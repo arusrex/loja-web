@@ -75,6 +75,9 @@ def dados_fiscais(request):
     form_unidades = UnidadesForm()
 
     context = {
+        'cfop_objs': cfop_objs,
+        'cst_csosn_objs': cst_csosn_objs,
+        'unidades': unidades,
         'form_cfop': form_cfop,
         'form_cst_csosn': form_cst_csosn,
         'form_unidades': form_unidades
