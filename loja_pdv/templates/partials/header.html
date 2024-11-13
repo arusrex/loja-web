@@ -1,0 +1,20 @@
+<header>
+    <div class="header-container">
+        <h1>{% if home.nome %}{{home.nome}}{% else %}ARUS T.I.{% endif %}</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'home' %}">Início</a></li>
+                <li><a href="{% url 'produtos' %}">Produtos</a></li>
+                <li><a href="{% url 'produtos' %}">Clientes</a></li>
+                <li><a href="{% url 'produtos' %}">Vendas</a></li>
+                <li><a href="{% url 'pdv' %}">PDV</a></li>
+                <li><a href="{% url 'relatorios' %}">Relatórios</a></li>
+                <li><a href="{% url 'contato' %}">Configurações da Loja</a></li>
+            </ul>
+        </nav>
+        <div class="user-info">
+            <p>Bem-vindo, {% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}</p>
+            <a href="{% url 'logout' %}" class="btn-logout">Sair</a>
+        </div>
+    </div>
+</header>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+{% include "partials/head.html" %}
+<body>
+    <!-- Cabeçalho -->
+    {% include "partials/header.html" %}
+
+    <!-- Conteúdo principal -->
+    <main>
+        <div class="container">
+            {% block content %}
+            <!-- O conteúdo das páginas específicas será inserido aqui -->
+            {% endblock %}
+        </div>
+    </main>
+
+    <!-- Rodapé -->
+    {% include "partials/footer.html" %}
+
+    <!-- JavaScript -->
+     {% include "partials/scripts.html" %}
+</body>
+</html>
