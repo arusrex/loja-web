@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'vendas',
     'produtos',
     'clientes',
-    'sat_nfe'
+    'sat_nfe',
+    'home'
 ]
 
 MIDDLEWARE = [
@@ -48,7 +49,7 @@ ROOT_URLCONF = 'loja_pdv.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
