@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm, SetPasswordForm
+from django.contrib.auth.models import User
 from .models import *
 
 class DadosLojaForm(forms.ModelForm):
@@ -6,17 +8,12 @@ class DadosLojaForm(forms.ModelForm):
         model = DadosLoja
         fields = '__all__'
 
-class CFOPForm(forms.ModelForm):
+class NewUserForm(UserCreationForm):
     class Meta:
-        model = CFOP
-        fields = '__all__'
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff', 'is_superuser']
 
-class CST_CSOSNForm(forms.ModelForm):
+class EditUserForm(UserChangeForm):
     class Meta:
-        model = CST_CSOSN
-        fields = '__all__'
-
-class UnidadesForm(forms.ModelForm):
-    class Meta:
-        model = Unidades
-        fields = '__all__'
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'is_active', 'is_staff', 'is_superuser']

@@ -2,7 +2,9 @@ from django.shortcuts import render, redirect
 from .forms import *
 from .models import *
 from django.contrib import messages
+from django.contrib.auth.models import User
 import logging
+
 
 log = logging.getLogger(__name__)
 
@@ -32,55 +34,36 @@ def dados_loja(request):
 
     return render(request, 'pages/dados_loja.html', context)
 
-def dados_fiscais(request):
-    cfop_objs = CFOP.objects.all().order_by('-id')
-    cst_csosn_objs = CST_CSOSN.objects.all().order_by('-id')
-    unidades = Unidades.objects.all().order_by('-id')
-
-    if request.POST.get('submit') == 'cfop_form':
-        form_cfop = CFOPForm(request.POST)
-        if form_cfop.is_valid():
-            form_cfop.save()
-            messages.success(request, 'CFOP salvo')
-            log.info('CFOP registrado no sistema')
-            return redirect('home:dados_fiscais')
-        else:
-            messages.error(request, 'Erro ao salvar CFOP')
-            log.error(f'Erro ao salvar CFOP: {form_cfop.errors}')
-
-    elif request.POST.get('submit') == 'cst_csosn_form':
-        form_cst_csosn = CST_CSOSNForm(request.POST)
-        if form_cst_csosn.is_valid():
-            form_cst_csosn.save()
-            messages.success(request, 'CST CSOSN salvo')
-            log.info('CST CSOSN registrado no sistema')
-            return redirect('home:dados_fiscais')
-        else:
-            messages.error(request, 'Erro ao salvar CST CSOSN')
-            log.error(f'Erro ao salvar CFOP: {form_cst_csosn.errors}')
-
-    elif request.POST.get('submit') == 'unidades_form':
-        form_unidades = UnidadesForm(request.POST)
-        if form_unidades.is_valid():
-            form_unidades.save()
-            messages.success(request, 'Unidades salvo')
-            log.info('Unidades registrado no sistema')
-            return redirect('home:dados_fiscais')
-        else:
-            messages.error(request, 'Erro ao salvar Unidades')
-            log.error(f'Erro ao salvar CFOP: {form_unidades.errors}')
+def users(request, user_id=None):
+    all_users = User.objects.all().order_by('first_name')
+    if user_id:
+        user_data = User.objects.get(id=user_id)
+        form = EditUserForm(request.POST or None, instance=user_data)
+    else:
+        form = NewUserForm(request.POST or None)
     
-    form_cfop = CFOPForm()
-    form_cst_csosn = CST_CSOSNForm()
-    form_unidades = UnidadesForm()
-
+    if request.method == 'POST':
+        if form.is_valid():
+            form.save()
+            if user_id:
+                messages.success(request, 'Usuário editado')
+                log.info(f'Usuário {user_data.get_full_name()} editado com sucesso')
+            else:
+                messages.success(request, 'Usuário criado')
+                log.info(f'Usuário criado com sucesso')
+            return redirect('home:users')
+    
     context = {
-        'cfop_objs': cfop_objs,
-        'cst_csosn_objs': cst_csosn_objs,
-        'unidades': unidades,
-        'form_cfop': form_cfop,
-        'form_cst_csosn': form_cst_csosn,
-        'form_unidades': form_unidades
+        'form': form,
+        'all_users': all_users
     }
 
-    return render(request, 'pages/dados_fiscais.html', context)
+    return render(request, 'pages/users.html', context)
+
+def delete_user(request, user_id):
+    user_data = User.objects.get(id=user_id)
+    user_data.delete()
+    messages.success(request, f'Usuário {user_data.get_full_name()} excluído')
+    log.info(f'Usuário {user_data.get_full_name()} excluído')
+    return redirect('home:users')
+
