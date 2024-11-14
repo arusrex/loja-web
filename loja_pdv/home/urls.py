@@ -9,5 +9,7 @@ urlpatterns = [
     path('dados_loja/', dados_loja, name="dados_loja"),
     # USUÁRIOS
     path('users/<int:id>/', users, name='users'),
+    path('edit_user/<int:id>/', edit_user, name='edit_user'),
+    path('edit_user_password/<int:id>/', edit_user_password, name='edit_user_password'),
     path('delete_users/<int:id>', delete_user, name="delete_user")
 ]
