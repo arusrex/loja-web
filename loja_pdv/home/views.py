@@ -3,6 +3,7 @@ from .forms import *
 from .models import *
 from django.contrib import messages
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import SetPasswordForm
 import logging
 
 
@@ -12,10 +13,10 @@ def home(request):
     return render(request, 'pages/index.html')
 
 def dados_loja(request):
-    dados = DadosLoja.objects.first()
+    dados = DadosLoja.objects.first() or None
     
     if request.method == 'POST':
-        form = DadosLojaForm(request.POST, instance=dados)
+        form = DadosLojaForm(request.POST, request.FILES, instance=dados)
 
         if form.is_valid():
             form.save()
@@ -25,11 +26,12 @@ def dados_loja(request):
         else:
             messages.error(request, 'Erro ao salvar !')
             log.error(f'Erro ao salvar os dados da empresa: {form.errors}')
-
-    form = DadosLojaForm(instance=dados)
+    else:
+        form = DadosLojaForm(instance=dados)
 
     context = {
         'form': form,
+        'dados': dados,
     }
 
     return render(request, 'pages/dados_loja.html', context)
@@ -37,20 +39,24 @@ def dados_loja(request):
 def users(request):
     return user_form(request)
 
-def edit_user(request, user_id, action='edit_user'):
-    return user_form(request, user_id, action)
+def edit_user(request, id):
+    action = 'edit_user'
+    return user_form(request, id, action)
 
-def edit_user_password(request, user_id, action='edit_user_password'):
-    return user_form(request, user_id, action)
+def edit_user_password(request, id):
+    action = 'edit_user_password'
+    return user_form(request, id, action)
 
 def user_form(request, user_id=None, action=None):
 
     all_users = User.objects.all().order_by('first_name')
 
     if user_id and action == 'edit_user':
+        log.info('Entrou em editar usuário')
         user_data = User.objects.get(id=user_id)
         form = EditUserForm(request.POST or None, instance=user_data)
     elif user_id and action == 'edit_user_password':
+        log.info('Entrou em alterar senha')
         user_data = User.objects.get(id=user_id)
         form = SetPasswordForm(user_data, request.POST or None)
     else:
@@ -71,7 +77,8 @@ def user_form(request, user_id=None, action=None):
     
     context = {
         'form': form,
-        'all_users': all_users
+        'all_users': all_users,
+        'action': action,
     }
 
     return render(request, 'pages/users.html', context)

@@ -1,0 +1,208 @@
+/* REMEDY */
+@import url('https://fonts.googleapis.com/css2?family=Host+Grotesk:ital,wght@0,300..800;1,300..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Funnel+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+
+:root {
+    /* Cores Primárias */
+    --color-primary: #1a73e8;           /* Azul Vibrante */
+    --color-primary-light: #4fc3f7;    /* Azul Claro */
+    --color-primary-dark: #004ba0;     /* Azul Escuro */
+
+    /* Cores Secundárias */
+    --color-secondary: #fbbc05;        /* Amarelo Solar */
+    --color-secondary-light: #ffdd57; /* Amarelo Claro */
+    --color-secondary-dark: #c79100;  /* Amarelo Escuro */
+
+    /* Cores de Acento */
+    --color-accent: #ea4335;           /* Vermelho Quente */
+    --color-accent-light: #ff867c;    /* Vermelho Suave */
+    --color-accent-dark: #c62828;     /* Vermelho Intenso */
+
+    /* Cores Terciárias */
+    --color-tertiary: #34a853;         /* Verde Vibrante */
+    --color-tertiary-light: #81c784;  /* Verde Claro */
+    --color-tertiary-dark: #2e7d32;   /* Verde Escuro */
+
+    /* Cores Neutras */
+    --color-neutral-lightest: #f8f9fa; /* Branco Suave */
+    --color-neutral-light: #e0e0e0;    /* Cinza Claro */
+    --color-neutral: #9e9e9e;          /* Cinza Médio */
+    --color-neutral-dark: #424242;     /* Cinza Escuro */
+    --color-neutral-darkest: #212121;  /* Preto Suave */
+
+    /* Feedback */
+    --color-success: #28a745;         /* Verde Sucesso */
+    --color-success-light: #a3e635;  /* Verde Claro Sucesso */
+    --color-success-dark: #1c7c31;   /* Verde Escuro Sucesso */
+
+    --color-warning: #ff9800;        /* Laranja Alerta */
+    --color-warning-light: #ffc947; /* Laranja Claro */
+    --color-warning-dark: #c66900;  /* Laranja Intenso */
+
+    --color-error: #d32f2f;          /* Vermelho Erro */
+    --color-error-light: #ef5350;   /* Vermelho Claro */
+    --color-error-dark: #b71c1c;    /* Vermelho Intenso */
+
+    /* Gradientes para Background */
+    --gradient-primary: linear-gradient(45deg, #1a73e8, #4fc3f7);
+    --gradient-accent: linear-gradient(45deg, #ea4335, #ff867c);
+    --gradient-neutral: linear-gradient(45deg, #e0e0e0, #424242);
+
+    /* Transparências */
+    --color-primary-transparent: rgba(26, 115, 232, 0.1); /* Azul translúcido */
+    --color-accent-transparent: rgba(234, 67, 53, 0.1);  /* Vermelho translúcido */
+    --color-neutral-transparent: rgba(158, 158, 158, 0.1); /* Cinza translúcido */
+}
+
+/* Box-sizing: Todos os elementos utilizam o modelo de caixa border-box */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+/* Remove espaçamento padrão da tag body */
+body {
+    margin: 0;
+    font-family: "Funnel Sans", sans-serif;
+    line-height: 1.5;
+    color: #333;
+    background-color: #fff;
+}
+
+/* Garantir que as imagens respeitem o modelo de caixa */
+img,
+picture {
+    max-width: 100%;
+    display: block;
+}
+
+/* Links sem estilos padrão */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+/* Tabelas consistentes */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+/* Remover espaçamento padrão de listas */
+ul, ol {
+    list-style: none;
+    padding-left: 0;
+}
+
+/* Botões com aparência consistente */
+button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    cursor: pointer;
+}
+
+/* Garantir que os formulários sejam consistentes */
+input,
+textarea,
+select {
+    font: inherit;
+    margin: 5px;
+    padding: 0;
+}
+
+/* Garantir que o HTML sempre preencha a altura da janela */
+html {
+    height: 100%;
+    overflow: auto;
+}
+
+body {
+    min-height: 100vh;
+    overflow: auto;
+}
+
+main {
+    display: flex;
+    margin: 1rem;
+}
+
+/* Ajustar áreas de texto */
+textarea {
+    resize: vertical;
+}
+
+/* Garantir que o campo de número não tenha setas desnecessárias no Chrome */
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+    appearance: none;
+    margin: 0;
+}
+
+header {
+    width: 100%;
+    background: var(--gradient-primary);
+}
+
+.header-container ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin: 10px auto;
+    padding: 10px;
+    width: fit-content;
+}
+
+.header-container h1 {
+    padding: 10px;
+    text-align: end;
+    color: var(--color-neutral-dark);
+    font-family: "Host Grotesk", sans-serif;
+}
+
+.header-container li {
+    display: inline;
+    padding: 0.5rem 1rem;
+    background-color: var(--color-neutral-light);
+}
+
+.header-container li:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.header-container li:last-child {
+    border-radius: 0 5px 5px 0;
+}
+
+.header-container a {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.header-container li:hover {
+    background-color: var(--color-primary-light);
+    color: var(--color-primary-dark);
+}
+
+.header-container li:active {
+    background-color: var(--color-primary);
+    color: var(--color-neutral-light);
+    transform: translateY(5px);
+}
+
+.sidebar-container ul {
+    flex-wrap: wrap;
+    flex-direction: column;
+}
+
+.sidebar-container li {
+
+}

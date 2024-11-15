@@ -1,0 +1,54 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="">
+    <h1>{% if action == 'edit_user' %}Atualizar dados de usuário {% elif action == 'edit_user_password' %}Alterar senha de usuário{% else %}Administração de Usuários{% endif %}</h1>
+    <form method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit">Salvar</button>
+    </form>
+    <div>
+        <table id="dataTable" class="display">
+            <thead>
+                <tr>
+                    <th>Usuário</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Ativo</th>
+                    <th>Colaborador</th>
+                    <th>Administrador</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in all_users %}
+                <tr>
+                    <td>{{item.username}}</td>
+                    <td>{{item.get_full_name}}</td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.is_active}}</td>
+                    <td>{{item.is_staff}}</td>
+                    <td>{{item.is_superuser}}</td>
+                    <td>
+                        <a href="{% url "home:edit_user" item.id %}">Editar</a>
+                        <a href="{% url "home:edit_user_password" item.id %}">Alterar Senha</a>
+                        <a href="{% url "home:delete_user" item.id %}">Excluir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th><small>Usuário</small></th>
+                    <th><small>Nome</small></th>
+                    <th><small>E-mail</small></th>
+                    <th><small>Ativo</small></th>
+                    <th><small>Colaborador</small></th>
+                    <th><small>Administrador</small></th>
+                    <th><small>Ações</small></th>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+{% endblock content %}

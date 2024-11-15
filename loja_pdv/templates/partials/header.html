@@ -1,7 +1,7 @@
 <header>
     <div class="header-container">
         <h1>{% if home.nome %}{{home.nome}}{% else %}ARUS T.I.{% endif %}</h1>
-        <nav>
+        <nav class="d-none d-sm-block">
             <ul>
                 <li><a href="{% url 'home:home' %}">Início</a></li>
                 {% comment %} <li><a href="{% url 'produtos' %}">Produtos</a></li> {% endcomment %}
@@ -9,7 +9,8 @@
                 {% comment %} <li><a href="{% url 'produtos' %}">Vendas</a></li> {% endcomment %}
                 {% comment %} <li><a href="{% url 'pdv' %}">PDV</a></li> {% endcomment %}
                 {% comment %} <li><a href="{% url 'relatorios' %}">Relatórios</a></li> {% endcomment %}
-                {% comment %} <li><a href="{% url 'contato' %}">Configurações da Loja</a></li> {% endcomment %}
+                <li><a href="{% url 'home:dados_loja' %}">Dados da Loja</a></li>
+                <li><a href="{% url 'home:users' %}">Usuários</a></li>
             </ul>
         </nav>
         <div class="user-info">
