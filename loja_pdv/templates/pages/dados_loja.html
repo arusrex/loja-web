@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 {% block content %}
-<div class="border">
+<div class="main-content">
     <h1>{% if dados.nome_fantasia %}Dados de {{dados.nome_fantasia}}{% else %}Dados da loja{% endif %}</h1>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}

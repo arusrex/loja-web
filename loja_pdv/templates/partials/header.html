@@ -1,21 +1,15 @@
 <header>
     <div class="header-container">
-        <h1>{% if home.nome %}{{home.nome}}{% else %}ARUS T.I.{% endif %}</h1>
-        <nav class="d-none d-sm-block">
-            <ul>
-                <li><a href="{% url 'home:home' %}">Início</a></li>
-                {% comment %} <li><a href="{% url 'produtos' %}">Produtos</a></li> {% endcomment %}
-                {% comment %} <li><a href="{% url 'produtos' %}">Clientes</a></li> {% endcomment %}
-                {% comment %} <li><a href="{% url 'produtos' %}">Vendas</a></li> {% endcomment %}
-                {% comment %} <li><a href="{% url 'pdv' %}">PDV</a></li> {% endcomment %}
-                {% comment %} <li><a href="{% url 'relatorios' %}">Relatórios</a></li> {% endcomment %}
-                <li><a href="{% url 'home:dados_loja' %}">Dados da Loja</a></li>
-                <li><a href="{% url 'home:users' %}">Usuários</a></li>
-            </ul>
-        </nav>
-        <div class="user-info">
-            {% comment %} <p>Bem-vindo, {% if user.is_authenticated %}{{ user.get_full_name }}{% endif %}</p> {% endcomment %}
-            {% comment %} <a href="{% url 'logout' %}" class="btn-logout">Sair</a> {% endcomment %}
+        <div class="header-left d-sm-none d-block">
+            <a href="#">Menu</a>
+        </div>
+                
+        <div class="header-right">
+            <h1>{% if home.nome %}{{home.nome}}{% else %}ARUS T.I.{% endif %}</h1>
+            <div class="user-info">
+                <small>Bem-vindo, Usuário</small>
+                <a href="#" class="btn-logout"><small>Sair</small></a>
+            </div>
         </div>
     </div>
 </header>

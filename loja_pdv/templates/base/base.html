@@ -4,11 +4,11 @@
 <body>
     <!-- Cabeçalho -->
     {% include "partials/header.html" %}
-
+    {% include "partials/navbar.html" %}
     <!-- Conteúdo principal -->
     <main>
         {% include "partials/sidebar.html" %}
-        <div class="container-fluid">
+        <div class="main-container">
 
             {% block content %}
             <!-- O conteúdo das páginas específicas será inserido aqui -->

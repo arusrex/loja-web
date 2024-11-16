@@ -1,6 +1,6 @@
 {% extends "base/base.html" %}
 {% block content %}
-<div class="">
+<div class="main-content">
     <h1>{% if action == 'edit_user' %}Atualizar dados de usuário {% elif action == 'edit_user_password' %}Alterar senha de usuário{% else %}Administração de Usuários{% endif %}</h1>
     <form method="POST">
         {% csrf_token %}
