@@ -8,12 +8,7 @@
     <!-- Conteúdo principal -->
     <main>
         {% include "partials/sidebar.html" %}
-        <div class="main-container">
-
-            {% block content %}
-            <!-- O conteúdo das páginas específicas será inserido aqui -->
-            {% endblock %}
-        </div>
+        {% block content %}{% endblock %}
     </main>
 
     <!-- Rodapé -->
