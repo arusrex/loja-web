@@ -1,11 +1,14 @@
 <header>
     <div class="header-container">
         <div class="header-left d-sm-none d-block">
-            <a href="#">Menu</a>
+            <a href="#">Menu Principal</a>
         </div>
                 
         <div class="header-right">
-            <h1>{% if home.nome %}{{home.nome}}{% else %}ARUS T.I.{% endif %}</h1>
+            <h1>ARUS T.I.</h1>
+            {% if dados_loja %}
+                <h3>{{dados_loja.nome_fantasia}}</h3>
+            {% endif %}
             <div class="user-info">
                 <small>Bem-vindo, Usuário</small>
                 <a href="#" class="btn-logout"><small>Sair</small></a>

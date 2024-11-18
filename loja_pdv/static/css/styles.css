@@ -140,10 +140,6 @@ main {
     overflow-y: auto;
 }
 
-.main-content {
-    max-width: 90vw;
-}
-
 /* Ajustar áreas de texto */
 textarea {
     resize: vertical;
@@ -155,6 +151,8 @@ input[type='number']::-webkit-outer-spin-button {
     appearance: none;
     margin: 0;
 }
+
+/* HEADER */
 
 header {
     width: 100%;
@@ -168,34 +166,78 @@ header {
     justify-content: space-between;
     align-items: center;
     /* border: 1px solid white; */
-    padding: 10px 20px;
+    padding: 10px 30px;
 }
 
 .header-left {
     /* border: 1px solid white; */
+    display: block;
+    width: 100%;
+    height: 100%;
     flex: 0;
+    border-top: 0.01em solid var(--color-neutral-light);
+    border-bottom: 0.01em solid var(--color-neutral-light);
+    text-align: center;
+}
+
+.header-left a {
     color: var(--color-neutral-light);
 }
 
+.header-left a:hover {
+    color: var(--color-neutral-lightest);
+    font-weight: 900;
+}
+
+.header-left a:active {
+    color: var(--color-neutral);
+}
+
 .header-right {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: end;
     /* border: 1px solid white; */
     flex: 1;
     color: var(--color-neutral-light);
     margin-right: 10px;
 }
 
-.user-info {
-    display: flex;
-    flex-direction: column;
-    text-align: end;
-    /* border: 1px solid white; */
-    color: var(--color-neutral-light);
-}
-
-.header-container h1 {
+.header-right h1 {
     text-align: end;
     color: var(--color-neutral-light);
     font-family: "Host Grotesk", sans-serif;
+    /* border: 1px solid white; */
+    width: fit-content;
+}
+
+.header-right h1:hover {
+    font-weight: 900;
+    cursor: pointer;
+    color: var(--color-neutral-lightest);
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+    align-items: end;
+    /* border: 1px solid white; */
+    color: var(--color-neutral-light);
+    width: fit-content;
+}
+
+.user-info .btn-logout {
+    width: fit-content;
+}
+
+.btn-logout:hover {
+    color: var(--color-neutral-lightest);
+    font-weight: 900;
+}
+
+.btn-logout:active {
+    color: var(--color-neutral);
 }
 
 .navbar-container {
@@ -210,6 +252,7 @@ header {
 
 .navbar-container nav ul li {
     position: relative;
+    border-right: 0.01em solid var(--color-neutral-dark);
 }
 
 .navbar-container nav ul li .drop-toggler {
@@ -221,9 +264,14 @@ header {
     color: var(--color-neutral-light);
 }
 
+.navbar-container nav ul li:last-of-type {
+    border-right: none;
+}
+
 .navbar-container nav ul li .drop-toggler:hover {
     background-color: var(--color-primary-light);
     color: var(--color-primary-dark);
+    font-weight: 900;
 }
 
 .navbar-container nav ul li:active {
@@ -236,11 +284,42 @@ header {
     color: var(--color-neutral-light);
 }
 
+.drop-menu {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    width: auto;
+}
+
+.drop-menu a {
+    display: block;
+    background-color: var(--color-neutral-light);
+    white-space: nowrap;
+    cursor: pointer;
+    padding: 5px;
+    border-bottom: 0.01em solid var(--color-neutral-dark);
+}
+
+.drop-menu a:last-of-type {
+    border-bottom: none;
+}
+
+.drop-menu a:hover {
+    background-color: var(--color-neutral);
+    font-weight: 900;
+}
+
+.drop-menu.show {
+    display: block;
+}
+
+
+/* SIDEBAR */
+
 .sidebar-container {
     background: var(--color-primary-dark);
     /* border: 1px solid white; */
     height: 100vh;
-    overflow-y: auto;
     border-top: 0.01em solid var(--color-neutral-light);
     border-bottom: 0.01em solid var(--color-neutral-light);
 }
@@ -253,7 +332,7 @@ header {
     justify-content: space-between;
     /* border: 1px solid white; */
     padding: 10px;
-    color: var(--color-neutral-light);
+    /* color: var(--color-neutral-light); */
 }
 
 .sidebar-container nav ul {
@@ -264,44 +343,78 @@ header {
 
 .sidebar-container nav ul li {
     width: 100%;
-    box-shadow: 0 1px 1px 2px var(--color-neutral-dark);
 }
 
-.sidebar-container nav ul li:first-child a {
+.sidebar-container nav ul li:first-child .side-drop-toggler {
     border-radius: 5px 5px 0 0;
+    /* border: 1px solid white; */
+}
+
+.sidebar-container nav ul li:last-child .side-drop-toggler {
+    border-radius: 0 0 5px 5px;
     /* border: 1px solid white; */
     border-bottom: none;
 }
 
-.sidebar-container nav ul li:last-child a {
-    border-radius: 0 0 5px 5px;
-    /* border: 1px solid white; */
-    border-top: none;
-}
-
-.sidebar-container nav ul li a {
+.sidebar-container nav ul li .side-drop-toggler {
     display: block;
     width: 100%;
     padding: 5px;
-    background-color: var(--color-neutral-light);
-    color: var(--color-neutral-dark);
-    /* border: 1px solid white; */
+    background-color: var(--color-primary);
+    color: var(--color-neutral-light);
+    border-bottom: 0.01em solid var(--color-neutral-dark);
+    cursor: pointer;
 }
 
-.sidebar-container nav ul li a:hover {
+.sidebar-container nav ul li .side-drop-toggler:hover {
     background-color: var(--color-primary-light);
     color: var(--color-primary-dark);
+    font-weight: 900;
 }
 
-.sidebar-container nav ul li a:active {
-    background-color: var(--color-primary-dark);
-    color: var(--color-neutral-light);
-    border: 0.01em solid var(--color-neutral-light);
+.sidebar-container nav ul li .side-drop-toggler.nav-item-active {
+    background-color: var(--color-primary-light) !important;
+    color: var(--color-primary-dark) !important;
+    font-weight: 900;
+}
+
+.sidebar-container nav ul li:last-child .side-drop-toggler.nav-item-active {
+    border-radius: 0 0 0 0 !important;
 }
 
 .sidebar-container .user-info {
     border-top: 0.01em solid var(--color-neutral-light);
 }
+
+.side-drop-menu {
+    display: none;
+}
+
+.side-drop-menu a {
+    display: block;
+    background-color: var(--color-neutral-light);
+    color: var(--color-neutral-dark);
+    cursor: pointer;
+    padding: 5px;
+    border: 0.01em solid var(--color-neutral-light);
+    border-top: none;
+}
+
+.sidebar-container nav ul li:last-child .side-drop-menu a:last-of-type {
+    border-radius: 0 0 5px 5px;
+}
+
+.side-drop-menu a:hover {
+    background-color: var(--color-neutral);
+    color: var(--color-neutral-dark);
+    font-weight: 900;
+}
+
+.side-drop-menu.show {
+    display: block;
+}
+
+/* FOOTER */
 
 footer {
     display: flex;
@@ -332,25 +445,5 @@ footer p {
     width: 40px;
     height: 40px;
     border-radius: 50% 50%;
-}
-
-.drop-menu {
-    display: none;
-    position: absolute;
-    /* top: 100%; */
-    /* left: 0; */
-    z-index: 1;
-    width: auto;
-}
-
-.drop-menu a {
-    display: block;
-    background-color: var(--color-neutral-light);
-    white-space: nowrap;
-    cursor: pointer;
-}
-
-.drop-menu.show {
-    display: block;
 }
 

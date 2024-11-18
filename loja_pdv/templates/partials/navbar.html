@@ -2,32 +2,19 @@
     <nav>
         <ul>
             <li>
-                <a class="drop-toggler" data-target="inicio">Início</a>
-                <div id="inicio" class="drop-menu">
-                    <a href="#">Link 1</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
+                <a class="drop-toggler" href="{% url "home:home" %}">Início</a>
+            </li>
+            <li>
+                <a class="drop-toggler" data-target="produtos">Produtos</a>
+                <div id="produtos" class="drop-menu">
+                    <a href="#">Cadastro de Produtos</a>
                 </div>
             </li>
-            {% comment %} <li><a href="{% url 'produtos' %}">Produtos</a></li> {% endcomment %}
-            {% comment %} <li><a href="{% url 'produtos' %}">Clientes</a></li> {% endcomment %}
-            {% comment %} <li><a href="{% url 'produtos' %}">Vendas</a></li> {% endcomment %}
-            {% comment %} <li><a href="{% url 'pdv' %}">PDV</a></li> {% endcomment %}
-            {% comment %} <li><a href="{% url 'relatorios' %}">Relatórios</a></li> {% endcomment %}
             <li>
-                <a class="drop-toggler" data-target="dados-loja">Dados da Loja</a>
+                <a class="drop-toggler" data-target="dados-loja">Configurações da Loja</a>
                 <div id="dados-loja" class="drop-menu">
-                    <a href="#">Link 1</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
-                </div>
-            </li>
-            <li>
-                <a class="drop-toggler" data-target="usuarios">Usuários</a>
-                <div id="usuarios" class="drop-menu">
-                    <a href="#">Link 1</a>
-                    <a href="#">Link 2</a>
-                    <a href="#">Link 3</a>
+                    <a href="{% url "home:dados_loja" %}">Dados da Loja</a>
+                    <a href="{% url "home:users" %}">Usuários</a>
                 </div>
             </li>
         </ul>
