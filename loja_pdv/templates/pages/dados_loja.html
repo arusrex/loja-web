@@ -1,20 +1,62 @@
 {% extends "base/base.html" %}
 {% block content %}
 <div class="main-content">
-    <h1>{% if dados.nome_fantasia %}Dados de {{dados.nome_fantasia}}{% else %}Dados da loja{% endif %}</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div class="col-6">
-            {{form.nome_fantasia.label_tag}}
-            {{form.nome_fantasia}}
-        </div><div class="col-6">
-            {{form.razao_social.label_tag}}
-            {{form.razao_social}}
-        </div><div class="col-6">
-            {{form.nome_fantasia.label_tag}}
-            {{form.nome_fantasia}}
+    <h1>
+        {% if dados.nome_fantasia %}
+            Dados de {{dados.nome_fantasia}}
+        {% else %}
+            Dados da loja
+        {% endif %}
+        {% if dados.logo %}
+        <div class="div-img">
+            <img src="{{ dados.logo.url }}" alt="{{dados.nome_fantasia}}">
         </div>
+        {% endif %}
+    </h1>
+
+    <form class="form-padrao row" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_div}}
+
         <button class="btn" type="submit">Salvar</button>
     </form>
 </div>
+
+<script>
+let formDadosLoja = document.addEventListener('DOMContentLoaded', () => {
+    function adicionaClasseDivPai (elemento, classe) {
+        if (elemento && classe) {
+            elemento.parentNode.classList.add(classe);
+        }
+    };
+    const nomeFantasia = document.querySelector('#id_nome_fantasia');
+    const razaoSocial = document.querySelector('#id_razao_social');
+    const cnpj = document.querySelector('#id_cnpj');
+    const inscricaoMunicipal = document.querySelector('#id_inscricao_municipal');
+    const inscricaoEstadual = document.querySelector('#id_inscricao_estadual');
+    const inscricaoEstadualST = document.querySelector('#id_inscricao_estadual_st');
+    const endereco = document.querySelector('#id_endereco');
+    const bairro = document.querySelector('#id_bairro');
+    const cep = document.querySelector('#id_cep');
+    const cidade = document.querySelector('#id_cidade');
+    const estado = document.querySelector('#id_estado');
+    const fone = document.querySelector('#id_fone');
+    const email = document.querySelector('#id_email');
+    const logo = document.querySelector('#id_logo');
+    adicionaClasseDivPai(nomeFantasia, 'col-6');
+    adicionaClasseDivPai(razaoSocial, 'col-6');
+    adicionaClasseDivPai(cnpj, 'col-3');
+    adicionaClasseDivPai(inscricaoMunicipal, 'col-3');
+    adicionaClasseDivPai(inscricaoEstadual, 'col-3');
+    adicionaClasseDivPai(inscricaoEstadualST, 'col-3');
+    adicionaClasseDivPai(endereco, 'col-8');
+    adicionaClasseDivPai(bairro, 'col-4');
+    adicionaClasseDivPai(cep, 'col-4');
+    adicionaClasseDivPai(cidade, 'col-4');
+    adicionaClasseDivPai(estado, 'col-4');
+    adicionaClasseDivPai(fone, 'col-4');
+    adicionaClasseDivPai(email, 'col-4');
+    adicionaClasseDivPai(logo, 'col-12');
+});
+</script>
 {% endblock content %}

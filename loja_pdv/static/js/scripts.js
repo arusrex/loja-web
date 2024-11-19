@@ -106,5 +106,5 @@ btnMenu.addEventListener('click', () => {
     } else {
         siderbar.style.display = 'none'
     }
-    
 });
+

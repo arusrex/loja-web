@@ -2,9 +2,9 @@
 {% block content %}
 <div class="main-content">
     <h1>{% if action == 'edit_user' %}Atualizar dados de usuário {% elif action == 'edit_user_password' %}Alterar senha de usuário{% else %}Administração de Usuários{% endif %}</h1>
-    <form method="POST">
+    <form class="form-padrao row" method="POST">
         {% csrf_token %}
-        {{form.as_p}}
+        {{form.as_div}}
         <button class="btn" type="submit">Salvar</button>
     </form>
     <div class="table">
@@ -51,4 +51,43 @@
         </table>
     </div>
 </div>
+
+<script>
+let formUsuarios = document.addEventListener('DOMContentLoaded', () => {
+    function adicionaClasseDivPai (elemento, classe) {
+        if (elemento && classe) {
+            elemento.parentNode.classList.add(classe);
+        }
+    };
+    const formUsername = document.querySelector('#id_username');
+    const formFisrtName = document.querySelector('#id_first_name');
+    const formLastName = document.querySelector('#id_last_name');
+    const formEmail = document.querySelector('#id_email');
+    const formIsActive = document.querySelector('#id_is_active');
+    const formIsStaff = document.querySelector('#id_is_staff');
+    const formIsSuperuser = document.querySelector('#id_is_superuser');
+    const formPassword1 = document.querySelector('#id_password1');
+    const formPassword2 = document.querySelector('#id_password2');
+    const formNewPassword1 = document.querySelector('#id_new_password1');
+    const formNewPassword2 = document.querySelector('#id_new_password2');
+
+    adicionaClasseDivPai(formUsername, 'col-3');
+    adicionaClasseDivPai(formFisrtName, 'col-3');
+    adicionaClasseDivPai(formLastName, 'col-3');
+    adicionaClasseDivPai(formEmail, 'col-3');
+
+    adicionaClasseDivPai(formIsActive, 'col-3');
+    adicionaClasseDivPai(formIsStaff, 'col-3');
+    adicionaClasseDivPai(formIsSuperuser, 'col-3');
+
+    adicionaClasseDivPai(formPassword1, 'col-6');
+    adicionaClasseDivPai(formPassword2, 'col-6');
+
+    adicionaClasseDivPai(formNewPassword1, 'col-6');
+    adicionaClasseDivPai(formNewPassword2, 'col-6');
+
+});
+
+</script>
+
 {% endblock content %}
