@@ -4,8 +4,17 @@
     <h1>{% if dados.nome_fantasia %}Dados de {{dados.nome_fantasia}}{% else %}Dados da loja{% endif %}</h1>
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">Salvar</button>
+        <div class="col-6">
+            {{form.nome_fantasia.label_tag}}
+            {{form.nome_fantasia}}
+        </div><div class="col-6">
+            {{form.razao_social.label_tag}}
+            {{form.razao_social}}
+        </div><div class="col-6">
+            {{form.nome_fantasia.label_tag}}
+            {{form.nome_fantasia}}
+        </div>
+        <button class="btn" type="submit">Salvar</button>
     </form>
 </div>
 {% endblock content %}

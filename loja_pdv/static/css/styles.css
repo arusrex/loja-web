@@ -47,11 +47,15 @@
     --gradient-primary: linear-gradient(45deg, #1a73e8, #4fc3f7);
     --gradient-accent: linear-gradient(45deg, #ea4335, #ff867c);
     --gradient-neutral: linear-gradient(45deg, #e0e0e0, #424242);
+    --gradient-btn-simples: linear-gradient(180deg, #f6f6f6, #e1e1e1);
+
+    /* no-gradient */
+    --no-gradiente-btn-simples: linear-gradient(180deg, #e1e1e1, #e1e1e1);
 
     /* Transparências */
     --color-primary-transparent: rgba(26, 115, 232, 0.1); /* Azul translúcido */
     --color-accent-transparent: rgba(234, 67, 53, 0.1);  /* Vermelho translúcido */
-    --color-neutral-transparent: rgba(158, 158, 158, 0.1); /* Cinza translúcido */
+    --color-neutral-transparent: rgba(158, 158, 158, 0.2); /* Cinza translúcido */
 }
 
 /* Box-sizing: Todos os elementos utilizam o modelo de caixa border-box */
@@ -83,12 +87,15 @@ main {
     display: flex;
     flex-direction: row;
     height: 100vh;
+    contain: content;
 }
 
 .main-content {
-    padding: 10px;
+    flex-grow: 1;
+    padding: 20px;
     width: 100%;
     height: 100%;
+    border: 0.01em solid var(--color-neutral);
     overflow: auto;
 }
 
@@ -117,16 +124,6 @@ ul, ol {
     padding: 0;
 }
 
-/* Botões com aparência consistente */
-button {
-    background: none;
-    border: none;
-    padding: 0;
-    font-family: inherit;
-    font-size: inherit;
-    line-height: inherit;
-    cursor: pointer;
-}
 
 /* Garantir que os formulários sejam consistentes */
 input,
@@ -439,14 +436,101 @@ footer p {
     display: flex;
     justify-content: center;
     align-items: center;
-    bottom: 20px;
-    right: 20px;
-    font-size: large;
-    font-weight: 300;
+    bottom: 15px;
+    right: 15px;
     background-color: var(--color-primary-dark);
     color: var(--color-neutral-light);
-    width: 40px;
-    height: 40px;
     border-radius: 50% 50%;
+    padding: 5px;
 }
+
+.topo i {
+    font-weight: 900;
+}
+
+
+/* ########## BREAKPOINTS ########## */
+
+@media (min-width: 576px) {
+    .sidebar-container {
+        display: none !important;
+    }
+
+    .header-container .header-left {
+        display: none !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar-container {
+        display: none !important;
+    }
+}
+
+/* ########## BOTÕES ########## */
+
+/* Botões com aparência consistente */
+button {
+    background: none;
+    border: none;
+    padding: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    cursor: pointer;
+}
+
+.btn {
+    border: 1px solid rgb(0, 0, 0, 0.4);
+    background: var(--gradient-btn-simples);
+    border-radius: 2px;
+    text-wrap: nowrap;
+    padding: 3px;
+    margin: 3px;
+    font-weight: lighter;
+}
+
+.btn:hover {
+    border: 1px solid rgb(0, 0, 0, 0.6);
+    background: var(--no-gradiente-btn-simples);
+}
+
+
+/* ########## H1 MAIN CONTENT ########## */
+
+.main-content h1:first-of-type {
+    border-left: 1px solid rgba(0,0,0, 0.1);
+    border-top: 10px solid rgba(0,0,0, 0.4);
+    border-right: 1px solid rgba(0,0,0, 0.1);
+    border-bottom: 1px solid rgba(0,0,0, 0.1);
+
+    border-radius: 10px 10px 0 0;
+    margin: 0;
+    padding: 5px;
+}
+
+.main-content form {
+    border-left: 1px solid rgba(0,0,0, 0.1);
+    border-right: 1px solid rgba(0,0,0, 0.1);
+    border-bottom: 1px solid rgba(0,0,0, 0.1);
+
+    border-radius: 0 0 3px 3px;
+    padding: 10px;
+}
+
+.main-content .table {
+    border: 1px solid rgba(0,0,0, 0.1);
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.main-content table {
+    border: 1px solid rgba(0,0,0, 0.1);
+    border-radius: 5px;
+}
+
+/* ########## FORM GRID ########## */
+
+
 

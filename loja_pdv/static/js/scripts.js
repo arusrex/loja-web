@@ -96,3 +96,15 @@ document.addEventListener('click', () => {
         click.classList.remove('nav-item-active');
     });
 });
+
+const btnMenu = document.querySelector('#btn-menu');
+
+btnMenu.addEventListener('click', () => {
+    let siderbar = document.querySelector('.sidebar-container');
+    if (siderbar.style.display === 'none') {
+        siderbar.style.display = 'block'
+    } else {
+        siderbar.style.display = 'none'
+    }
+    
+});
