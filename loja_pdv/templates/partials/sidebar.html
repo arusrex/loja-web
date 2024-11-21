@@ -5,6 +5,12 @@
                 <a class="side-drop-toggler" href="{% url 'home:home' %}">Início</a>
             </li>
             <li>
+                <a class="side-drop-toggler" data-target="side-clientes">Clientes</a>
+                <div id="side-clientes" class="side-drop-menu">
+                    <a href="{% url "clientes:clientes" %}">Gestão de Clientes</a>
+                </div>
+            </li>
+            <li>
                 <a class="side-drop-toggler" data-target="side-produtos">Produtos</a>
                 <div id="side-produtos" class="side-drop-menu">
                     <a href="#">Cadastro de Produtos</a>

@@ -1,0 +1,82 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="main-content">
+    <h1>Gestão de Clientes</h1>
+
+    <form class="form-padrao row" method="POST" id="form-tipo-pessoa">
+        {% csrf_token %}
+        <div class="col-2">
+            <label for="tipo-pessoa">Tipo de Cliente:</label>
+            <select id="tipo-pessoa" name="tipo-pessoa" onchange="document.getElementById('form-tipo-pessoa').submit()">
+                <option value="1" {% if tipo_cliente == '1' %}selected{% endif %}>Pessoa Física</option>
+                <option value="2" {% if tipo_cliente == '2' %}selected{% endif %}>Pessoa Jurídica</option>
+            </select>
+        </div>
+    </form>
+
+    <form class="form-padrao" method="POST">
+        {% csrf_token %}
+        {% for field in form %}
+            {{field.label_tag}}
+            {{field}}
+            {% if field.errors %}
+            <ul>
+                {% for error in field.errors %}
+                <li class="text-error">{{error}}</li>
+                {% endfor %}
+            </ul>
+            {% endif %}
+            {% if field.help_texts %}
+                {{field.help_texts}}
+            {% endif %}
+        {% endfor %}
+        <div>
+            <button name="btn-form" class="btn" type="submit">Salvar</button>
+        </div>
+    </form>
+    <div class="table">
+        <table id="dataTable" class="display">
+            <thead>
+                <tr>
+                    <td>ID</td>
+                    <td>CÓDIGO</td>
+                    <td>NOME</td>
+                    <td>RAZÃO SOCIAL</td>
+                    <td>CNPJ</td>
+                    <td>INSCRIÇÃO MUNICIPAL</td>
+                    <td>INSCRIÇÃO ESTADUAL</td>
+                    <td>FONE</td>
+                    <td>EMAIL</td>
+                    <td>ENDEREÇO</td>
+                    <td>Nº</td>
+                    <td>BAIRRO</td>
+                    <td>CEP</td>
+                    <td>CIDADE</td>
+                    <td>ESTADO</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in objs %}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.codigo}}</td>
+                    <td>{{item.nome_fantasia}}</td>
+                    <td>{{item.razao_social}}</td>
+                    <td>{{item.cnpj}}</td>
+                    <td>{{item.incricao_municipal}}</td>
+                    <td>{{item.inscricao_estadual}}</td>
+                    <td>{{item.fone}}</td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.endereco}}</td>
+                    <td>{{item.numero}}</td>
+                    <td>{{item.bairro}}</td>
+                    <td>{{item.cep}}</td>
+                    <td>{{item.cidade}}</td>
+                    <td>{{item.estado}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

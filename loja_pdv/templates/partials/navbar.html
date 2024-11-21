@@ -5,6 +5,12 @@
                 <a class="drop-toggler" href="{% url "home:home" %}">Início</a>
             </li>
             <li>
+                <a class="drop-toggler" data-target="clientes">Clientes</a>
+                <div id="clientes" class="drop-menu">
+                    <a href="{% url "clientes:clientes" %}">Gestão de Clientes</a>
+                </div>
+            </li>
+            <li>
                 <a class="drop-toggler" data-target="produtos">Produtos</a>
                 <div id="produtos" class="drop-menu">
                     <a href="#">Cadastro de Produtos</a>
