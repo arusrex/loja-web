@@ -2,5 +2,26 @@
 {% block content %}
 <div class="main-content">
     <h1>Início da Loja</h1>
+    <div class="div-home row">
+        <h3>Acesso Rápido</h3>
+        <div class="card-home col-2">
+            <a class="bg-warning" href="{% url "home:dados_loja" %}"><i class="fas fa-solid fa-shop"></i>Dados da Loja</a>
+        </div>
+        <div class="card-home col-2">
+            <a class="bg-primary" href="{% url "home:dados_loja" %}"><i class="fas fa-solid fa-users"></i>Gestão de Usuários</a>
+        </div>
+        <div class="card-home col-2">
+            <a href="{% url "home:dados_loja" %}">Gestão de Usuários</a>
+        </div>
+        <div class="card-home col-2">
+            <a href="{% url "home:dados_loja" %}">Gestão de Usuários</a>
+        </div>
+        <div class="card-home col-2">
+            <a href="{% url "home:dados_loja" %}">Gestão de Usuários</a>
+        </div>
+        <div class="card-home col-2">
+            <a href="{% url "home:dados_loja" %}">Gestão de Usuários</a>
+        </div>
+    </div>
 </div>
 {% endblock content %}

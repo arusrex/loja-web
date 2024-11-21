@@ -4,8 +4,25 @@
     <h1>{% if action == 'edit_user' %}Atualizar dados de usuário {% elif action == 'edit_user_password' %}Alterar senha de usuário{% else %}Administração de Usuários{% endif %}</h1>
     <form class="form-padrao row" method="POST">
         {% csrf_token %}
-        {{form.as_div}}
-        <button class="btn" type="submit">Salvar</button>
+        {% for field in form %}
+        <div>
+            {{field.label_tag}}
+            {{field}}
+            {% if field.errors %}
+                <ul>
+                {% for error in field.errors %}
+                    <li class="text-error"><small>{{error}}</small></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+            {% if field.help_text %}
+                {{field.help_text|safe}}
+            {% endif %}
+            </div>
+        {% endfor %}
+        <div class="col-12">
+            <button class="btn" type="submit">Salvar</button>
+        </div>
     </form>
     <div class="table">
         <table id="dataTable" class="display">
@@ -30,22 +47,22 @@
                     <td>{{item.is_staff}}</td>
                     <td>{{item.is_superuser}}</td>
                     <td>
-                        <a href="{% url "home:edit_user" item.id %}">Editar</a>
-                        <a href="{% url "home:edit_user_password" item.id %}">Alterar Senha</a>
-                        <a href="{% url "home:delete_user" item.id %}">Excluir</a>
+                        <a class="btn-acao text-light bg-primary-dark" href="{% url "home:edit_user" item.id %}">Editar</a>
+                        <a class="btn-acao text-light bg-warning-dark" href="{% url "home:edit_user_password" item.id %}">Alterar Senha</a>
+                        <a class="btn-acao text-light bg-error-dark" href="{% url "home:delete_user" item.id %}">Excluir</a>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
             <tfoot>
                 <tr>
-                    <th><small>Usuário</small></th>
-                    <th><small>Nome</small></th>
-                    <th><small>E-mail</small></th>
-                    <th><small>Ativo</small></th>
-                    <th><small>Colaborador</small></th>
-                    <th><small>Administrador</small></th>
-                    <th><small>Ações</small></th>
+                    <th><small>---</small></th>
+                    <th><small>---</small></th>
+                    <th><small>---</small></th>
+                    <th><small>---</small></th>
+                    <th><small>---</small></th>
+                    <th><small>---</small></th>
+                    <th><small>---</small></th>
                 </tr>
             </tfoot>
         </table>

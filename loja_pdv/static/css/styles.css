@@ -105,11 +105,6 @@ a {
     color: inherit;
 }
 
-/* Tabelas consistentes */
-table {
-    border-collapse: collapse;
-    width: 100%;
-}
 
 /* Remover espaçamento padrão de listas */
 ul, ol {
@@ -526,8 +521,24 @@ input[type="checkbox"] {
 
 .form-padrao {
     width: 100%;
-    padding: 10px;
     margin: 0 auto;
+}
+
+.form-padrao div ul li small, .form-padrao div small {
+    color: rgb(0, 0, 0, 0.6);
+    font-size: xx-small;
+}
+
+.form-padrao div ul {
+    margin: 0;
+    padding: 0 !important;
+    list-style: none;
+}
+
+.form-padrao div ul li {
+    width: fit-content;
+    padding: 0 !important;
+    margin: 0;
 }
 
 .row {
@@ -569,6 +580,128 @@ picture {
     box-shadow: 2px 2px 6px rgb(0, 0, 0, 0.4);
 }
 
+/* ########## HOME ########## */
+.div-home {
+    /* border: 1px solid rgb(0, 0, 0, 0.4); */
+    /* border-top: none; */
+    box-shadow: 2px 2px 6px rgb(0, 0, 0, 0.4);
+    width: 100%;
+    margin: 0 auto;
+    padding: 10px;
+}
+
+.div-home h3 {
+    text-align: center;
+    background-color: var(--color-primary-light);
+}
+
+.div-home .card-home {
+    border: 1px solid rgb(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.div-home .card-home a {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    border: 1px solid rgb(0, 0, 0, 0.4);
+    box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.2);
+    border-radius: 5px;
+    text-align: center;
+}
+
+.div-home .card-home a:hover {
+    border: 3px solid rgb(0, 0, 0, 0.4);
+    font-weight: 900;
+}
+
+.div-home .card-home a:active {
+    border: 1px solid rgb(0, 0, 0, 0.2);
+}
+
+
+/* ########## TABELAS ########## */
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table thead tr {
+    background-color: var(--color-primary-dark);
+    color: var(--color-neutral-light);
+}
+
+table tfoot tr {
+    background-color: var(--color-primary-transparent);
+}
+
+table tbody tr td .btn-acao {
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid rgb(0, 0, 0, 0.2);
+}
+
+table tbody tr td .btn-acao:hover {
+    border: 3px solid rgb(0, 0, 0, 0.4);
+    font-weight: 900;
+}
+
+/* ########## BACKGROUND COLORS ########## */
+
+.bg-success {
+    background-color: var(--color-success);
+}
+
+.bg-error {
+    background-color: var(--color-error);
+}
+
+.bg-warning {
+    background-color: var(--color-warning);
+}
+
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-success-dark {
+    background-color: var(--color-success-dark);
+}
+
+.bg-error-dark {
+    background-color: var(--color-error-dark);
+}
+
+.bg-warning-dark {
+    background-color: var(--color-warning-dark);
+}
+
+.bg-primary-dark {
+    background-color: var(--color-primary-dark);
+}
+
+/* ########## TEXTS COLORS ########## */
+
+.text-light {
+    color: var(--color-neutral-light);
+}
+
+.text-dark {
+    color: var(--color-neutral-dark);
+}
+
+.text-error {
+    color: var(--color-error);
+}
+
 /* ########## BREAKPOINTS ########## */
 
 @media (min-width: 576px) {
@@ -588,7 +721,7 @@ picture {
 }
 
 @media (max-width: 576px) {
-    
+
     [class*="col-"] {
         flex: 0 0 100%;
         max-width: 100%;
