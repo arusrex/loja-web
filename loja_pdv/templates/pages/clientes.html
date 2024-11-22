@@ -3,7 +3,7 @@
 <div class="main-content">
     <h1>Gestão de Clientes</h1>
 
-    <form class="form-padrao row" method="POST" id="form-tipo-pessoa">
+    <form class="form-padrao row" method="GET" id="form-tipo-pessoa">
         {% csrf_token %}
         <div class="col-2">
             <label for="tipo-pessoa">Tipo de Cliente:</label>
@@ -14,30 +14,34 @@
         </div>
     </form>
 
-    <form class="form-padrao" method="POST">
+    <form class="form-padrao row" method="POST">
         {% csrf_token %}
         {% for field in form %}
-            {{field.label_tag}}
-            {{field}}
-            {% if field.errors %}
-            <ul>
-                {% for error in field.errors %}
-                <li class="text-error">{{error}}</li>
-                {% endfor %}
-            </ul>
-            {% endif %}
-            {% if field.help_texts %}
-                {{field.help_texts}}
-            {% endif %}
+            <div>
+                {{field.label_tag}}
+                {{field}}
+                {% if field.errors %}
+                    <ul>
+                        {% for error in field.errors %}
+                        <li class="text-error">{{error}}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if field.help_texts %}
+                    {{field.help_texts}}
+                {% endif %}
+            </div>
         {% endfor %}
         <div>
-            <button name="btn-form" class="btn" type="submit">Salvar</button>
+            <button name="btn-form" class="btn">Salvar</button>
         </div>
     </form>
+
     <div class="table">
         <table id="dataTable" class="display">
             <thead>
                 <tr>
+                {% if tipo_cliente == '2' %}
                     <td>ID</td>
                     <td>CÓDIGO</td>
                     <td>NOME</td>
@@ -53,9 +57,28 @@
                     <td>CEP</td>
                     <td>CIDADE</td>
                     <td>ESTADO</td>
+                    <td>AÇÕES</td>
+                {% else %}
+                    <td>ID</td>
+                    <td>CÓDIGO</td>
+                    <td>NOME</td>
+                    <td>RG</td>
+                    <td>CPF</td>
+                    <td>NASCIMENTO</td>
+                    <td>FONE</td>
+                    <td>EMAIL</td>
+                    <td>ENDEREÇO</td>
+                    <td>NÚMERO</td>
+                    <td>BAIRRO</td>
+                    <td>CEP</td>
+                    <td>CIDADE</td>
+                    <td>ESTADO</td>
+                    <td>AÇÕES</td>
+                {% endif %}
                 </tr>
             </thead>
             <tbody>
+                {% if tipo_cliente == '2' %}
                 {% for item in objs %}
                 <tr>
                     <td>{{item.id}}</td>
@@ -73,10 +96,90 @@
                     <td>{{item.cep}}</td>
                     <td>{{item.cidade}}</td>
                     <td>{{item.estado}}</td>
+                    <td>
+                        <a class="btn-acao text-light bg-primary-dark" href="{% url "clientes:edit_cliente" item.id tipo_cliente %}">Editar</a>
+                        <a class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id tipo_cliente %}">Excluir</a>
+                    </td>
                 </tr>
                 {% endfor %}
+                {% else %}
+                {% for item in objs %}
+                <tr>
+                    <td>{{item.id}}</td>
+                    <td>{{item.codigo}}</td>
+                    <td>{{item.nome}}</td>
+                    <td>{{item.rg}}</td>
+                    <td>{{item.cpf}}</td>
+                    <td>{{item.nascimento}}</td>
+                    <td>{{item.fone}}</td>
+                    <td>{{item.email}}</td>
+                    <td>{{item.endereco}}</td>
+                    <td>{{item.numero}}</td>
+                    <td>{{item.bairro}}</td>
+                    <td>{{item.cep}}</td>
+                    <td>{{item.cidade}}</td>
+                    <td>{{item.estado}}</td>
+                    <td>
+                        <a class="btn-acao text-light bg-primary-dark" href="{% url "clientes:edit_cliente" item.id tipo_cliente %}">Editar</a>
+                        <a class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id tipo_cliente %}">Excluir</a>
+                    </td>
+                </tr>
+                {% endfor %}
+                {% endif %}
             </tbody>
         </table>
     </div>
 </div>
+
+<script>
+    let formClientes = document.addEventListener('DOMContentLoaded', () => {
+        function addClasseElementoPai(elemento, classe) {
+            if (elemento && classe) {
+                elemento.parentNode.classList.add(classe);
+            }
+        };
+
+        const formCodigo = document.querySelector('#id_codigo');
+        const formNome = document.querySelector('#id_nome');
+        const formNomeFantasia = document.querySelector('#id_nome_fantasia');
+        const formRazaoSocial = document.querySelector('#id_razao_social');
+        const formRg = document.querySelector('#id_rg');
+        const formCpf = document.querySelector('#id_cpf');
+        const formCnpj = document.querySelector('#id_cnpj');
+        const formIE = document.querySelector('#id_inscricao_estadual');
+        const formIM = document.querySelector('#id_inscricao_municipal');
+        const formIEST = document.querySelector('#id_inscricao_estadual_st');
+        const formNascimento = document.querySelector('#id_nascimento');
+        const formFone = document.querySelector('#id_fone');
+        const formEmail = document.querySelector('#id_email');
+        const formEndereco = document.querySelector('#id_endereco');
+        const formNumero = document.querySelector('#id_numero');
+        const formBairro = document.querySelector('#id_bairro');
+        const formCep = document.querySelector('#id_cep');
+        const formCidade = document.querySelector('#id_cidade');
+        const formEstado = document.querySelector('#id_estado');
+
+        addClasseElementoPai(formCodigo, 'col-2');
+        addClasseElementoPai(formNome, 'col-4');
+        addClasseElementoPai(formNomeFantasia, 'col-4');
+        addClasseElementoPai(formRazaoSocial, 'col-4');
+        addClasseElementoPai(formRg, 'col-2');
+        addClasseElementoPai(formCpf, 'col-3');
+        addClasseElementoPai(formCnpj, 'col-3');
+        addClasseElementoPai(formCodigo, 'col-2');
+        addClasseElementoPai(formIE, 'col-3');
+        addClasseElementoPai(formIEST, 'col-3');
+        addClasseElementoPai(formIM, 'col-2');
+        addClasseElementoPai(formNascimento, 'col-2');
+        addClasseElementoPai(formFone, 'col-2');
+        addClasseElementoPai(formEmail, 'col-3');
+        addClasseElementoPai(formEndereco, 'col-6');
+        addClasseElementoPai(formNumero, 'col-2');
+        addClasseElementoPai(formBairro, 'col-3');
+        addClasseElementoPai(formCidade, 'col-3');
+        addClasseElementoPai(formEstado, 'col-2');
+        addClasseElementoPai(formCep, 'col-2');
+
+    });
+</script>
 {% endblock content %}
