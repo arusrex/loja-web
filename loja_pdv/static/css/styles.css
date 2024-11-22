@@ -88,6 +88,7 @@ main {
     flex-direction: row;
     height: 100vh;
     contain: content;
+    background-color: var(--color-primary-dark);
 }
 
 .main-content {
@@ -471,6 +472,7 @@ button {
     justify-content: space-between;
     align-items: center;
     box-shadow: 2px 0 4px rgb(0, 0, 0, 0.4);
+    background-color: var(--color-neutral-lightest);
 }
 
 .main-content form {
@@ -482,6 +484,7 @@ button {
     padding: 10px;
 
     box-shadow: 2px 2px 4px rgb(0, 0, 0, 0.4);
+    background-color: var(--color-neutral-lightest);
 }
 
 .main-content .table {
@@ -489,11 +492,17 @@ button {
     border-radius: 5px;
     margin-top: 5px;
     margin-bottom: 5px;
+    background-color: var(--color-neutral-lightest);
 }
 
 .main-content table {
     border: 1px solid rgba(0,0,0, 0.1);
     border-radius: 5px;
+    background-color: var(--color-neutral-lightest);
+}
+
+.main-content div {
+    background-color: var(--color-neutral-lightest);
 }
 
 /* ########## FORM PADRÃO ########## */
@@ -596,7 +605,6 @@ picture {
 }
 
 .div-home .card-home {
-    border: 1px solid rgb(0, 0, 0, 0.4);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -656,6 +664,13 @@ table tbody tr td .btn-acao:hover {
     font-weight: 900;
 }
 
+.cell-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    align-items: center;
+}
+
 /* ########## BACKGROUND COLORS ########## */
 
 .bg-success {
@@ -703,6 +718,14 @@ table tbody tr td .btn-acao:hover {
 .text-error {
     color: var(--color-error);
 }
+
+/* ########## DIVERSOS ########## */
+
+.div-btn-end {
+    display: flex;
+    justify-content: end;
+}
+
 
 /* ########## BREAKPOINTS ########## */
 
