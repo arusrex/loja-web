@@ -29,7 +29,6 @@ def form_clientes(request, id=None, tipo_cliente='1', is_edit=False):
 
     elif tipo_cliente == '2':
         objs = PessoaJuridica.objects.all().order_by('razao_social')
-        obj = PessoaJuridica()
         form = PessoaJuridicaForm(request.POST or None)
         if is_edit:
             cliente = PessoaJuridica.objects.get(id=id)
@@ -60,6 +59,7 @@ def form_clientes(request, id=None, tipo_cliente='1', is_edit=False):
         'objs': objs,
         'tipo_cliente': tipo_cliente,
         'is_edit': is_edit,
+        'cliente': cliente,
     }
 
     return render(request, 'pages/clientes.html', context)
