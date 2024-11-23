@@ -22,8 +22,6 @@ def form_clientes(request, id=None, tipo_cliente='1', is_edit=False):
     if tipo_cliente == '1':
         objs = PessoaFisica.objects.all().order_by('nome')
         form = PessoaFisicaForm(request.POST or None)
-        # obj = PessoaFisica()
-        # campos = [field.name for field in obj._meta.get_fields()] # type: ignore
         if is_edit:
             cliente = PessoaFisica.objects.get(id=id)
             form = PessoaFisicaForm(request.POST or None, instance=cliente)
@@ -31,9 +29,8 @@ def form_clientes(request, id=None, tipo_cliente='1', is_edit=False):
 
     elif tipo_cliente == '2':
         objs = PessoaJuridica.objects.all().order_by('razao_social')
+        obj = PessoaJuridica()
         form = PessoaJuridicaForm(request.POST or None)
-        # obj = PessoaJuridica()
-        # campos = [field.name for field in obj._meta.get_fields()] # type: ignore
         if is_edit:
             cliente = PessoaJuridica.objects.get(id=id)
             form = PessoaJuridicaForm(request.POST or None, instance=cliente)
@@ -57,14 +54,12 @@ def form_clientes(request, id=None, tipo_cliente='1', is_edit=False):
             messages.success(request, 'Cliente registrado com sucesso')
             log.info('Cliente registrado com sucesso')
             return redirect('clientes:clientes')
-
+        
     context = {
         'form': form,
         'objs': objs,
         'tipo_cliente': tipo_cliente,
         'is_edit': is_edit,
-        'cliente': cliente,
-        # 'campos': campos,
     }
 
     return render(request, 'pages/clientes.html', context)
