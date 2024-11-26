@@ -30,9 +30,11 @@
     </form>
 
     <div class="table">
+        <h3>{% if tipo_cliente == '1' %}Clientes Pessoa Física{% else %}Clientes Pessoa Jurídica{% endif %}</h3>
         <table id="dataTable" class="display striped compact hover cell-border row-border">
             <thead>
                 <tr>
+                    <td>AÇÕES</td>
                     <td>CÓDIGO</td>
                     <td>{% if tipo_cliente == '1' %}NOME{% else %}NOME FANTASIA{% endif %}</td>
                     <td>{% if tipo_cliente == '1' %}RG{% else %}RAZÃO SOCIAL{% endif %}</td>
@@ -47,12 +49,15 @@
                     <td>CEP</td>
                     <td>CIDADE</td>
                     <td>ESTADO</td>
-                    <td>AÇÕES</td>
                 </tr>
             </thead>
             <tbody>
                 {% for item in objs %}
                 <tr>
+                    <td class="cell">
+                        <a class="btn-acao text-light bg-primary-dark" href="{% url "clientes:edit_cliente" item.id tipo_cliente %}">Editar</a>
+                        <a class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id tipo_cliente %}">Excluir</a>
+                    </td>
                     <td>{{item.codigo}}</td>
                     <td>{% if tipo_cliente == '1' %}{{item.nome}}{% else %}{{item.nome_fantasia}}{% endif %}</td>
                     <td>{% if tipo_cliente == '1' %}{{item.rg}}{% else %}{{item.razao_social}}{% endif %}</td>
@@ -67,10 +72,6 @@
                     <td>{{item.cep}}</td>
                     <td>{{item.cidade}}</td>
                     <td>{{item.estado}}</td>
-                    <td>
-                        <a class="btn-acao text-light bg-primary-dark" href="{% url "clientes:edit_cliente" item.id tipo_cliente %}">Editar</a>
-                        <a class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id tipo_cliente %}">Excluir</a>
-                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

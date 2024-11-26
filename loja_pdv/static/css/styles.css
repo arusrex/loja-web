@@ -653,6 +653,10 @@ table tfoot tr {
     background-color: var(--color-primary-transparent);
 }
 
+table tbody tr .cell {
+    white-space: nowrap;
+}
+
 table tbody tr td .btn-acao {
     padding: 5px;
     border-radius: 5px;
@@ -664,12 +668,11 @@ table tbody tr td .btn-acao:hover {
     font-weight: 900;
 }
 
-.cell-buttons {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    align-items: center;
+.table {
+    padding: 15px;
 }
+
+
 
 /* ########## BACKGROUND COLORS ########## */
 
