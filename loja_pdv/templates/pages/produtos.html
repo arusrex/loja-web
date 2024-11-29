@@ -4,13 +4,22 @@
     <h1>Gestão de Produtos</h1>
     <form class="form-padrao row" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
+        {% if action == 'edit_produto' %}
+        {% if produto.imagem %}
+        <a href="{{produto.imagem.url}}">
+            <img class="img_produto" src="{{produto.imagem.url}}" alt="produto.nome">
+        </a>
+        {% else %}
+        <p>Produto sem imagem</p>
+        {% endif %}
+        {% endif %}
         {{form.as_div}}
         <div>
             <button class="btn" type="submit">Salvar</button>
         </div>
     </form>
     <div class="table">
-        <table id="dataTable">
+        <table id="dataTable" class="display compact striped cell-border">
             <thead>
                 <tr>
                     <th>AÇÕES</th>
@@ -35,8 +44,8 @@
                 {% for item in objs %}
                 <tr>
                     <td class="cell">
-                        <a class="btn-acao bg-primary text-light" href="#">Editar</a>
-                        <a class="btn-acao bg-error text-light" href="#">Excluir</a>
+                        <a class="btn-acao bg-primary text-light" href="{% url 'produtos:edit_produto' item.id %}">Editar</a>
+                        <a class="btn-acao bg-error text-light" href="{% url 'produtos:delete_produto' item.id %}">Excluir</a>
                     </td>
                     <td>{{item.codigo}}</td>
                     <td>{{item.nome}}</td>
@@ -60,8 +69,50 @@
     </div>
 </div>
 
-<scripts>
+<script>
+    let formProduto = document.addEventListener('DOMContentLoaded', () => {
+        function addClasseElementoPai (elemento, classe) {
+            if (elemento && classe) {
+            elemento.parentNode.classList.add(classe);
+            }
+        };
 
+        const formCodigo = document.querySelector('#id_codigo');
+        const formNome = document.querySelector('#id_nome');
+        const formDescricao = document.querySelector('#id_descricao');
+        const formCusto = document.querySelector('#id_custo');
+        const formPreco = document.querySelector('#id_preco');
+        const formEstoque = document.querySelector('#id_estoque');
+        const formImagem = document.querySelector('#id_imagem');
+        const formEan = document.querySelector('#id_ean');
+        const formCfop = document.querySelector('#id_cfop');
+        const formCst = document.querySelector('#id_cst');
+        const formCsosn = document.querySelector('#id_csosn');
+        const formUnidade = document.querySelector('#id_unidade');
+        const formNcm = document.querySelector('#id_ncm');
+        const formIcms = document.querySelector('#id_icms');
+        const formIpi = document.querySelector('#id_ipi');
+        const formPis = document.querySelector('#id_pis');
+        const formCofins = document.querySelector('#id_cofins');
+
+        addClasseElementoPai(formCodigo, 'col-2');
+        addClasseElementoPai(formNome, 'col-6');
+        addClasseElementoPai(formDescricao, 'col-6');
+        addClasseElementoPai(formCusto, 'col-3');
+        addClasseElementoPai(formPreco, 'col-3');
+        addClasseElementoPai(formEstoque, 'col-2');
+        addClasseElementoPai(formImagem, 'col-4');
+        addClasseElementoPai(formEan, 'col-3');
+        addClasseElementoPai(formCfop, 'col-6');
+        addClasseElementoPai(formCst, 'col-4');
+        addClasseElementoPai(formCsosn, 'col-4');
+        addClasseElementoPai(formUnidade, 'col-2');
+        addClasseElementoPai(formNcm, 'col-3');
+        addClasseElementoPai(formIcms, 'col-2');
+        addClasseElementoPai(formIpi, 'col-2');
+        addClasseElementoPai(formPis, 'col-2');
+        addClasseElementoPai(formCofins, 'col-2');
+    });
     
-</scripts>
+</script>
 {% endblock content %}

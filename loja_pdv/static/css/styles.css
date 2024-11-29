@@ -114,11 +114,11 @@ ul, ol {
 }
 
 /* Garantir que o campo de número não tenha setas desnecessárias no Chrome */
-input[type='number']::-webkit-inner-spin-button,
+/* input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
     appearance: none;
     margin: 0;
-}
+} */
 
 /* HEADER */
 
@@ -589,6 +589,14 @@ picture {
     box-shadow: 2px 2px 6px rgb(0, 0, 0, 0.4);
 }
 
+.img_produto {
+    max-width: 10rem;
+    max-height: 10rem;
+    cursor: pointer;
+    box-shadow: 2px 2px 6px rgb(0, 0, 0, 0.4);
+    border: 0.01em solid rgb(0, 0, 0, 0.4);
+}
+
 /* ########## HOME ########## */
 .div-home {
     /* border: 1px solid rgb(0, 0, 0, 0.4); */
@@ -609,6 +617,7 @@ picture {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    text-wrap: wrap;
 }
 
 .div-home .card-home a {

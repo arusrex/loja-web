@@ -64,9 +64,8 @@ def form_clientes(request, id=None, tipo_cliente='1', is_edit=False):
 
     return render(request, 'pages/clientes.html', context)
 
-def delete_cliente(request, id):
-    tipo_cliente = request.GET.get('tipo_pessoa', '1')
-    cliente = PessoaFisica.objects.get(id=id)
+def delete_cliente(request, id, tipo_cliente):
+    # tipo_cliente = request.GET.get('tipo_pessoa', '1')
     if tipo_cliente == '2':
         cliente = PessoaJuridica.objects.get(id=id)
         cliente.delete()
@@ -74,6 +73,7 @@ def delete_cliente(request, id):
         log.info('Cliente pessoa jurídica excluída com sucesso')
         return redirect('cliente:clientes')
     else:
+        cliente = PessoaFisica.objects.get(id=id)
         cliente.delete()
         messages.success(request, f'Cliente {cliente.nome} excluído com sucesso')
         log.info(f'Cliente {cliente.nome} excluído com sucesso')
