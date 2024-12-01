@@ -5,7 +5,21 @@ from django.core.exceptions import ValidationError
 class PessoaFisicaForm(forms.ModelForm):
     class Meta:
         model = PessoaFisica
-        fields = '__all__'
+        fields = [
+            'codigo',
+            'nome',
+            'rg',
+            'cpf',
+            'nascimento',
+            'fone',
+            'email',
+            'endereco',
+            'numero',
+            'bairro',
+            'cep',
+            'cidade',
+            'estado',
+        ]
 
     def clean_cpf(self):
         cpf = self.cleaned_data["cpf"]
@@ -21,7 +35,22 @@ class PessoaFisicaForm(forms.ModelForm):
 class PessoaJuridicaForm(forms.ModelForm):
     class Meta:
         model = PessoaJuridica
-        fields = '__all__'
+        fields = fields = [
+            'codigo',
+            'nome_fantasia',
+            'razao_social',
+            'cnpj',
+            'inscricao_municipal',
+            'inscricao_estadual',
+            'fone',
+            'email',
+            'endereco',
+            'numero',
+            'bairro',
+            'cep',
+            'cidade',
+            'estado',
+        ]
 
     def clean_cnpj(self):
         cnpj = self.cleaned_data.get("cnpj")
