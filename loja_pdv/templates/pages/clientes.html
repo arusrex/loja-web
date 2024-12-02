@@ -3,19 +3,6 @@
 <div class="main-content">
     <h1>{% if is_edit %}Atualizar dados do cliente {% if tipo_cliente == '1' %}{{cliente.nome}} - Pessoa Física{% else %}{{cliente.nome_fantasia}} - Pessoa Jurídica{% endif %}{% else %}Gestão de Clientes{% endif %}</h1>
 
-    {% if not is_edit %}
-    <form class="form-padrao row" method="GET" id="form-tipo-pessoa">
-        {% csrf_token %}
-        <div class="col-2">
-            <label for="tipo-pessoa">Tipo de Cliente:</label>
-            <select id="tipo-pessoa" name="tipo-pessoa" onchange="document.getElementById('form-tipo-pessoa').submit()">
-                <option value="1" {% if tipo_cliente == '1' %}selected{% endif %}>Pessoa Física</option>
-                <option value="2" {% if tipo_cliente == '2' %}selected{% endif %}>Pessoa Jurídica</option>
-            </select>
-        </div>
-    </form>
-    {% endif %}
-
     <form class="form-padrao row" method="POST">
         {% if is_edit %}
         <div class="div-btn-end">
@@ -30,17 +17,20 @@
     </form>
 
     <div class="table">
-        <h3>{% if tipo_cliente == '1' %}Clientes Pessoa Física{% else %}Clientes Pessoa Jurídica{% endif %}</h3>
+        <h3>Clientes</h3>
         <table id="dataTable" class="display striped compact hover cell-border row-border">
             <thead>
                 <tr>
                     <td>AÇÕES</td>
                     <td>CÓDIGO</td>
-                    <td>{% if tipo_cliente == '1' %}NOME{% else %}NOME FANTASIA{% endif %}</td>
-                    <td>{% if tipo_cliente == '1' %}RG{% else %}RAZÃO SOCIAL{% endif %}</td>
-                    <td>{% if tipo_cliente == '1' %}CPF{% else %}CNPJ{% endif %}</td>
-                    {% if tipo_cliente == '2' %}<td>INSCRIÇÃO MUNICIPAL</td>{% endif %}
-                    <td>{% if tipo_cliente == '1' %}NASCIMENTO{% else %}INSCRIÇÃO ESTADUAL{% endif %}</td>
+                    <td>NOME</td>
+                    <td>RAZÃO SOCIAL</td>
+                    <td>RG</td>
+                    <td>CPF</td>
+                    <td>CNPJ</td>
+                    <td>NASCIMENTO</td>
+                    <td>INSCRIÇÃO MUNICIPAL</td>
+                    <td>INSCRIÇÃO ESTADUAL</td>
                     <td>FONE</td>
                     <td>EMAIL</td>
                     <td>ENDEREÇO</td>
@@ -55,23 +45,26 @@
                 {% for item in objs %}
                 <tr>
                     <td class="cell">
-                        <a class="btn-acao text-light bg-primary-dark" href="{% url "clientes:edit_cliente" item.id tipo_cliente %}">Editar</a>
-                        <a class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id tipo_cliente %}">Excluir</a>
+                        <a class="btn-acao text-light bg-primary-dark" href="{% url "clientes:edit_cliente" item.id %}">Editar</a>
+                        <a class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id %}">Excluir</a>
                     </td>
                     <td>{{item.codigo}}</td>
-                    <td>{% if tipo_cliente == '1' %}{{item.nome}}{% else %}{{item.nome_fantasia}}{% endif %}</td>
-                    <td>{% if tipo_cliente == '1' %}{{item.rg}}{% else %}{{item.razao_social}}{% endif %}</td>
-                    <td>{% if tipo_cliente == '1' %}{{item.cpf}}{% else %}{{item.cnpj}}{% endif %}</td>
-                    {% if tipo_cliente == '2' %}<td>{{item.inscricao_municipal}}</td>{% endif %}
-                    <td>{% if tipo_cliente == '1' %}{{item.nascimento}}{% else %}{{item.inscricao_estadual}}{% endif %}</td>
-                    <td>{{item.fone}}</td>
-                    <td>{{item.email}}</td>
-                    <td>{{item.endereco}}</td>
-                    <td>{{item.numero}}</td>
-                    <td>{{item.bairro}}</td>
-                    <td>{{item.cep}}</td>
-                    <td>{{item.cidade}}</td>
-                    <td>{{item.estado}}</td>
+                    <td>{{item.nome}}</td>
+                    <td>{{item.razao_social|default_if_none:"---"}}</td>
+                    <td>{{item.rg|default_if_none:"---"}}</td>
+                    <td>{{item.cpf|default_if_none:"---"}}</td>
+                    <td>{{item.cnpj|default_if_none:"---"}}</td>
+                    <td>{{item.nascimento|default_if_none:"---"}}</td>
+                    <td>{{item.inscricao_municipal|default_if_none:"---"}}</td>
+                    <td>{{item.inscricao_estadual|default_if_none:"---"}}</td>
+                    <td>{{item.fone|default_if_none:"---"}}</td>
+                    <td>{{item.email|default_if_none:"---"}}</td>
+                    <td>{{item.endereco|default_if_none:"---"}}</td>
+                    <td>{{item.numero|default_if_none:"---"}}</td>
+                    <td>{{item.bairro|default_if_none:"---"}}</td>
+                    <td>{{item.cep|default_if_none:"---"}}</td>
+                    <td>{{item.cidade|default_if_none:"---"}}</td>
+                    <td>{{item.estado|default_if_none:"---"}}</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -89,14 +82,12 @@
 
         const formCodigo = document.querySelector('#id_codigo');
         const formNome = document.querySelector('#id_nome');
-        const formNomeFantasia = document.querySelector('#id_nome_fantasia');
         const formRazaoSocial = document.querySelector('#id_razao_social');
         const formRg = document.querySelector('#id_rg');
         const formCpf = document.querySelector('#id_cpf');
         const formCnpj = document.querySelector('#id_cnpj');
         const formIE = document.querySelector('#id_inscricao_estadual');
         const formIM = document.querySelector('#id_inscricao_municipal');
-        const formIEST = document.querySelector('#id_inscricao_estadual_st');
         const formNascimento = document.querySelector('#id_nascimento');
         const formFone = document.querySelector('#id_fone');
         const formEmail = document.querySelector('#id_email');
@@ -109,14 +100,12 @@
 
         addClasseElementoPai(formCodigo, 'col-2');
         addClasseElementoPai(formNome, 'col-4');
-        addClasseElementoPai(formNomeFantasia, 'col-4');
         addClasseElementoPai(formRazaoSocial, 'col-4');
         addClasseElementoPai(formRg, 'col-2');
         addClasseElementoPai(formCpf, 'col-3');
         addClasseElementoPai(formCnpj, 'col-3');
         addClasseElementoPai(formCodigo, 'col-2');
         addClasseElementoPai(formIE, 'col-3');
-        addClasseElementoPai(formIEST, 'col-3');
         addClasseElementoPai(formIM, 'col-2');
         addClasseElementoPai(formNascimento, 'col-2');
         addClasseElementoPai(formFone, 'col-2');
@@ -127,6 +116,8 @@
         addClasseElementoPai(formCidade, 'col-3');
         addClasseElementoPai(formEstado, 'col-2');
         addClasseElementoPai(formCep, 'col-2');
+
+        document.getElementById('id_nascimento').setAttribute('type', 'date');
 
     });
 </script>

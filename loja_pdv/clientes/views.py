@@ -6,75 +6,44 @@ import logging
 
 log = logging.getLogger(__name__)
 
-
 def clientes(request):
     return form_clientes(request)
 
-def edit_cliente(request, id, tipo_cliente):
-    return form_clientes(request, id=id, tipo_cliente=tipo_cliente, is_edit=True)
+def edit_cliente(request, id):
+    return form_clientes(request, id=id, is_edit=True)
 
-def form_clientes(request, id=None, tipo_cliente='1', is_edit=False):
+def form_clientes(request, id=None, is_edit=False):
+    objs = Cliente.objects.all().order_by('nome')
     cliente = None
 
-    if not is_edit:
-        tipo_cliente = request.GET.get('tipo-pessoa', '1')
-    
-    if tipo_cliente == '1':
-        objs = PessoaFisica.objects.all().order_by('nome')
-        form = PessoaFisicaForm(request.POST or None)
-        if is_edit:
-            cliente = PessoaFisica.objects.get(id=id)
-            form = PessoaFisicaForm(request.POST or None, instance=cliente)
-            print(f'edit fisico: {cliente}')
-
-    elif tipo_cliente == '2':
-        objs = PessoaJuridica.objects.all().order_by('razao_social')
-        form = PessoaJuridicaForm(request.POST or None)
-        if is_edit:
-            cliente = PessoaJuridica.objects.get(id=id)
-            form = PessoaJuridicaForm(request.POST or None, instance=cliente)
-            print(f'edit juridico: {cliente}')
-
+    if is_edit:
+        cliente = Cliente.objects.get(id=id)
+        form = ClienteForm(request.POST or None, instance=cliente)
     else:
-        return redirect('clientes:clientes')
-
-    if request.method == 'POST' and request.POST.get('btn-form') and is_edit:
-        print(f'entrou no post edit: {cliente}')
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Cliente editado com sucesso')
-            log.info('Cliente editado com sucesso')
-            return redirect('clientes:edit_user', id=cliente.id) # type: ignore
+        form = ClienteForm(request.POST or None)
     
-    if request.method == 'POST' and not is_edit:
-        print('entrou no post new')
+    if request.method == 'POST':
         if form.is_valid():
             form.save()
-            messages.success(request, 'Cliente registrado com sucesso')
-            log.info('Cliente registrado com sucesso')
+            messages.success(request, 'Cliente registrado com sucesso! ✅')
+            log.info('Cliente registrado com sucesso!')
             return redirect('clientes:clientes')
+        else:
+            messages.error(request, 'Erro ao registrar cliente! ⛔')
+            log.error('Erro ao registrar cliente!')
         
     context = {
         'form': form,
         'objs': objs,
-        'tipo_cliente': tipo_cliente,
         'is_edit': is_edit,
         'cliente': cliente,
     }
 
     return render(request, 'pages/clientes.html', context)
 
-def delete_cliente(request, id, tipo_cliente):
-    # tipo_cliente = request.GET.get('tipo_pessoa', '1')
-    if tipo_cliente == '2':
-        cliente = PessoaJuridica.objects.get(id=id)
-        cliente.delete()
-        messages.success(request, f'Cliente {cliente.nome_fantasia} excluído com sucesso')
-        log.info('Cliente pessoa jurídica excluída com sucesso')
-        return redirect('cliente:clientes')
-    else:
-        cliente = PessoaFisica.objects.get(id=id)
-        cliente.delete()
-        messages.success(request, f'Cliente {cliente.nome} excluído com sucesso')
-        log.info(f'Cliente {cliente.nome} excluído com sucesso')
-        return redirect('clientes:clientes')
+def delete_cliente(request, id):
+    cliente = Cliente.objects.get(id=id)
+    cliente.delete()
+    messages.success(request, f'Cliente {cliente.nome} excluído com sucesso')
+    log.info('Cliente excluído com sucesso')
+    return redirect('clientes:clientes')
