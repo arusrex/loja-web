@@ -505,6 +505,17 @@ button {
     background-color: var(--color-neutral-lightest);
 }
 
+/* ########## VENDAS ########## */
+
+.div-btn-vendas {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+}
+
 /* ########## FORM PADRÃO ########## */
 
 

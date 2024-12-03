@@ -5,8 +5,8 @@ app_name = 'vendas'
 
 urlpatterns = [
     path('gestao_vendas/', vendas, name='vendas'),
-    path('carrinho/', carrinho, name='carrinho'),
+    path('pdv/', pdv, name='pdv'),
     path('adicionar/<int:produto_id>/', adicionar, name='adicionar'),
-    path('remover/<int:item_id>/', remover, name='remover'),
-    path('finalizar/', finalizar, name='finalizar'),
+    # path('remover/<int:item_id>/', remover, name='remover'),
+    # path('finalizar/', finalizar, name='finalizar'),
 ]

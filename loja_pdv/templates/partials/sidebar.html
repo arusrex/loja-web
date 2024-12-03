@@ -17,6 +17,13 @@
                 </div>
             </li>
             <li>
+                <a class="side-drop-toggler" data-target="side-vendas">Gestão de Vendas</a>
+                <div id="side-vendas" class="side-drop-menu">
+                    <a href="{% url "vendas:vendas" %}">Vendas</a>
+                    <a href="{% url "vendas:pdv" %}">Ponto de Venda</a>
+                </div>
+            </li>
+            <li>
                 <a class="side-drop-toggler" data-target="side-dados-loja">Configurações da Loja</a>
                 <div id="side-dados-loja" class="side-drop-menu">
                     <a href="{% url "home:dados_loja" %}">Dados da Loja</a>

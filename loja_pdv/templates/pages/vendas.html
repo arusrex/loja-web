@@ -1,0 +1,36 @@
+{% extends "base/base.html" %}
+{% block content %}
+    <div class="main-content">
+        <h1>Controle de Vendas</h1>
+        <div class="div-btn-vendas">
+            <a class="btn" href="{% url "vendas:pdv" %}">Ponto de Venda</a>
+            <a class="btn" href="{% url "home:home" %}">Voltar</a>
+        </div>
+        <div class="table">
+            <table id="dataTable" class="display compact cell-border stripped">
+                <thead>
+                    <tr>
+                        <th>Venda</th>
+                        <th>Cliente</th>
+                        <th>Data</th>
+                        <th>Total</th>
+                        <th>Desconto Total</th>
+                        <th>Finalizada</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for venda in vendas %}
+                    <tr>
+                        <td>{{venda.id}}</td>
+                        <td>{{venda.cliente}}</td>
+                        <td>{{venda.data}}</td>
+                        <td>{{venda.total}}</td>
+                        <td>{{venda.desconto_total}}</td>
+                        <td>{{venda.finalizada}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}

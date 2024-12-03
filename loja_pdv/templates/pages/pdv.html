@@ -1,0 +1,73 @@
+{% extends "base/base.html" %}
+{% block content %}
+    <div class="main-content">
+        <h1>Ponto de Venda</h1>
+        <!-- Venda -->
+        <div class="table div-venda">
+            <div>
+                <h2>Cliente:</h2>
+                <small>{{venda.cliente}}</small>
+            </div>
+            <table id="tableVenda" class="">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>EAN</th>
+                        <th>Nome</th>
+                        <th>Preço</th>
+                        <th>Quantidade</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in venda.itens.all %}
+                    <tr>
+                        <td>{{ item.produto.codigo }}</td>
+                        <td>{{ item.produto.ean }}</td>
+                        <td>{{ item.produto.nome }}</td>
+                        <td>{{ item.produto.preco }}</td>
+                        <td>{{ item.quantidade }}</td>
+                        <th>{{ item.subtotal}}</th>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div>
+                <small>Desconto total: {{venda.desconto_total}}</small>
+                <h2>Total: {{venda.total}}</h2>
+            </div>
+        </div>
+
+        <!-- Adicionar produtos -->
+        <div class="table">
+            <table id="dataTable" class="display compact cell-border">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>EAN</th>
+                        <th>Nome</th>
+                        <th>Preço</th>
+                        <th>Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for produto in produtos %}
+                    <tr>
+                        <td>{{ produto.codigo }}</td>
+                        <td>{{ produto.ean }}</td>
+                        <td>{{ produto.nome }}</td>
+                        <td>{{ produto.preco }}</td>
+                        <td>
+                            <form method="POST" action="{% url 'vendas:adicionar' produto.id %}">
+                                {% csrf_token %}
+                                <input type="number" id="quantidade" name="quantidade" min="1" value="1"></input>
+                                <button class="btn">Adicionar</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock content %}
