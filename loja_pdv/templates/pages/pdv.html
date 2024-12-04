@@ -17,6 +17,7 @@
                         <th>Preço</th>
                         <th>Quantidade</th>
                         <th>Subtotal</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,7 +28,8 @@
                         <td>{{ item.produto.nome }}</td>
                         <td>{{ item.produto.preco }}</td>
                         <td>{{ item.quantidade }}</td>
-                        <th>{{ item.subtotal}}</th>
+                        <td>{{ item.subtotal}}</td>
+                        <td><a class="btn" href="{% url "vendas:remover" item.id %}">Remover</td>
                     </tr>
                     {% endfor %}
                 </tbody>
