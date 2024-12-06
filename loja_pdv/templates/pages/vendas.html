@@ -16,6 +16,7 @@
                         <th>Total</th>
                         <th>Desconto Total</th>
                         <th>Finalizada</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -27,6 +28,10 @@
                         <td>{{venda.total}}</td>
                         <td>{{venda.desconto_total}}</td>
                         <td>{{venda.finalizada}}</td>
+                        <td>
+                            <a class="btn" href="{% url "vendas:alterar_venda" venda.id %}">Alterar</a>
+                            <a class="btn" href="{% url "vendas:excluir_venda" venda.id %}">Excluir</a>
+                        </td>
                     </tr>
                     {% endfor %}
                 </tbody>

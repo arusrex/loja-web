@@ -3,11 +3,25 @@ from vendas.models import *
 from produtos.models import *
 
 def vendas(request):
-    objs = Venda.objects.all().order_by('-id')
+    vendas = Venda.objects.all().order_by('-id')
+
+    for venda in vendas:
+        for item in venda.itens.all(): # type: ignore
+            venda.total += item.subtotal
+
     context = {
-        'vendas': objs,
+        'vendas': vendas,
     }
     return render(request, 'pages/vendas.html', context)
+
+def alterar_venda(request, venda_id):
+    return redirect('vendas:vendas')
+
+def excluir_venda(request, venda_id):
+    venda = Venda.objects.get(id=venda_id)
+    venda.delete()
+
+    return redirect('vendas:vendas')
 
 def calcular_subtotal(quantidade, preco_unitario):
     subtotal = quantidade * preco_unitario
@@ -17,8 +31,8 @@ def pdv(request):
     venda = Venda.objects.filter(finalizada=False).first()
     produtos = Produto.objects.all().order_by('nome')
 
-    for item in venda.itens.all():
-        venda.total += item.subtotal
+    for item in venda.itens.all(): # type: ignore
+        venda.total += item.subtotal # type: ignore
 
     context = {
         'venda': venda,
@@ -37,7 +51,7 @@ def adicionar(request, produto_id):
     
     if request.method == 'POST':
         quantidade = int(request.POST.get('quantidade'))
-        item_venda = venda.itens.filter(produto=produto).first()
+        item_venda = venda.itens.filter(produto=produto).first() # type: ignore
         if item_venda:
             item_venda.quantidade += quantidade
             item_venda.subtotal = calcular_subtotal(item_venda.quantidade, produto.preco)
@@ -59,7 +73,7 @@ def remover(request, item_id):
     venda = Venda.objects.filter(finalizada=False).first()
     itens = ItemVenda.objects.filter(venda=venda)
     for i in itens:
-        if i.id == item_id:
+        if i.id == item_id: # type: ignore
             i.delete()
     return redirect('vendas:pdv')
 
