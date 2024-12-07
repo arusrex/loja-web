@@ -750,6 +750,116 @@ table tbody tr td .btn-acao:hover {
 }
 
 /* ########## MARGENS PADRÕES ########## */
+.m-1 {
+    margin: 10px;
+}
+.m-2 {
+    margin: 20px;
+}
+.m-3 {
+    margin: 30px;
+}
+.m-4 {
+    margin: 40px;
+}
+.m-5 {
+    margin: 50px;
+}
+
+.mx-1 {
+    margin: 0 10px;
+}
+.mx-2 {
+    margin: 0 20px;
+}
+.mx-3 {
+    margin: 0 30px;
+}
+.mx-4 {
+    margin: 0 40px;
+}
+.mx-5 {
+    margin: 0 50px;
+}
+
+.my-1 {
+    margin: 10px 0;
+}
+.my-2 {
+    margin: 20px 0;
+}
+.my-3 {
+    margin: 30px 0;
+}
+.my-4 {
+    margin: 40px 0;
+}
+.my-5 {
+    margin: 50px 0;
+}
+
+/* ########## PADDING GERAL ########## */
+.p-1 {
+    padding: 10px;
+}
+.p-2 {
+    padding: 20px;
+}
+.p-3 {
+    padding: 30px;
+}
+.p-4 {
+    padding: 40px;
+}
+.p-5 {
+    padding: 50px;
+}
+
+.px-1 {
+    padding: 0 10px;
+}
+.px-2 {
+    padding: 0 20px;
+}
+.px-3 {
+    padding: 0 30px;
+}
+.px-4 {
+    padding: 0 40px;
+}
+.px-5 {
+    padding: 0 50px;
+}
+
+.py-1 {
+    padding: 10px 0;
+}
+.py-2 {
+    padding: 20px 0;
+}
+.py-3 {
+    padding: 30px 0;
+}
+.py-4 {
+    padding: 40px 0;
+}
+.py-5 {
+    padding: 50px 0;
+}
+
+/* ########## TABELA DE VENDA ########## */
+
+.table-venda th, .table-venda td{
+    border: 1px solid rgb(0, 0, 0, 0.2);
+    padding: 0 5px;
+}
+
+/* ########## TABELA CLIENTES ########## */
+.table-clientes {
+    border: 1px solid rgb(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 1px 1px rgb(0, 0, 0, 0.6);
+    margin: 10px 0;
+}
 
 /* ########## BREAKPOINTS ########## */
 

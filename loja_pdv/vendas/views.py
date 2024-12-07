@@ -43,6 +43,31 @@ def pdv(request):
     }
     return render(request, 'pages/pdv.html', context)
 
+def adicionar_cliente(request, cliente_id):
+    cliente = Cliente.objects.get(id=cliente_id)
+    venda = Venda.objects.filter(finalizada=False).first()
+
+    if not venda:
+        venda = Venda.objects.create(
+            cliente=cliente,
+            finalizada=False,
+        )
+    else:
+        venda.cliente = cliente
+        venda.save()
+    
+    return redirect('vendas:pdv')
+
+def alterar_cliente(request, cliente_id):
+    cliente_novo = Cliente.objects.get(id=cliente_id)
+    venda = Venda.objects.filter(finalizada=False).first()
+
+    if venda:
+        venda.cliente = cliente_novo
+        venda.save()
+
+    return redirect('vendas:pdv')
+
 def adicionar(request, produto_id):
     produto = Produto.objects.get(id=produto_id)
     venda = Venda.objects.filter(finalizada=False).first()

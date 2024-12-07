@@ -5,17 +5,47 @@
         
         <!-- Venda -->
         <div class="table div-venda">
-            <div>
+            <div class="my-1">
                 <h2>Venda Nº: {{venda.id}} - Status: {% if venda.finalizada == False %}Em aberto{% else %}Finalizada{% endif %}</h2>
             </div>
             <div>
                 {% if venda.cliente %}
                 <h2>Cliente: <small>{{venda.cliente}}</small></h2>
+                <button id="btn-clientes" class="btn mx-1">Alterar Cliente</button>
                 {% else %}
-                <a class="btn" href="">Adicionar Cliente</a>
+                <button id="btn-clientes" class="btn my-1">Adicionar Cliente</button>
                 {% endif %}
             </div>
-            <table id="tableVenda" class="">
+
+            <div class="table-clientes">
+                <h3 class="p-1">Clientes</h3>
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nome</th>
+                            <th>Ações</th>    
+                        </tr>
+                    </thead>
+                    <thead>
+                        {% for cliente in clientes %}
+                        <tr>
+                            <td>{{cliente.codigo}}</td>
+                            <td>{{cliente.nome}}</td>
+                            <td>
+                                {% if venda.cliente %}
+                                <a class="btn" href="{% url "vendas:alterar_cliente" cliente.id %}">Alterar</a>
+                                {% else %}
+                                <a class="btn" href="{% url "vendas:adicionar_cliente" cliente.id %}">Adicionar</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </thead>
+                </table>
+            </div>
+
+            <table id="tableVenda" class="table-venda">
                 <thead>
                     <tr>
                         <th>Código</th>
@@ -41,7 +71,7 @@
                     {% endfor %}
                 </tbody>
             </table>
-            <div>
+            <div class="my-4">
                 <small>Desconto total: {{venda.desconto_total}}</small>
                 <h2>Total: {{venda.total}}</h2>
             </div>
@@ -80,6 +110,13 @@
         </div>
     </div>
     <script>
-
+        let btnCliente = document.getElementById('btn-clientes').addEventListener('click', () => {
+            const tableClientes = document.querySelector('.table-clientes');
+            if (tableClientes.style.display === 'none') {
+                tableClientes.style.display = 'block';
+            } else {
+                tableClientes.style.display = 'none';
+            }
+        });
     </script>
 {% endblock content %}
