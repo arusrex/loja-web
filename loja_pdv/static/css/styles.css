@@ -861,6 +861,16 @@ table tbody tr td .btn-acao:hover {
     margin: 10px 0;
 }
 
+.table-clientes td, .table-clientes th {
+    border: 1px solid rgb(0, 0, 0, 0.6);
+}
+
+/* ########## PESQUISA DE CLIENTE E PRODUTOS ########## */
+/* div.dtb-collection-closeable {
+    width: 100%;
+    max-width: 600px;
+} */
+
 /* ########## BREAKPOINTS ########## */
 
 @media (min-width: 576px) {

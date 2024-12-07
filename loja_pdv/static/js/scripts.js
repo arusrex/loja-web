@@ -245,14 +245,26 @@ document.addEventListener('DOMContentLoaded', () => {
         "searchPlaceholder": "Buscar registros"
     }
 
-    let table = new DataTable('#dataTable', {
+    let tableClientes = new DataTable('#dataTableClientes', {
         responsive: true,
+        pageLength: 50,
+        lengthChange: false,
+
         layout: {
-            top0Start: 'buttons'
+            topStart: 'search',
+            topEnd: null,
         },
-        buttons: {
-            name: 'primary',
-            buttons: ['copy', 'csv', 'excel']
+
+        language, 
+    });
+
+    let tableProdutos = new DataTable('#dataTableProdutos', {
+        responsive: true,
+        pageLength: 50,
+        lengthChange: false,
+        layout: {
+            topStart: 'search',
+            topEnd: null,
         },
         language, 
     });

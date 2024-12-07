@@ -11,15 +11,15 @@
             <div>
                 {% if venda.cliente %}
                 <h2>Cliente: <small>{{venda.cliente}}</small></h2>
-                <button id="btn-clientes" class="btn mx-1">Alterar Cliente</button>
+                <button id="btn-clientes" class="btn my-1">Alterar Cliente</button>
                 {% else %}
                 <button id="btn-clientes" class="btn my-1">Adicionar Cliente</button>
                 {% endif %}
             </div>
 
-            <div class="table-clientes">
-                <h3 class="p-1">Clientes</h3>
-                <table id="dataTable">
+            <div class="table-clientes" style="display: none;">
+                <h3 class="p-1">Todos Clientes</h3>
+                <table id="dataTableClientes" class="display compact">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -27,7 +27,7 @@
                             <th>Ações</th>    
                         </tr>
                     </thead>
-                    <thead>
+                    <tbody>
                         {% for cliente in clientes %}
                         <tr>
                             <td>{{cliente.codigo}}</td>
@@ -41,7 +41,7 @@
                             </td>
                         </tr>
                         {% endfor %}
-                    </thead>
+                    </tbody>
                 </table>
             </div>
 
@@ -79,7 +79,8 @@
 
         <!-- Adicionar produtos -->
         <div class="table">
-            <table id="dataTable" class="display compact cell-border">
+            <table id="dataTableProdutos" class="display compact cell-border">
+                <h3 class="p-1">Todos Produtos</h3>
                 <thead>
                     <tr>
                         <th>Código</th>
