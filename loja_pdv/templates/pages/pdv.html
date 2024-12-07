@@ -2,11 +2,18 @@
 {% block content %}
     <div class="main-content">
         <h1>Ponto de Venda</h1>
+        
         <!-- Venda -->
         <div class="table div-venda">
             <div>
-                <h2>Cliente:</h2>
-                <small>{{venda.cliente}}</small>
+                <h2>Venda Nº: {{venda.id}} - Status: {% if venda.finalizada == False %}Em aberto{% else %}Finalizada{% endif %}</h2>
+            </div>
+            <div>
+                {% if venda.cliente %}
+                <h2>Cliente: <small>{{venda.cliente}}</small></h2>
+                {% else %}
+                <a class="btn" href="">Adicionar Cliente</a>
+                {% endif %}
             </div>
             <table id="tableVenda" class="">
                 <thead>
@@ -72,4 +79,7 @@
             </table>
         </div>
     </div>
+    <script>
+
+    </script>
 {% endblock content %}

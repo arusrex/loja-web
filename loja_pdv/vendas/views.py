@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from vendas.models import *
 from produtos.models import *
+from clientes.models import *
 
 def vendas(request):
     vendas = Venda.objects.all().order_by('-id')
@@ -30,6 +31,7 @@ def calcular_subtotal(quantidade, preco_unitario):
 def pdv(request):
     venda = Venda.objects.filter(finalizada=False).first()
     produtos = Produto.objects.all().order_by('nome')
+    clientes = Cliente.objects.all().order_by('nome')
 
     for item in venda.itens.all(): # type: ignore
         venda.total += item.subtotal # type: ignore
@@ -37,6 +39,7 @@ def pdv(request):
     context = {
         'venda': venda,
         'produtos': produtos,
+        'clientes': clientes,
     }
     return render(request, 'pages/pdv.html', context)
 
