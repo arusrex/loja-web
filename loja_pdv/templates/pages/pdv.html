@@ -5,21 +5,22 @@
         
         <!-- Venda -->
         <div class="table div-venda">
-            <div class="my-1">
-                <h2>Venda Nº: {{venda.id}} - Status: {% if venda.finalizada == False %}Em aberto{% else %}Finalizada{% endif %}</h2>
+            <div class="my-1 div-titulo-venda">
+                <h2 class="p-1 my-0 text-light">Venda Nº: {{venda.id}} - Status: {% if venda.finalizada == False %}Em aberto{% else %}Finalizada{% endif %}</h2>
             </div>
-            <div>
+
+            <div class="div-cliente-venda">
                 {% if venda.cliente %}
-                <h2>Cliente: <small>{{venda.cliente}}</small></h2>
-                <button id="btn-clientes" class="btn my-1">Alterar Cliente</button>
+                <button id="btn-clientes" class="btn">Alterar Cliente</button>
+                <h2 class="p-1 my-0 text-light">Cliente: {{venda.cliente}}</h2>
                 {% else %}
-                <button id="btn-clientes" class="btn my-1">Adicionar Cliente</button>
+                <button id="btn-clientes" class="btn">Adicionar Cliente</button>
                 {% endif %}
             </div>
 
-            <div class="table-clientes" style="display: none;">
-                <h3 class="p-1">Todos Clientes</h3>
-                <table id="dataTableClientes" class="display compact">
+            <div class="table-clientes bg-neutral" style="display: none;">
+                <h3 class="p-1">Lista de Clientes</h3>
+                <table id="dataTableClientes" class="display compact cell-border">
                     <thead>
                         <tr>
                             <th>Código</th>
@@ -43,73 +44,82 @@
                         {% endfor %}
                     </tbody>
                 </table>
+
             </div>
 
-            <table id="tableVenda" class="table-venda">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>EAN</th>
-                        <th>Nome</th>
-                        <th>Preço</th>
-                        <th>Quantidade</th>
-                        <th>Subtotal</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item in venda.itens.all %}
-                    <tr>
-                        <td>{{ item.produto.codigo }}</td>
-                        <td>{{ item.produto.ean }}</td>
-                        <td>{{ item.produto.nome }}</td>
-                        <td>{{ item.produto.preco }}</td>
-                        <td>{{ item.quantidade }}</td>
-                        <td>{{ item.subtotal}}</td>
-                        <td><a class="btn" href="{% url "vendas:remover" item.id %}">Remover</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-            <div class="my-4">
-                <small>Desconto total: {{venda.desconto_total}}</small>
-                <h2>Total: {{venda.total}}</h2>
+            <div class="table-venda">
+                <table id="dataTableVenda">
+                    <h3>Itens da Venda</h3>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>EAN</th>
+                            <th>Nome</th>
+                            <th>Preço</th>
+                            <th>Quantidade</th>
+                            <th>Subtotal</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in venda.itens.all %}
+                        <tr>
+                            <td>{{ item.produto.codigo }}</td>
+                            <td>{{ item.produto.ean }}</td>
+                            <td>{{ item.produto.nome }}</td>
+                            <td>{{ item.produto.preco }}</td>
+                            <td>{{ item.quantidade }}</td>
+                            <td>{{ item.subtotal}}</td>
+                            <td><a class="btn" href="{% url "vendas:remover" item.id %}">Remover</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                
+                <div class="total-venda my-1">
+                    <h5>Desconto: {{venda.desconto_total}}</h5>
+                    <h2>Total: {{venda.total}}</h2>
+                    {% if venda.itens.all %}
+                    <a class="btn" href="{% url 'vendas:finalizar' %}">Finalizar Venda</a>
+                    {% endif %}
+                </div>
             </div>
-        </div>
 
-        <!-- Adicionar produtos -->
-        <div class="table">
-            <table id="dataTableProdutos" class="display compact cell-border">
-                <h3 class="p-1">Todos Produtos</h3>
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>EAN</th>
-                        <th>Nome</th>
-                        <th>Preço</th>
-                        <th>Quantidade</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for produto in produtos %}
-                    <tr>
-                        <td>{{ produto.codigo }}</td>
-                        <td>{{ produto.ean }}</td>
-                        <td>{{ produto.nome }}</td>
-                        <td>{{ produto.preco }}</td>
-                        <td>
-                            <form method="POST" action="{% url 'vendas:adicionar' produto.id %}">
-                                {% csrf_token %}
-                                <input type="number" id="quantidade" name="quantidade" min="1" value="1"></input>
-                                <button class="btn">Adicionar</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <!-- Adicionar produtos -->
+            <div class="table-produtos">
+                <h3>Adicionar Produtos</h3>
+                <table id="dataTableProdutos" class="display compact cell-border">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Preço</th>
+                            <th>Quantidade</th>
+                            <th>Código</th>
+                            <th>EAN</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for produto in produtos %}
+                        <tr>
+                            <td>{{ produto.nome }}</td>
+                            <td>{{ produto.preco }}</td>
+                            <td>
+                                <form class="form-quantidade" method="POST" action="{% url 'vendas:adicionar' produto.id %}">
+                                    {% csrf_token %}
+                                    <input class="" type="number" id="quantidade" name="quantidade" min="1" value="1"></input>
+                                    <div class=""><button class="btn">Adicionar</button></div>
+                                </form>
+                            </td>
+                            <td>{{ produto.codigo }}</td>
+                            <td>{{ produto.ean }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+
     <script>
         let btnCliente = document.getElementById('btn-clientes').addEventListener('click', () => {
             const tableClientes = document.querySelector('.table-clientes');

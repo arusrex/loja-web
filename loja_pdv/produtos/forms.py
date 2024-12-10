@@ -19,9 +19,9 @@ class ProdutoForm(forms.ModelForm):
     
     def clean_ean(self):
         ean = self.cleaned_data['ean']
-
-        if not ean.isdigit():
-            raise ValidationError("O campo EAN deve conter apenas números")
+        if ean:
+            if not ean.isdigit():
+                raise ValidationError("O campo EAN deve conter apenas números")
 
         return ean
     

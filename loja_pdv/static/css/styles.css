@@ -516,6 +516,33 @@ button {
     padding: 10px;
 }
 
+.form-quantidade {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    box-shadow: none !important;
+    border: none !important;
+}
+
+.form-quantidade input {
+    width: fit-content;
+}
+
+.div-cliente-venda {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-primary) !important    ;
+}
+
+.div-titulo-venda {
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    background-color: var(--color-accent) !important    ;
+}
+
 /* ########## FORM PADRÃO ########## */
 
 
@@ -728,6 +755,14 @@ table tbody tr td .btn-acao:hover {
     background-color: var(--color-primary-dark);
 }
 
+.bg-neutral {
+    background-color: var(--color-neutral) !important;
+}
+
+.bg-light {
+    background-color: var(--color-light) !important;
+}
+
 /* ########## TEXTS COLORS ########## */
 
 .text-light {
@@ -750,6 +785,20 @@ table tbody tr td .btn-acao:hover {
 }
 
 /* ########## MARGENS PADRÕES ########## */
+.m-0 {
+    margin: 0;
+}
+
+.mx-0 {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.my-0 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
 .m-1 {
     margin: 10px;
 }
@@ -799,6 +848,10 @@ table tbody tr td .btn-acao:hover {
 }
 
 /* ########## PADDING GERAL ########## */
+.p-0 {
+    padding: 0;
+}
+
 .p-1 {
     padding: 10px;
 }
@@ -813,6 +866,16 @@ table tbody tr td .btn-acao:hover {
 }
 .p-5 {
     padding: 50px;
+}
+
+.px-0 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.py-0 {
+    padding-top: 0;
+    padding-bottom: 0;
 }
 
 .px-1 {
@@ -849,21 +912,91 @@ table tbody tr td .btn-acao:hover {
 
 /* ########## TABELA DE VENDA ########## */
 
-.table-venda th, .table-venda td{
+.table-venda {
     border: 1px solid rgb(0, 0, 0, 0.2);
+    background-color: var(--color-neutral) !important;
     padding: 0 5px;
+}
+
+.total-venda {
+    background-color: var(--color-primary) !important;
+    padding: 10px;
+}
+
+.total-venda h2, .total-venda h5 {
+    color: var(--color-neutral-light) !important;
+}
+
+.total-venda h5 {
+    background-color: var(--color-secondary-dark);
+}
+
+.total-venda h2 {
+    background-color: var(--color-success-dark);
 }
 
 /* ########## TABELA CLIENTES ########## */
 .table-clientes {
-    border: 1px solid rgb(0, 0, 0, 0.2);
-    box-shadow: 2px 2px 1px 1px rgb(0, 0, 0, 0.6);
-    margin: 10px 0;
+    margin: 10px auto;
+    max-width: 75%;
+    padding: 10px;
 }
 
-.table-clientes td, .table-clientes th {
-    border: 1px solid rgb(0, 0, 0, 0.6);
+.table-clientes h3 {
+    color: var(--color-neutral-lightest);
 }
+
+.table-clientes table {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ########## Tabela de Produtos Venda ########## */
+
+.table-produtos {
+    margin: 10px auto;
+    max-width: 75%;
+    padding: 10px;
+    background-color: var(--color-neutral) !important;
+}
+
+.table-produtos h3 {
+    color: var(--color-neutral-lightest);
+}
+
+.table-produtos tr {
+    padding: 0 !important;
+}
+
+.div-venda {
+}
+
+/* ########## Alinhamento de texto ########## */
+
+.text-left {
+    text-align: left;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.text-justify {
+    text-align: justify;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-italic {
+    font-style: italic;
+}
+
+.text-bold {
+    font-weight: bold;
+}
+
 
 /* ########## PESQUISA DE CLIENTE E PRODUTOS ########## */
 /* div.dtb-collection-closeable {

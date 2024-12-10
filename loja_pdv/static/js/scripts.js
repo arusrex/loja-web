@@ -260,11 +260,43 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let tableProdutos = new DataTable('#dataTableProdutos', {
         responsive: true,
-        pageLength: 50,
+        scrollY: '200px',
+        scrollCollapse: true,
+        pageLength: 10,
         lengthChange: false,
+        paging: false,
         layout: {
             topStart: 'search',
             topEnd: null,
+            bottomStart: null,
+        },
+        language, 
+    });
+
+    let tableVenda = new DataTable('#dataTableVenda', {
+        responsive: true,
+        search: false,
+        lengthChange: false,
+        paging: false,
+        layout: {
+            topEnd: null,
+            bottomStart: null,
+        },
+        language, 
+    });
+
+    let table = new DataTable('#dataTable', {
+        responsive: true,
+        buttons: {
+            buttons: [
+                'copy',
+                'excel',
+                'pdf',
+                'print',
+            ],
+        },
+        layout: {
+            top0Start: 'buttons',
         },
         language, 
     });

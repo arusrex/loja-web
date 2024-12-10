@@ -33,6 +33,11 @@ def pdv(request):
     produtos = Produto.objects.all().order_by('nome')
     clientes = Cliente.objects.all().order_by('nome')
 
+    if not venda:
+        venda = Venda.objects.create(
+            finalizada=False,            
+        )
+
     for item in venda.itens.all(): # type: ignore
         venda.total += item.subtotal # type: ignore
 
@@ -106,4 +111,8 @@ def remover(request, item_id):
     return redirect('vendas:pdv')
 
 def finalizar(request):
-    ...
+    venda = Venda.objects.filter(finalizada=False).first()
+    if venda:
+        venda.finalizada = True
+        venda.save()
+    return redirect('vendas:pdv')
