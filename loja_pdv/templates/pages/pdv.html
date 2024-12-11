@@ -77,7 +77,13 @@
                 </table>
                 
                 <div class="total-venda my-1">
-                    <h5>Desconto: {{venda.desconto_total}}</h5>
+                    <h5>Desconto: 
+                        <form class="form-desconto" method="POST" action="{% url 'vendas:aplicar_desconto' %}">
+                            {% csrf_token %}
+                            <input class="" type="number" id="desconto" name="desconto" value="0"></input>
+                            <div class=""><button class="btn">Aplicar Desconto</button></div>
+                        </form>
+                    </h5>
                     <h2>Total: {{venda.total}}</h2>
                     {% if venda.itens.all %}
                     <a class="btn" href="{% url 'vendas:finalizar' %}">Finalizar Venda</a>
@@ -128,6 +134,11 @@
             } else {
                 tableClientes.style.display = 'none';
             }
+        });
+
+        let descontoTotal = document.getElementById('desconto', () => {
+            let valor = "{{venda.desconto_total}}".replace(',', '.');
+            console.log(valor);
         });
     </script>
 {% endblock content %}

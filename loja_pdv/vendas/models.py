@@ -8,6 +8,10 @@ class Venda(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0) # type: ignore
     desconto_total = models.DecimalField(max_digits=10, decimal_places=2, default=0) # type: ignore
     finalizada = models.BooleanField(default=False)
+
+    def calcular_total(self):
+        
+        return self.total - self.desconto_total
     
     def __str__(self):
         return f'Venda {self.id} - {self.data}' # type: ignore
@@ -18,6 +22,14 @@ class ItemVenda(models.Model):
     quantidade = models.IntegerField()
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
     
+    def calcular_subtotal(self):
+        self.subtotal = self.quantidade * self.produto.preco
+
+        return self.subtotal
+    
+    def total(self):
+        self.venda.total += cal
+
     def __str__(self):
         return f'{self.produto.nome} (x {self.quantidade})'
     

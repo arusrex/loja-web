@@ -6,17 +6,24 @@ from clientes.models import *
 def vendas(request):
     vendas = Venda.objects.all().order_by('-id')
 
-    for venda in vendas:
-        for item in venda.itens.all(): # type: ignore
-            venda.total += item.subtotal
-
     context = {
         'vendas': vendas,
     }
     return render(request, 'pages/vendas.html', context)
 
 def alterar_venda(request, venda_id):
-    return redirect('vendas:vendas')
+    venda = Venda.objects.get(id=venda_id)
+    venda_aberta = Venda.objects.filter(finalizada=False).first()
+
+    if venda_aberta:
+        venda_aberta.finalizada = True
+        venda_aberta.save()
+    
+    if venda:
+        venda.finalizada = False
+        venda.save()
+
+    return redirect('vendas:pdv')
 
 def excluir_venda(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
@@ -28,8 +35,12 @@ def calcular_subtotal(quantidade, preco_unitario):
     subtotal = quantidade * preco_unitario
     return subtotal
 
-def pdv(request):
-    venda = Venda.objects.filter(finalizada=False).first()
+def pdv(request, venda_id=None):
+    if not venda_id:
+        venda = Venda.objects.filter(finalizada=False).first()
+    else:
+        venda = Venda.objects.get(id=venda_id)
+
     produtos = Produto.objects.all().order_by('nome')
     clientes = Cliente.objects.all().order_by('nome')
 
@@ -37,9 +48,6 @@ def pdv(request):
         venda = Venda.objects.create(
             finalizada=False,            
         )
-
-    for item in venda.itens.all(): # type: ignore
-        venda.total += item.subtotal # type: ignore
 
     context = {
         'venda': venda,
@@ -99,8 +107,7 @@ def adicionar(request, produto_id):
             
             item.save()
         
-    return redirect('vendas:pdv')
-        
+    return redirect('vendas:pdv')    
 
 def remover(request, item_id):
     venda = Venda.objects.filter(finalizada=False).first()
@@ -115,4 +122,15 @@ def finalizar(request):
     if venda:
         venda.finalizada = True
         venda.save()
+    return redirect('vendas:pdv')
+
+def aplicar_desconto(request):
+    venda = Venda.objects.filter(finalizada=False).first()
+
+    if request.method == 'POST':
+        desconto = request.POST.get('desconto')
+        if venda:
+            venda.desconto_total = desconto
+            venda.save()
+    
     return redirect('vendas:pdv')
