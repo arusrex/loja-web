@@ -1,0 +1,35 @@
+{% extends "base/base.html" %}
+{% block content %}
+<div class="main-content">
+    <h1>Dados de Configuração do SAT</h1>
+    <form class="form-padrao row" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{form.as_div}}
+
+        <div class="col-12">
+            <button class="btn" type="submit">Salvar</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        function addClasseElementoPai (elemento, classe) {
+            if (elemento && classe) {
+                elemento.parentNode.classList.add(classe);
+            }
+        };
+
+        const formLoja = document.getElementById('id_loja');
+        const formCodAtivacao = document.querySelector('#id_codigo_ativacao');
+        const formTipoCert = document.querySelector('#id_tipo_certificado');
+        const formNroCaixa = document.querySelector('#id_numero_caixa');
+        addClasseElementoPai(formLoja, 'col-md-4');
+        addClasseElementoPai(formCodAtivacao, 'col-md-4');
+        addClasseElementoPai(formTipoCert, 'col-md-2');
+        addClasseElementoPai(formNroCaixa, 'col-md-2');
+    });
+
+</script>
+{% endblock content %}

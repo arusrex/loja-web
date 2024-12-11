@@ -33,6 +33,7 @@
                         <td>
                             <a class="btn" href="{% url "vendas:alterar_venda" venda.id %}">{% if venda.finalizada %}Alterar{% else %}Continuar Venda{% endif %}</a>
                             <a class="btn" href="{% url "vendas:excluir_venda" venda.id %}">Excluir</a>
+                            {% if venda.finalizada %}<a class="btn" href="{% url "sat_nfe:testar_sat" venda.id %}">Gerar SAT/CFe</a>{% endif %}
                         </td>
                     </tr>
                     {% endfor %}
