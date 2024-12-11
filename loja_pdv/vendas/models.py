@@ -1,6 +1,7 @@
 from django.db import models
 from clientes.models import Cliente
 from produtos.models import Produto
+from decimal import Decimal
 
 class Venda(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, blank=True, null=True)
@@ -9,7 +10,16 @@ class Venda(models.Model):
     desconto_total = models.DecimalField(max_digits=10, decimal_places=2, default=0) # type: ignore
     finalizada = models.BooleanField(default=False)
 
-    def calcular_total(self):
+    def calcula_total(self):
+        total = Decimal('0')
+
+        for item in self.itens.all(): # type: ignore
+            total += item.subtotal
+
+        self.total = total - self.desconto_total
+        self.save()
+
+    def calcular_desconto(self):
         
         return self.total - self.desconto_total
     
@@ -21,14 +31,6 @@ class ItemVenda(models.Model):
     produto = models.ForeignKey(Produto, on_delete=models.PROTECT)
     quantidade = models.IntegerField()
     subtotal = models.DecimalField(max_digits=10, decimal_places=2)
-    
-    def calcular_subtotal(self):
-        self.subtotal = self.quantidade * self.produto.preco
-
-        return self.subtotal
-    
-    def total(self):
-        self.venda.total += cal
 
     def __str__(self):
         return f'{self.produto.nome} (x {self.quantidade})'

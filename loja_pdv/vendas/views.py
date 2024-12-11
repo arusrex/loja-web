@@ -6,6 +6,10 @@ from clientes.models import *
 def vendas(request):
     vendas = Venda.objects.all().order_by('-id')
 
+    if vendas:
+        for venda in vendas:
+            venda.calcula_total()
+
     context = {
         'vendas': vendas,
     }
@@ -35,6 +39,7 @@ def calcular_subtotal(quantidade, preco_unitario):
     subtotal = quantidade * preco_unitario
     return subtotal
 
+
 def pdv(request, venda_id=None):
     if not venda_id:
         venda = Venda.objects.filter(finalizada=False).first()
@@ -48,6 +53,8 @@ def pdv(request, venda_id=None):
         venda = Venda.objects.create(
             finalizada=False,            
         )
+
+    venda.calcula_total()
 
     context = {
         'venda': venda,
@@ -112,16 +119,23 @@ def adicionar(request, produto_id):
 def remover(request, item_id):
     venda = Venda.objects.filter(finalizada=False).first()
     itens = ItemVenda.objects.filter(venda=venda)
+
     for i in itens:
         if i.id == item_id: # type: ignore
             i.delete()
+    
+    if venda:
+        venda.save()
+
     return redirect('vendas:pdv')
 
 def finalizar(request):
     venda = Venda.objects.filter(finalizada=False).first()
+
     if venda:
         venda.finalizada = True
         venda.save()
+
     return redirect('vendas:pdv')
 
 def aplicar_desconto(request):

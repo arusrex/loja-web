@@ -770,7 +770,7 @@ table tbody tr td .btn-acao:hover {
 }
 
 .text-dark {
-    color: var(--color-neutral-dark);
+    color: var(--color-neutral-dark) !important;
 }
 
 .text-error {
@@ -933,6 +933,14 @@ table tbody tr td .btn-acao:hover {
 
 .total-venda h2 {
     background-color: var(--color-success-dark);
+}
+
+.form-desconto {
+    display: flex;
+    flex-direction: row;
+    border: none !important;
+    box-shadow: none !important;
+    background-color: var(--color-secondary-dark) !important;
 }
 
 /* ########## TABELA CLIENTES ########## */

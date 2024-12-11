@@ -52,11 +52,9 @@
                     <h3>Itens da Venda</h3>
                     <thead>
                         <tr>
-                            <th>Código</th>
-                            <th>EAN</th>
+                            <th>Quantidade</th>
                             <th>Nome</th>
                             <th>Preço</th>
-                            <th>Quantidade</th>
                             <th>Subtotal</th>
                             <th>Ações</th>
                         </tr>
@@ -64,11 +62,9 @@
                     <tbody>
                         {% for item in venda.itens.all %}
                         <tr>
-                            <td>{{ item.produto.codigo }}</td>
-                            <td>{{ item.produto.ean }}</td>
+                            <td>{{ item.quantidade }}</td>
                             <td>{{ item.produto.nome }}</td>
                             <td>{{ item.produto.preco }}</td>
-                            <td>{{ item.quantidade }}</td>
                             <td>{{ item.subtotal}}</td>
                             <td><a class="btn" href="{% url "vendas:remover" item.id %}">Remover</td>
                         </tr>
@@ -80,8 +76,8 @@
                     <h5>Desconto: 
                         <form class="form-desconto" method="POST" action="{% url 'vendas:aplicar_desconto' %}">
                             {% csrf_token %}
-                            <input class="" type="number" id="desconto" name="desconto" value="0"></input>
-                            <div class=""><button class="btn">Aplicar Desconto</button></div>
+                            <input class="" type="number" id="desconto" name="desconto" step="0.01" value="0"></input>
+                            <button class="btn text-dark">Aplicar Desconto</button>
                         </form>
                     </h5>
                     <h2>Total: {{venda.total}}</h2>
@@ -136,9 +132,12 @@
             }
         });
 
-        let descontoTotal = document.getElementById('desconto', () => {
-            let valor = "{{venda.desconto_total}}".replace(',', '.');
-            console.log(valor);
+        document.addEventListener('DOMContentLoaded', () => {
+            let descontoTotal = document.getElementById('desconto');
+
+            let valor = '{{venda.desconto_total}}';
+            descontoTotal.value = valor.replace(',', '.');
         });
+
     </script>
 {% endblock content %}
