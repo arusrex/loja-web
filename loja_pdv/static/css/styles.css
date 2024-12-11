@@ -442,7 +442,7 @@ button {
     border: 1px solid rgb(0, 0, 0, 0.4);
     background: var(--gradient-btn-simples);
     border-radius: 2px;
-    text-wrap: nowrap;
+    text-wrap: wrap;
     padding: 3px;
     margin: 3px;
     font-weight: lighter;
@@ -594,7 +594,6 @@ input[type="checkbox"] {
 }
 
 [class*="col-"] {
-    padding: 0.5rem;
     box-sizing: border-box;
 }
 
@@ -915,7 +914,8 @@ table tbody tr td .btn-acao:hover {
 .table-venda {
     border: 1px solid rgb(0, 0, 0, 0.2);
     background-color: var(--color-neutral) !important;
-    padding: 0 5px;
+    padding: 5px;
+    margin: 5px 5px;
 }
 
 .total-venda {
@@ -938,6 +938,7 @@ table tbody tr td .btn-acao:hover {
 .form-desconto {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     border: none !important;
     box-shadow: none !important;
     background-color: var(--color-secondary-dark) !important;

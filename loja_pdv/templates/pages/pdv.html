@@ -47,32 +47,33 @@
 
             </div>
 
-            <div class="table-venda">
-                <table id="dataTableVenda">
-                    <h3>Itens da Venda</h3>
-                    <thead>
-                        <tr>
-                            <th>Quantidade</th>
-                            <th>Nome</th>
-                            <th>Preço</th>
-                            <th>Subtotal</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in venda.itens.all %}
-                        <tr>
-                            <td>{{ item.quantidade }}</td>
-                            <td>{{ item.produto.nome }}</td>
-                            <td>{{ item.produto.preco }}</td>
-                            <td>{{ item.subtotal}}</td>
-                            <td><a class="btn" href="{% url "vendas:remover" item.id %}">Remover</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                
-                <div class="total-venda my-1">
+            <div class="table-venda row">
+                <div class="col-9">
+                    <table id="dataTableVenda">
+                        <h3>Itens da Venda</h3>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Quantidade</th>
+                                <th>Preço</th>
+                                <th>Subtotal</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in venda.itens.all %}
+                            <tr>
+                                <td>{{ item.produto.nome }}</td>
+                                <td>{{ item.quantidade }}</td>
+                                <td>{{ item.produto.preco }}</td>
+                                <td>{{ item.subtotal}}</td>
+                                <td><a class="btn" href="{% url "vendas:remover" item.id %}">Remover</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="total-venda col-3">
                     <h5>Desconto: 
                         <form class="form-desconto" method="POST" action="{% url 'vendas:aplicar_desconto' %}">
                             {% csrf_token %}
