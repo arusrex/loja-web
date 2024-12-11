@@ -135,15 +135,16 @@ def gerar_xml_venda(venda):
 
         # Acumular total da venda
         total_venda += v_item
-
+        
+    total_com_desconto = total_venda - venda.desconto_total
     # Totalização
     total = ET.SubElement(inf_cfe, "total")
-    ET.SubElement(total, "vCFe").text = f"{total_venda:.2f}"
+    ET.SubElement(total, "vCFe").text = f"{total_com_desconto:.2f}"
 
     # Pagamento (Exemplo: pagamento em dinheiro)
     pgto = ET.SubElement(inf_cfe, "pgto")
     ET.SubElement(pgto, "MP").text = "01"  # Código para dinheiro
-    ET.SubElement(pgto, "vMP").text = f"{total_venda:.2f}"
+    ET.SubElement(pgto, "vMP").text = f"{total_com_desconto:.2f}"
 
     return ET.tostring(cfe, encoding="utf-8").decode("utf-8")
 
