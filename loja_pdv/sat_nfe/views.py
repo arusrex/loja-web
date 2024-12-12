@@ -137,6 +137,7 @@ def gerar_xml_venda(venda):
         total_venda += v_item
         
     total_com_desconto = total_venda - venda.desconto_total
+    
     # Totalização
     total = ET.SubElement(inf_cfe, "total")
     ET.SubElement(total, "vCFe").text = f"{total_com_desconto:.2f}"
