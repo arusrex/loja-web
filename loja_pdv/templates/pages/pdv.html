@@ -81,6 +81,16 @@
                             <button class="btn text-dark">Aplicar Desconto</button>
                         </form>
                     </h5>
+                    <h5>Método de pagamento: 
+                        <form class="form-pgto" method="GET">
+                            {% csrf_token %}
+                            <select id="pgto" name="pgto" onchange="this.form.submit()">
+                                {% for option in form.metodo_pagamento %}
+                                {{option}}
+                                {% endfor %}
+                            </select>
+                        </form>
+                    </h5>
                     <h2>Total: {{venda.total}}</h2>
                     {% if venda.itens.all %}
                     <a class="btn" href="{% url 'vendas:finalizar' %}">Finalizar Venda</a>

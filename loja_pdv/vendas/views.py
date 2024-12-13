@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from vendas.models import *
 from produtos.models import *
 from clientes.models import *
+from .forms import *
 
 def vendas(request):
     vendas = Venda.objects.all().order_by('-id')
@@ -17,17 +18,17 @@ def vendas(request):
 
 def alterar_venda(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
-    venda_aberta = Venda.objects.filter(finalizada=False).first()
+    # venda_aberta = Venda.objects.filter(finalizada=False).first()
 
-    if venda_aberta:
-        venda_aberta.finalizada = True
-        venda_aberta.save()
+    # if venda_aberta:
+    #     venda_aberta.finalizada = True
+    #     venda_aberta.save()
     
     if venda:
         venda.finalizada = False
         venda.save()
 
-    return redirect('vendas:pdv')
+    return pdv(request, venda_id)
 
 def excluir_venda(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
@@ -41,22 +42,31 @@ def calcular_subtotal(quantidade, preco_unitario):
 
 
 def pdv(request, venda_id=None):
-    if not venda_id:
-        venda = Venda.objects.filter(finalizada=False).first()
-    else:
-        venda = Venda.objects.get(id=venda_id)
-
     produtos = Produto.objects.all().order_by('nome')
     clientes = Cliente.objects.all().order_by('nome')
+
+    if venda_id:
+        venda = Venda.objects.get(id=venda_id)
+    else:
+        venda = Venda.objects.filter(finalizada=False).first()
 
     if not venda:
         venda = Venda.objects.create(
             finalizada=False,            
         )
 
+    form = VendaForm(request.POST or None, instance=venda)
+    met_pgto = request.GET.get('pgto')
+
+    if met_pgto:
+        venda.metodo_pagamento = met_pgto
+        venda.save()
+        return redirect('vendas:pdv')
+
     venda.calcula_total()
 
     context = {
+        'form': form,
         'venda': venda,
         'produtos': produtos,
         'clientes': clientes,

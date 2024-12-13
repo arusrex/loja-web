@@ -944,6 +944,12 @@ table tbody tr td .btn-acao:hover {
     background-color: var(--color-secondary-dark) !important;
 }
 
+.form-pgto {
+    border: none !important;
+    box-shadow: none !important;
+    background-color: var(--color-secondary-dark) !important;
+}
+
 /* ########## TABELA CLIENTES ########## */
 .table-clientes {
     margin: 10px auto;

@@ -26,7 +26,14 @@ def config_sat(request):
 
     return render(request, 'pages/config_sat.html', context)
 
-def enviar_dados_simulados(xml_venda, codigo_ativacao):
+def enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id):
+    venda = Venda.objects.get(id=venda_id)
+    
+    if venda:
+        venda.xml_gerado = True
+        venda.xml_cfe = xml_venda
+        venda.save()
+
     return {
         'xml_venda': xml_venda,
         'Status': 'Sucesso',
@@ -35,19 +42,27 @@ def enviar_dados_simulados(xml_venda, codigo_ativacao):
         'cfe': f'CFe{random.randint(100000, 999999)}'
     }
 
-def enviar_dados_sat_real(xml_venda, codigo_ativacao):
+def enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id):
+    venda = Venda.objects.get(id=venda_id)
+
+    if venda:
+        venda.xml_gerado = True
+        venda.xml_cfe = xml_venda
+        venda.save()
+
     sat = ctypes.CDLL("C:/Caminho/para/SAT.dll")
     retorno = sat.EnviarDadosVenda(codigo_ativacao.encode(), xml_venda.encode())
     return retorno
 
-def enviar_dados_sat(xml_venda, codigo_ativacao):
+def enviar_dados_sat(xml_venda, codigo_ativacao, venda_id):
     SAT_SIMULADO  = ConfiguracaoSAT.objects.first()
 
     if SAT_SIMULADO and SAT_SIMULADO.teste:
-        return enviar_dados_simulados(xml_venda, codigo_ativacao)
-        print('entrou aqui')
+
+        return enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id)
+        
     else:
-        # return enviar_dados_sat_real(xml_venda, codigo_ativacao)
+        # return enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id)
         pass
 
 def gerar_xml_venda(venda):
@@ -137,14 +152,19 @@ def gerar_xml_venda(venda):
         total_venda += v_item
         
     total_com_desconto = total_venda - venda.desconto_total
+
+    desconto = ET.SubElement(inf_cfe, "desconto")
+    ET.SubElement(desconto, "vDesc").text = f"{venda.desconto_total:.2f}"
     
     # Totalização
     total = ET.SubElement(inf_cfe, "total")
     ET.SubElement(total, "vCFe").text = f"{total_com_desconto:.2f}"
+    
+    met_pgto = venda.metodo_pagamento if venda.metodo_pagamento else '01'
 
     # Pagamento (Exemplo: pagamento em dinheiro)
     pgto = ET.SubElement(inf_cfe, "pgto")
-    ET.SubElement(pgto, "MP").text = "01"  # Código para dinheiro
+    ET.SubElement(pgto, "MP").text = met_pgto # Código para dinheiro
     ET.SubElement(pgto, "vMP").text = f"{total_com_desconto:.2f}"
 
     return ET.tostring(cfe, encoding="utf-8").decode("utf-8")
@@ -159,7 +179,7 @@ def testar_sat(request, venda_id):
     try:
         xml = gerar_xml_venda(venda)
 
-        resposta = enviar_dados_sat(xml, configuracao.codigo_ativacao)
+        resposta = enviar_dados_sat(xml, configuracao.codigo_ativacao, venda_id)
 
         return JsonResponse({"status": "sucesso", "resposta": resposta})
 
@@ -176,7 +196,7 @@ def gerar_sat(request, venda_id):
     try:
         xml = gerar_xml_venda(venda)
 
-        resposta = enviar_dados_sat(xml, configuracao.codigo_ativacao)
+        resposta = enviar_dados_sat(xml, configuracao.codigo_ativacao, venda_id)
 
         return JsonResponse({"status": "sucesso", "resposta": resposta})
 

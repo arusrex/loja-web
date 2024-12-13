@@ -9,9 +9,10 @@ class Venda(models.Model):
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0) # type: ignore
     desconto_total = models.DecimalField(max_digits=10, decimal_places=2, default=0) # type: ignore
     finalizada = models.BooleanField(default=False)
+    xml_gerado = models.BooleanField(default=False)
     sat_gerado = models.BooleanField(default=False)
-    metodo_pagamento = models.CharField(max_length=2, choices=[('01', 'Dinheiro'), ('02', 'Cartão de Crédito'), ('03', 'Cartão de Débito')])
-
+    metodo_pagamento = models.CharField(max_length=2, choices=[('01', 'Dinheiro'), ('02', 'Cartão de Crédito'), ('03', 'Cartão de Débito')], blank=True, null=True)
+    xml_cfe = models.TextField(blank=True, null=True)
 
     def calcula_total(self):
         total = Decimal('0')
