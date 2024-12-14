@@ -36,7 +36,7 @@
                             <a class="btn" href="{% url "vendas:excluir_venda" venda.id %}">Excluir</a>
                             {% if venda.finalizada %}<a class="btn" href="{% url "sat_nfe:testar_sat" venda.id %}">Gerar SAT/CFe</a>{% endif %}
                             {% else %}
-                            <a class="btn" href="">Imprimir SAT</a>
+                            <a class="btn" target="_blank" href="{% url "sat_nfe:imprimir_sat" venda.id %}">Imprimir SAT</a>
                             {% endif %}
                         </td>
                     </tr>
