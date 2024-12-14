@@ -8,11 +8,13 @@ from vendas.models import *
 from django.shortcuts import redirect
 from pathlib import Path
 from django.http import FileResponse, HttpResponse
+from home.models import DadosLoja
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 def gerar_comprovante(venda, xml):
+    loja = DadosLoja.objects.first()
     output_dir = "comprovantes/"
     os.makedirs(output_dir, exist_ok=True)
     filename = f"{output_dir}comprovante_venda_{venda.id}.pdf"
@@ -21,23 +23,58 @@ def gerar_comprovante(venda, xml):
     c = canvas.Canvas(filename, pagesize=letter)
     width, height = letter
 
-    # Títulos
-    c.setFont("Helvetica-Bold", 12)
-    c.drawString(50, height - 50, "DOCUMENTO AUXILIAR DO CF-e SAT")
-    c.setFont("Helvetica", 10)
-    c.drawString(50, height - 70, "Não é válido como nota fiscal")
+    if venda.retorno_sat and venda.codigo_retorno == "06000":
+        # Títulos
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(50, height - 50, f"CF-e SAT nº {venda.sat_cfe}")
+        c.setFont("Helvetica", 10)
+        c.drawString(50, height - 70, loja.nome_fantasia if loja else 'ArusTI')
+    else:
+        # Títulos
+        c.setFont("Helvetica-Bold", 12)
+        c.drawString(50, height - 50, "DOCUMENTO AUXILIAR DO CF-e SAT")
+        c.setFont("Helvetica", 10)
+        c.drawString(50, height - 70, "Não é válido como nota fiscal")
 
     # Dados do Emitente
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(50, height - 100, "Emitente:")
+    emitente = height - 100
+    c.drawString(50, emitente, "Emitente:")
     c.setFont("Helvetica", 10)
-    c.drawString(50, height - 115, f"Razão Social: {venda.cliente.razao_social if venda.cliente else 'Consumidor Final'}")
-    c.drawString(50, height - 130, f"CNPJ: {venda.cliente.cnpj if venda.cliente else '---'}")
+    c.drawString(50, emitente - 15, f"Razão Social: {loja.razao_social if loja else 'ArusTI'}")
+    c.drawString(50, emitente - 30, f"CNPJ: {loja.cnpj if loja else '---'}")
+    
+    if venda.cliente:
+        if venda.cliente.cnpj:
+            cnpj_cpf = venda.cliente.cnpj
+        elif venda.cliente.cpf:
+            cnpj_cpf = venda.cliente.cpf
+        else:
+            cnpj_cpf = '---'
+
+        # Dados do Destinatário PJ
+        c.setFont("Helvetica-Bold", 10)
+        destinatario = emitente - 60
+        c.drawString(50, destinatario, "Destinatário:")
+        c.setFont("Helvetica", 10)
+        c.drawString(
+                50,
+                destinatario - 15,
+                f"Cliente: {venda.cliente.nome if venda.cliente else 'Consumidor Final'}"
+            )
+        c.drawString(50, destinatario - 30, f"CNPJ/CPF: {cnpj_cpf}")
+    else:
+        # Sem dados de Cliente
+        c.setFont("Helvetica-Bold", 10)
+        destinatario = emitente - 60
+        c.drawString(50, destinatario, "Destinatário:")
+        c.setFont("Helvetica", 10)
+        c.drawString(50, destinatario - 15, f"Cliente: Consumidor Final")
 
     # Dados da Venda
     c.setFont("Helvetica-Bold", 10)
-    c.drawString(50, height - 160, "Itens da Venda:")
-    y_position = height - 175
+    c.drawString(50, height - 220, "Itens da Venda:")
+    y_position = height - 235
     for item in venda.itens.all():
         c.setFont("Helvetica", 9)
         c.drawString(50, y_position, f"{item.produto.descricao} - {item.quantidade} x {item.produto.preco:.2f} = {item.subtotal:.2f}")
