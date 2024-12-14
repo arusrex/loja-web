@@ -8,7 +8,7 @@ class ConfiguracaoSATForm(forms.ModelForm):
         fields = '__all__'
 
         widgets = {
-            'caminho': forms.FileInput(attrs={'class': 'form-control'}),
+            'caminho': forms.TextInput(),
         }
     
     def clean_codigo_ativacao(self):

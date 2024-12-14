@@ -13,6 +13,10 @@ class Venda(models.Model):
     sat_gerado = models.BooleanField(default=False)
     metodo_pagamento = models.CharField(max_length=2, choices=[('01', 'Dinheiro'), ('02', 'Cartão de Crédito'), ('03', 'Cartão de Débito')], blank=True, null=True)
     xml_cfe = models.TextField(blank=True, null=True)
+    sat_cfe = models.TextField(blank=True, null=True)
+    codigo_retorno = models.TextField(blank=True, null=True)
+    mensagem_retorno = models.TextField(blank=True, null=True)
+    retorno_sat = models.TextField(blank=True, null=True)
 
     def calcula_total(self):
         total = Decimal('0')

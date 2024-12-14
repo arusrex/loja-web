@@ -28,31 +28,66 @@ def config_sat(request):
 
 def enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id):
     venda = Venda.objects.get(id=venda_id)
-    
-    if venda:
-        venda.xml_gerado = True
-        venda.xml_cfe = xml_venda
-        venda.save()
 
-    return {
+    status = 'Sucesso'
+    mensagem = 'CF-e processado com sucesso'
+    cfe = f'CFe{random.randint(100000, 999999)}'
+    codigo_retorno = '06000'
+
+    retorno = {
         'xml_venda': xml_venda,
-        'Status': 'Sucesso',
-        'codigo_retorno': 6000,
+        'Status': status,
+        'codigo_retorno': codigo_retorno,
         'mensagem': 'CF-e processado com sucesso',
         'cfe': f'CFe{random.randint(100000, 999999)}'
     }
+    
+    if codigo_retorno == '06000':
+        venda.xml_gerado = True
+        venda.xml_cfe = xml_venda
+        venda.sat_gerado = True
+        venda.sat_cfe = cfe
+        venda.codigo_retorno = codigo_retorno
+        venda.mensagem_retorno = mensagem
+        venda.retorno_sat = str(retorno)
+        venda.save()    
+
+    return redirect('vendas:vendas')
 
 def enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id):
     venda = Venda.objects.get(id=venda_id)
+    configuracao_sat = ConfiguracaoSAT.objects.first()
 
-    if venda:
+    if configuracao_sat:
+        literal_caminho = configuracao_sat.caminho
+        caminho = literal_caminho if literal_caminho else 'C:/Program Files (x86)/SAT/SAT.dll'
+        print(caminho)
+    else:
+        caminho = 'C:\Program Files (x86)\SAT\SAT.dll'
+        print(caminho)
+
+    sat = ctypes.CDLL(caminho)
+    retorno = sat.EnviarDadosVenda(codigo_ativacao.encode(), xml_venda.encode())
+
+    retorno_str = ctypes.string_at(retorno).decode("utf-8")
+    retorno_parts = retorno_str.split("|")
+
+    status = retorno_parts[0]
+    mensagem = retorno_parts[1]
+    cfe = retorno_parts[2]
+    codigo_retorno = retorno_parts[3]
+    xml_venda = retorno_parts[4]
+
+    if codigo_retorno == '06000':
         venda.xml_gerado = True
         venda.xml_cfe = xml_venda
+        venda.sat_gerado = True
+        venda.sat_cfe = cfe
+        venda.codigo_retorno = codigo_retorno
+        venda.retorno_sat = retorno_str
         venda.save()
 
-    sat = ctypes.CDLL("C:/Caminho/para/SAT.dll")
-    retorno = sat.EnviarDadosVenda(codigo_ativacao.encode(), xml_venda.encode())
-    return retorno
+    return redirect('vendas:vendas')
 
 def enviar_dados_sat(xml_venda, codigo_ativacao, venda_id):
     SAT_SIMULADO  = ConfiguracaoSAT.objects.first()
@@ -62,8 +97,7 @@ def enviar_dados_sat(xml_venda, codigo_ativacao, venda_id):
         return enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id)
         
     else:
-        # return enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id)
-        pass
+        return enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id)
 
 def gerar_xml_venda(venda):
 
@@ -85,13 +119,17 @@ def gerar_xml_venda(venda):
         ET.Element("UF", text=loja.estado) # type: ignore
     ])
 
-    # Identificação do consumidor
-    dest = ET.SubElement(inf_cfe, "dest")
-    if venda.cliente.cnpj:
-        ET.SubElement(dest, "CNPJ").text = venda.cliente.cnpj
-    elif venda.cliente.cpf:
-        ET.SubElement(dest, "CPF").text = venda.cliente.cpf
-    ET.SubElement(dest, "xNome").text = venda.cliente.nome
+    if venda.cliente:
+        # Identificação do consumidor
+        dest = ET.SubElement(inf_cfe, "dest")
+        if venda.cliente.cnpj:
+            ET.SubElement(dest, "CNPJ").text = venda.cliente.cnpj
+        elif venda.cliente.cpf:
+            ET.SubElement(dest, "CPF").text = venda.cliente.cpf
+        ET.SubElement(dest, "xNome").text = venda.cliente.nome
+    else:
+        dest = ET.SubElement(inf_cfe, "dest")
+        ET.SubElement(dest, "xNome").text = 'Consumidor'
 
     # Dados da venda
     total_venda = 0
@@ -179,9 +217,7 @@ def testar_sat(request, venda_id):
     try:
         xml = gerar_xml_venda(venda)
 
-        resposta = enviar_dados_sat(xml, configuracao.codigo_ativacao, venda_id)
-
-        return JsonResponse({"status": "sucesso", "resposta": resposta})
+        return enviar_dados_sat(xml, configuracao.codigo_ativacao, venda_id)
 
     except Exception as e:
         return JsonResponse({"status": "erro", "mensagem": str(e)})
@@ -196,11 +232,10 @@ def gerar_sat(request, venda_id):
     try:
         xml = gerar_xml_venda(venda)
 
-        resposta = enviar_dados_sat(xml, configuracao.codigo_ativacao, venda_id)
-
-        return JsonResponse({"status": "sucesso", "resposta": resposta})
+        return enviar_dados_sat(xml, configuracao.codigo_ativacao, venda_id)
 
     except Exception as e:
         return JsonResponse({"status": "erro", "mensagem": str(e)})
 
-
+def imprimmir_sat():
+    pass
