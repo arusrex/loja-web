@@ -60,10 +60,10 @@ def enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id):
 
     if configuracao_sat:
         literal_caminho = configuracao_sat.caminho
-        caminho = literal_caminho if literal_caminho else 'C:/Program Files (x86)/SAT/SAT.dll'
+        caminho = literal_caminho.replace('\\', '/') if literal_caminho else 'C:/Program Files (x86)/SAT/SAT.dll'
         print(caminho)
     else:
-        caminho = 'C:\Program Files (x86)\SAT\SAT.dll'
+        caminho = 'C:/Program Files (x86)/SAT/SAT.dll'
         print(caminho)
 
     sat = ctypes.CDLL(caminho)
