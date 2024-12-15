@@ -6,11 +6,13 @@ from vendas.models import *
 import random
 import ctypes
 import xml.etree.ElementTree as ET
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def sat_nfe(request):
     return render(request, 'pages/sat_nfe.html')
 
+@login_required
 def config_sat(request):
     config = ConfiguracaoSAT.objects.first()
     form = ConfiguracaoSATForm(request.POST or None, instance=config)
@@ -26,6 +28,7 @@ def config_sat(request):
 
     return render(request, 'pages/config_sat.html', context)
 
+@login_required
 def enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id):
     venda = Venda.objects.get(id=venda_id)
 
@@ -54,6 +57,7 @@ def enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id):
 
     return redirect('vendas:vendas')
 
+@login_required
 def enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id):
     venda = Venda.objects.get(id=venda_id)
     configuracao_sat = ConfiguracaoSAT.objects.first()
@@ -89,6 +93,7 @@ def enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id):
 
     return redirect('vendas:vendas')
 
+@login_required
 def enviar_dados_sat(xml_venda, codigo_ativacao, venda_id):
     SAT_SIMULADO  = ConfiguracaoSAT.objects.first()
 
@@ -99,6 +104,7 @@ def enviar_dados_sat(xml_venda, codigo_ativacao, venda_id):
     else:
         return enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id)
 
+@login_required
 def gerar_xml_venda(venda):
 
     loja = DadosLoja.objects.first()
@@ -207,6 +213,7 @@ def gerar_xml_venda(venda):
 
     return ET.tostring(cfe, encoding="utf-8").decode("utf-8")
 
+@login_required
 def testar_sat(request, venda_id):
     configuracao = ConfiguracaoSAT.objects.first()
     venda = Venda.objects.get(id=venda_id)
@@ -222,6 +229,7 @@ def testar_sat(request, venda_id):
     except Exception as e:
         return JsonResponse({"status": "erro", "mensagem": str(e)})
     
+@login_required
 def gerar_sat(request, venda_id):
     configuracao = ConfiguracaoSAT.objects.first()
     venda = Venda.objects.get(id=venda_id)

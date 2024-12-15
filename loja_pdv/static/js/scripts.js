@@ -300,6 +300,26 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         language, 
     });
+
+    function removeMessages () {
+        let messages = document.querySelectorAll('.messages');
+
+        messages.forEach((message) => {
+            message.remove();
+        });
+    };
+
+    setTimeout(removeMessages, 10000);
+
+
+    function removeLoader () {
+        let loader = document.querySelector('#loader');
+        if (loader) {
+            loader.remove()
+        }
+    };
+
+    setInterval(removeLoader, 0.500);
 });
 
 // NAVBAR DROPDOWN

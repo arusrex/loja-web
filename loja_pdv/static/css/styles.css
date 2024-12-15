@@ -311,7 +311,7 @@ header {
     display: block;
     width: 100%;
     padding: 5px;
-    background-color: var(--color-primary-dark);
+    background-color: var(--color-primary);
     color: var(--color-neutral-light);
     border: 0.01em solid var(--color-neutral-light);
     cursor: pointer;
@@ -573,7 +573,7 @@ input[type="checkbox"] {
 
 .form-padrao div ul li small, .form-padrao div small {
     color: rgb(0, 0, 0, 0.6);
-    font-size: xx-small;
+    font-size: small;
 }
 
 .form-padrao div ul {
@@ -1012,6 +1012,65 @@ table tbody tr td .btn-acao:hover {
     font-weight: bold;
 }
 
+/*########## MENSAGENS ##########*/
+.messages {
+    border: 1px solid rgb(0, 0, 0, 0.2);
+    box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.5);
+    list-style: none !important;
+    width: fit-content;
+    margin: 0 auto;
+    margin-bottom: 10px;
+}
+
+.error {
+    color: var(--color-neutral-light);
+    background-color: rgb(255, 0, 0);
+    padding: 10px;
+}
+
+.success {
+    color: var(--color-neutral-light);
+    background-color: rgb(28, 168, 0);
+    padding: 10px;
+}
+
+.warning {
+    color: rgb(85, 85, 0);
+    background-color: rgb(184, 125, 0);
+    padding: 10px;
+}
+
+/* ########## LOADER ########## */
+#loader {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background-color: rgb(0, 0, 0, 0.6) !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    z-index: 9999 !important;
+}
+
+.spinner {
+    border: 8px solid #f3f3f3 !important;
+    border-top: 8px solid #3498db !important;
+    border-radius: 50% !important;
+    width: 50px !important;
+    height: 50px !important;
+    animation: spin 1s linear infinite !important;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
 
 /* ########## PESQUISA DE CLIENTE E PRODUTOS ########## */
 /* div.dtb-collection-closeable {

@@ -1,6 +1,8 @@
 {% extends "base/base.html" %}
 {% block content %}
 <div class="main-content">
+    {% include "partials/messages.html" %}
+
     <h1>Início da Loja</h1>
     <div class="div-home row">
         <h3>Acesso Rápido</h3>
@@ -22,6 +24,76 @@
         <div class="card-home col-2">
             <a class="bg-warning" href="{% url "vendas:pdv" %}"><i class="fas fa-solid fa-gift"></i>Ponto de Venda</a>
         </div>
+        <figure><div id="high-chart" class="col-12"></div></figure>
     </div>
 </div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        let vendas = {{vendas_total}};
+
+        // HIGHCHARTS
+        let chart =  Highcharts.chart('high-chart', {
+
+            title: {
+            text: 'Resumo de Vendas',
+            align: 'left'
+            },
+        
+            subtitle: {
+            text: 'Resumo das 10 últimas vendas',
+            align: 'left'
+            },
+        
+            yAxis: {
+            title: {
+                text: 'Total em R$'
+            }
+            },
+        
+            xAxis: {
+            accessibility: {
+                rangeDescription: 'Vendas'
+            }
+            },
+        
+            legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+            },
+        
+            // plotOptions: {
+            // series: {
+            //     label: {
+            //     connectorAllowed: true
+            //     },
+            //     pointStart: 0
+            // }
+            // },
+        
+            series: [{
+            name: 'Nro.',
+            data: vendas,
+            },],
+        
+            responsive: {
+            rules: [{
+                condition: {
+                maxWidth: 500
+                },
+                chartOptions: {
+                legend: {
+                    layout: 'horizontal',
+                    align: 'center',
+                    verticalAlign: 'bottom'
+                }
+                }
+            }]
+            }
+        
+        });
+    });
+</script>
 {% endblock content %}

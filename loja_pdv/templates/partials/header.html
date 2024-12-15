@@ -9,6 +9,7 @@
             {% if dados_loja %}
                 <h3>{{dados_loja.nome_fantasia}}</h3>
             {% endif %}
+            {% if user.get_full_name %}<span>Bem-vindo, {{user.get_full_name}}</span>{% endif %}
         </div>
     </div>
 </header>

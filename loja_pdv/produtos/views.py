@@ -3,18 +3,23 @@ from .models import *
 from .forms import *
 from django.contrib import messages
 import logging
+from django.contrib.auth.decorators import login_required
 
 log = logging.getLogger()
 
+@login_required
 def produtos(request):
     return form_produtos(request)
 
+@login_required
 def edit_produto(request, id):
     return form_produtos(request, id=id, action='edit_produto')
 
+@login_required
 def delete_produto(request, id):
     return form_produtos(request, id=id, action='delete_produto')
 
+@login_required
 def form_produtos(request, id=None, action=None):
     objs = Produto.objects.all().order_by('nome')
     form = ProdutoForm(request.POST or None)

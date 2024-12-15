@@ -3,7 +3,9 @@ from vendas.models import *
 from produtos.models import *
 from clientes.models import *
 from .forms import *
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def vendas(request):
     vendas = Venda.objects.all().order_by('-id')
 
@@ -16,6 +18,7 @@ def vendas(request):
     }
     return render(request, 'pages/vendas.html', context)
 
+@login_required
 def alterar_venda(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
     # venda_aberta = Venda.objects.filter(finalizada=False).first()
@@ -30,17 +33,20 @@ def alterar_venda(request, venda_id):
 
     return pdv(request, venda_id)
 
+@login_required
 def excluir_venda(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
     venda.delete()
 
     return redirect('vendas:vendas')
 
+@login_required
 def calcular_subtotal(quantidade, preco_unitario):
     subtotal = quantidade * preco_unitario
     return subtotal
 
 
+@login_required
 def pdv(request, venda_id=None):
     produtos = Produto.objects.all().order_by('nome')
     clientes = Cliente.objects.all().order_by('nome')
@@ -73,6 +79,7 @@ def pdv(request, venda_id=None):
     }
     return render(request, 'pages/pdv.html', context)
 
+@login_required
 def adicionar_cliente(request, cliente_id):
     cliente = Cliente.objects.get(id=cliente_id)
     venda = Venda.objects.filter(finalizada=False).first()
@@ -88,6 +95,7 @@ def adicionar_cliente(request, cliente_id):
     
     return redirect('vendas:pdv')
 
+@login_required
 def alterar_cliente(request, cliente_id):
     cliente_novo = Cliente.objects.get(id=cliente_id)
     venda = Venda.objects.filter(finalizada=False).first()
@@ -98,6 +106,7 @@ def alterar_cliente(request, cliente_id):
 
     return redirect('vendas:pdv')
 
+@login_required
 def adicionar(request, produto_id):
     produto = Produto.objects.get(id=produto_id)
     venda = Venda.objects.filter(finalizada=False).first()
@@ -126,6 +135,7 @@ def adicionar(request, produto_id):
         
     return redirect('vendas:pdv')    
 
+@login_required
 def remover(request, item_id):
     venda = Venda.objects.filter(finalizada=False).first()
     itens = ItemVenda.objects.filter(venda=venda)
@@ -139,6 +149,7 @@ def remover(request, item_id):
 
     return redirect('vendas:pdv')
 
+@login_required
 def finalizar(request):
     venda = Venda.objects.filter(finalizada=False).first()
 
@@ -148,6 +159,7 @@ def finalizar(request):
 
     return redirect('vendas:pdv')
 
+@login_required
 def aplicar_desconto(request):
     venda = Venda.objects.filter(finalizada=False).first()
 

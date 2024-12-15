@@ -1,6 +1,6 @@
-<div class="navbar-container bg-neutral">
+<div class="navbar-container bg-primary">
     <nav>
-        <ul class=" text-dark">
+        <ul>
             <li>
                 <a class="drop-toggler" href="{% url "home:home" %}">Início</a>
             </li>
@@ -33,8 +33,7 @@
             </li>
         </ul>
         <div class="user-info">
-            <span>Bem-vindo, Usuário</span>
-            <a href="#" class="btn-logout">Sair</a>
+            <a href="{% url "home:sair" %}" class="btn-logout">Sair</a>
         </div>
     </nav>
 </div>

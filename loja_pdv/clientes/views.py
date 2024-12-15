@@ -3,15 +3,19 @@ from .models import *
 from .forms import *
 from django.contrib import messages
 import logging
+from django.contrib.auth.decorators import login_required
 
 log = logging.getLogger(__name__)
 
+@login_required
 def clientes(request):
     return form_clientes(request)
 
+@login_required
 def edit_cliente(request, id):
     return form_clientes(request, id=id, is_edit=True)
 
+@login_required
 def form_clientes(request, id=None, is_edit=False):
     objs = Cliente.objects.all().order_by('nome')
     cliente = None
@@ -41,6 +45,7 @@ def form_clientes(request, id=None, is_edit=False):
 
     return render(request, 'pages/clientes.html', context)
 
+@login_required
 def delete_cliente(request, id):
     cliente = Cliente.objects.get(id=id)
     cliente.delete()

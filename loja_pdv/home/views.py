@@ -4,14 +4,29 @@ from .models import *
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import SetPasswordForm
+from django.contrib.auth import authenticate
+from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
+from vendas.models import Venda
 import logging
 
 
 log = logging.getLogger(__name__)
 
+@login_required
 def home(request):
-    return render(request, 'pages/index.html')
+    vendas = Venda.objects.all().order_by('-id')[:10]
+    vendas_total = []
+    for venda in vendas:
+        vendas_total.append(float(venda.total))
+    context = {
+        'vendas': vendas,
+        'vendas_total': vendas_total,
+    }
 
+    return render(request, 'pages/index.html', context)
+
+@login_required
 def dados_loja(request):
     dados = DadosLoja.objects.first() or None
     
@@ -36,17 +51,21 @@ def dados_loja(request):
 
     return render(request, 'pages/dados_loja.html', context)
 
+@login_required
 def users(request):
     return user_form(request)
 
+@login_required
 def edit_user(request, id):
     action = 'edit_user'
     return user_form(request, id, action)
 
+@login_required
 def edit_user_password(request, id):
     action = 'edit_user_password'
     return user_form(request, id, action)
 
+@login_required
 def user_form(request, user_id=None, action=None):
 
     all_users = User.objects.all().order_by('first_name')
@@ -83,6 +102,7 @@ def user_form(request, user_id=None, action=None):
 
     return render(request, 'pages/users.html', context)
 
+@login_required
 def delete_user(request, user_id):
     user_data = User.objects.get(id=user_id)
     user_data.delete()
@@ -90,3 +110,25 @@ def delete_user(request, user_id):
     log.info(f'Usuário {user_data.get_full_name()} excluído')
     return redirect('home:users')
 
+def entrar(request):
+    if request.method == 'POST':
+        username = request.POST['usuario']
+        password = request.POST['senha']
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, f'Bom trabalho, {user.get_full_name()}')
+            return redirect('home:home')
+        else:
+            messages.error(request, 'Credenciais inválidas')
+            return redirect('home:entrar')
+        
+
+    return render(request, 'pages/login.html')
+
+@login_required
+def sair(request):
+    logout(request)
+    return redirect('home:entrar')

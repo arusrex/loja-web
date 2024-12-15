@@ -32,8 +32,8 @@
             </li>
         </ul>
         <div class="user-info">
-            <small>Bem-vindo, Usuário</small>
-            <a href="#" class="btn-logout">Sair</a>
+            <small>Bem-vindo, {{user.get_full_name}}</small>
+            <a href="{% url "home:sair" %}" class="btn-logout">Sair</a>
         </div>
     </nav>
 </div>

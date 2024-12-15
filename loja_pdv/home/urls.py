@@ -5,6 +5,8 @@ app_name = 'home'
 
 urlpatterns = [
     path('', home, name="home"),
+    path('login/', entrar, name="entrar"),
+    path('logout/', sair, name="sair"),
     # DADOS DA LOJA
     path('dados_loja/', dados_loja, name="dados_loja"),
     # USUÁRIOS
