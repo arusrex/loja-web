@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 
 @login_required
 def home(request):
-    vendas = Venda.objects.all().order_by('-id')[:10]
+    vendas = Venda.objects.filter(finalizada=True).order_by('-id')[:10]
     vendas_total = []
     for venda in vendas:
         vendas_total.append(float(venda.total))

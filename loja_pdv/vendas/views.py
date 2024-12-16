@@ -40,7 +40,6 @@ def excluir_venda(request, venda_id):
 
     return redirect('vendas:vendas')
 
-@login_required
 def calcular_subtotal(quantidade, preco_unitario):
     subtotal = quantidade * preco_unitario
     return subtotal
@@ -106,7 +105,6 @@ def alterar_cliente(request, cliente_id):
 
     return redirect('vendas:pdv')
 
-@login_required
 def adicionar(request, produto_id):
     produto = Produto.objects.get(id=produto_id)
     venda = Venda.objects.filter(finalizada=False).first()

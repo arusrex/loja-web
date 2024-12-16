@@ -31,7 +31,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        let vendas = {{vendas_total}};
+        let vendas = {{vendas_total}}; 
 
         // HIGHCHARTS
         let chart =  Highcharts.chart('high-chart', {
@@ -64,17 +64,17 @@
             verticalAlign: 'middle'
             },
         
-            // plotOptions: {
-            // series: {
-            //     label: {
-            //     connectorAllowed: true
-            //     },
-            //     pointStart: 0
-            // }
-            // },
+            plotOptions: {
+            series: {
+                label: {
+                connectorAllowed: false
+                },
+                pointStart: 0
+            }
+            },
         
             series: [{
-            name: 'Nro.',
+            name: 'Venda',
             data: vendas,
             },],
         
