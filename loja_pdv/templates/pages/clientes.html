@@ -1,5 +1,14 @@
 {% extends "base/base.html" %}
 {% block content %}
+<div id="backdrop-editar">
+    <div class="confirm-question">
+        <h2>Deseja editar este cliente?</h2>
+        <div class="confirm-answer">
+            <button class="btn" id="confirm">Sim, continuar</button>
+            <button class="btn" id="cancel">Cancelar</button>
+        </div>
+    </div>
+</div>
 <div class="main-content">
     <h1>{% if is_edit %}Atualizar dados do cliente {% if tipo_cliente == '1' %}{{cliente.nome}} - Pessoa Física{% else %}{{cliente.nome_fantasia}} - Pessoa Jurídica{% endif %}{% else %}Gestão de Clientes{% endif %}</h1>
 
@@ -45,8 +54,8 @@
                 {% for item in objs %}
                 <tr>
                     <td class="cell">
-                        <a class="btn-acao text-light bg-primary-dark" href="{% url "clientes:edit_cliente" item.id %}">Editar</a>
-                        <a class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id %}">Excluir</a>
+                        <a id="cliente-editar" class="btn-acao text-light bg-primary-dark" data-cliente-id="{{item.id}}">Editar</a>
+                        <a id="cliente-excluir" class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id %}">Excluir</a>
                     </td>
                     <td>{{item.codigo}}</td>
                     <td>{{item.nome}}</td>
@@ -119,6 +128,27 @@
 
         document.getElementById('id_nascimento').setAttribute('type', 'date');
 
+    });
+    let = clienteId = null;
+
+    let = editarCliente = document.getElementById('cliente-editar').addEventListener('click', (e) => {
+        e.preventDefault();
+        const backDrop = document.getElementById('backdrop-editar');
+        backDrop.style.display = "block";
+        clienteId = e.target.dataset.clienteId;
+    });
+
+    let = confirmEditar = document.getElementById('confirm').addEventListener('click', (e) => {
+        const backDrop = document.getElementById('backdrop-editar');
+        backDrop.style.display = "none";
+        window.location.href = `/clientes/edit_cliente/${clienteId}/`;
+    });
+
+    let = cancelEditar = document.getElementById('cancel').addEventListener('click', (e) => {
+        e.preventDefault();
+        const backDrop = document.getElementById('backdrop-editar');
+        backDrop.style.display = "none";
+        clienteId = null;
     });
 </script>
 {% endblock content %}
