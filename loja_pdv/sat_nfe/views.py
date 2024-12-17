@@ -28,7 +28,6 @@ def config_sat(request):
 
     return render(request, 'pages/config_sat.html', context)
 
-@login_required
 def enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id):
     venda = Venda.objects.get(id=venda_id)
 
@@ -37,13 +36,20 @@ def enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id):
     cfe = f'CFe{random.randint(100000, 999999)}'
     codigo_retorno = '06000'
 
-    retorno = {
-        'xml_venda': xml_venda,
-        'Status': status,
-        'codigo_retorno': codigo_retorno,
-        'mensagem': 'CF-e processado com sucesso',
-        'cfe': f'CFe{random.randint(100000, 999999)}'
-    }
+    retorno = [
+        f'CFe{random.randint(10000, 99999)}',
+        f'CFe{random.randint(10000, 99999)}',
+        f'CFe{random.randint(100, 99999)}',
+        'Venda processada com sucesso',
+        f'cod{random.randint(100, 999)}',
+        'Emitido',
+        '<Base64>',
+        '20240612153045',
+        '351406123456789012345512345678901234567890123456',
+        f'{venda.total}',
+        f'{random.randint(10000000000, 99999999999)}',
+        'ASSINATURAQRCODE',
+    ]
     
     if codigo_retorno == '06000':
         venda.xml_gerado = True
@@ -57,7 +63,6 @@ def enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id):
 
     return redirect('vendas:vendas')
 
-@login_required
 def enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id):
     venda = Venda.objects.get(id=venda_id)
     configuracao_sat = ConfiguracaoSAT.objects.first()
@@ -93,7 +98,6 @@ def enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id):
 
     return redirect('vendas:vendas')
 
-@login_required
 def enviar_dados_sat(xml_venda, codigo_ativacao, venda_id):
     SAT_SIMULADO  = ConfiguracaoSAT.objects.first()
 
@@ -104,7 +108,6 @@ def enviar_dados_sat(xml_venda, codigo_ativacao, venda_id):
     else:
         return enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id)
 
-@login_required
 def gerar_xml_venda(venda):
 
     loja = DadosLoja.objects.first()
@@ -213,7 +216,6 @@ def gerar_xml_venda(venda):
 
     return ET.tostring(cfe, encoding="utf-8").decode("utf-8")
 
-@login_required
 def testar_sat(request, venda_id):
     configuracao = ConfiguracaoSAT.objects.first()
     venda = Venda.objects.get(id=venda_id)
@@ -229,7 +231,6 @@ def testar_sat(request, venda_id):
     except Exception as e:
         return JsonResponse({"status": "erro", "mensagem": str(e)})
     
-@login_required
 def gerar_sat(request, venda_id):
     configuracao = ConfiguracaoSAT.objects.first()
     venda = Venda.objects.get(id=venda_id)
@@ -244,6 +245,3 @@ def gerar_sat(request, venda_id):
 
     except Exception as e:
         return JsonResponse({"status": "erro", "mensagem": str(e)})
-
-def imprimmir_sat():
-    pass

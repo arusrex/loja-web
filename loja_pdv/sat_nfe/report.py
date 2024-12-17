@@ -9,14 +9,19 @@ import os
 
 
 def gerar_cupom_fiscal_com_qrcode(venda, xml):
-    largura_max = 42
+    dados = xml.split('|')
+    print(dados)
+    largura_max = 40
     # Pegar a impressora padrão
     printer_name = win32print.GetDefaultPrinter()
 
     # Criar o QR Code
-    chave_acesso = "CHAVE_DE_ACESSO_EXTRAIDA_DO_XML"
+    chave_acesso = dados[8]
+    valor_total_cfe = dados[9]
+    time_stamp = dados[7]
+    assinatura_qrcode = dados[11]
     url_consulta = "http://www.sefaz.sp.gov.br/qrcode"
-    qr_code_text = f"{url_consulta}?p={chave_acesso}"
+    qr_code_text = f"{url_consulta}?p={chave_acesso}|{valor_total_cfe}|{time_stamp}|{assinatura_qrcode}"
 
     qr = qrcode.QRCode(version=1, box_size=5, border=2)
     qr.add_data(qr_code_text)
@@ -74,6 +79,7 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
         f"TOTAL: R$ {venda.total:.2f}",
         f"Desconto: R$ {venda.desconto_total:.2f}",
         f"TOTAL FINAL: R$ {venda.calcular_desconto():.2f}",
+        f"----------------------------------------",
     ]
 
     for linha in totais:
@@ -82,13 +88,16 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
             hdc.TextOut(start_x, start_y, l)
             start_y += 50
 
+    posicao = (largura_max - -600) // 2
+    
     # Inserir o QR Code
     dib = ImageWin.Dib(qr_image)
-    dib.draw(hdc.GetHandleOutput(), (start_x, start_y, start_x + 900, start_y + 900))
+    dib.draw(hdc.GetHandleOutput(), (posicao, start_y, posicao + 800, start_y + 800))
     start_y += 950
 
     # Rodapé
     rodape = [
+        "----------------------------------------",
          f"Consulta: {qr_code_text}",
         "----------------------------------------",
         "OBRIGADO PELA PREFERÊNCIA!",
