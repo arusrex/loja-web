@@ -45,13 +45,13 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
 
     # Definir a posição inicial (em pontos gráficos)
     start_x, start_y = 100, 100
-    line_height = 50
+    line_height = 100
 
     # Imprimir o cabeçalho como texto
     cupom_texto = [
         "----------------------------------------",
         "                CF-e SAT",
-        f"        Numero de Serie: {dados[0]}",
+        f"    Numero de Serie: {dados[0]}",
         "----------------------------------------",
         f"{loja.nome_fantasia}",
         f"CNPJ: {loja.cnpj}",
@@ -66,7 +66,7 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
         f"CNPJ: {venda.cliente.cnpj if venda.cliente else '---'}",
         "----------------------------------------",
         "Itens:",
-        "COD | NOME | QTD | PRECO | SUBTOTAL",
+        "COD|PROD|QT|PREC|SUBT",
     ]
 
     for linha in cupom_texto:
@@ -77,17 +77,18 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
 
     # Imprimir os itens da venda
     for item in venda.itens.all():
-        texto_item = f"{item.cod} {item.produto.nome[:30]} {item.quantidade} x {item.produto.preco:.2f} = {item.subtotal:.2f}"
+        texto_item = f"{item.produto.codigo} {item.produto.nome[:30]} {item.quantidade} x {item.produto.preco:.2f} = {item.subtotal:.2f}"
         linhas_quebradas = quebra_linhas(texto_item, largura_max)
         for l in linhas_quebradas:
             hdc.TextOut(start_x, start_y, l)
-            start_y += 50
+            start_y += line_height
 
     # Total e descontos
     totais = [
         f"TOTAL: R$ {venda.total:.2f}",
         f"Desconto: R$ {venda.desconto_total:.2f}",
         f"TOTAL FINAL: R$ {venda.calcular_desconto():.2f}",
+        f"PGTO: {venda.metodo_pagamento if venda.metodo_pagamento else " Dinheiro"}",
         f"----------------------------------------",
     ]
 
@@ -95,7 +96,7 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
         linhas_quebradas = quebra_linhas(linha, largura_max)
         for l in linhas_quebradas:
             hdc.TextOut(start_x, start_y, l)
-            start_y += 50
+            start_y += line_height
 
     posicao = (largura_max - -600) // 2
     
@@ -116,7 +117,7 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
         linhas_quebradas = quebra_linhas(linha, largura_max)
         for l in linhas_quebradas:
             hdc.TextOut(start_x, start_y, l)
-            start_y += 50
+            start_y += line_height
 
     # Finalizar a impressão
     hdc.EndPage()
@@ -155,7 +156,7 @@ def gerar_comprovante(venda):
 
     # Definir a posição inicial (em pontos gráficos)
     start_x, start_y = 100, 100
-    line_height = 50
+    line_height = 100
 
     # Imprimir o cabeçalho como texto
     cupom_texto = [
@@ -173,7 +174,7 @@ def gerar_comprovante(venda):
         f"CNPJ: {venda.cliente.cnpj if venda.cliente else '---'}",
         "----------------------------------------",
         "Itens:",
-        "COD | NOME | QTD | PRECO | SUBTOTAL",
+        "PROD|QTD|PRECO|SUBTOTAL",
     ]
 
     for linha in cupom_texto:
@@ -184,11 +185,11 @@ def gerar_comprovante(venda):
 
     # Imprimir os itens da venda
     for item in venda.itens.all():
-        texto_item = f"{item.cod} {item.produto.nome[:30]} {item.quantidade} x {item.produto.preco:.2f} = {item.subtotal:.2f}"
+        texto_item = f" {item.produto.nome[:30]} {item.quantidade} x {item.produto.preco:.2f} = {item.subtotal:.2f}"
         linhas_quebradas = quebra_linhas(texto_item, largura_max)
         for l in linhas_quebradas:
             hdc.TextOut(start_x, start_y, l)
-            start_y += 50
+            start_y += line_height 
 
     # Total e descontos
     totais = [
@@ -202,14 +203,14 @@ def gerar_comprovante(venda):
         linhas_quebradas = quebra_linhas(linha, largura_max)
         for l in linhas_quebradas:
             hdc.TextOut(start_x, start_y, l)
-            start_y += 50
+            start_y += line_height
 
     posicao = (largura_max - -600) // 2
     
     # Inserir o QR Code
     dib = ImageWin.Dib(qr_image)
     dib.draw(hdc.GetHandleOutput(), (posicao, start_y, posicao + 800, start_y + 800))
-    start_y += 950
+    start_y += (line_height + 950)
 
     # Rodapé
     rodape = [
@@ -221,14 +222,15 @@ def gerar_comprovante(venda):
         linhas_quebradas = quebra_linhas(linha, largura_max)
         for l in linhas_quebradas:
             hdc.TextOut(start_x, start_y, l)
-            start_y += 50
+            start_y += line_height
 
     # Finalizar a impressão
     hdc.EndPage()
     hdc.EndDoc()
     hdc.DeleteDC()
     win32print.ClosePrinter(hprinter)
-    os.remove(qr_image_path)
+    if qr_image_path:
+        os.remove(qr_image_path)
 
 def imprimir_sat(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
