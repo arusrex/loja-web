@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import *
+from sat_nfe.report import imprimir_comprovante
 
 app_name = 'vendas'
 
@@ -14,4 +15,5 @@ urlpatterns = [
     path('adicionar/<int:produto_id>/', adicionar, name='adicionar'),
     path('remover/<int:item_id>/', remover, name='remover'),
     path('finalizar/', finalizar, name='finalizar'),
+    path('imprimir_comprovante/<int:venda_id>/', imprimir_comprovante, name='imprimir_comprovante'),
 ]

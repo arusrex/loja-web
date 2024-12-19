@@ -28,85 +28,109 @@ def config_sat(request):
 
     return render(request, 'pages/config_sat.html', context)
 
-def enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id):
+def enviar_dados_simulados(xml_venda, numeroSessao, venda_id):
     venda = Venda.objects.get(id=venda_id)
 
-    status = 'Sucesso'
-    mensagem = 'CF-e processado com sucesso'
-    cfe = f'CFe{random.randint(100000, 999999)}'
-    codigo_retorno = '06000'
+    eeeee = f'{random.randint(10000, 99999)}'
+    cccc = f'{random.randint(1000, 9999)}'
+    mensagem = 'Emitido com sucesso + conteúdo notas.'
+    cod = f'{random.randint(100, 999)}'
+    mensagem_sefaz = 'Autorizado o uso do CFe'
+    arquivoCFeBase64 = 'ExemploCFeBase64.txt...'
+    timeStamp = '20110101170101'
+    chaveConsulta = 'CFe351112027675790001485 98583801050151865833992'
+    valorTotalCFe = f'{venda.total}'
+    CPFCNPJValue = f'{random.randint(10000000000, 99999999999)}'
+    assinaturaQRCODE = 'ExemploAssinaturaQRCODE.txt...'
 
     retorno = [
-        f'CFe{random.randint(10000, 99999)}',
-        f'CFe{random.randint(10000, 99999)}',
-        f'CFe{random.randint(100, 99999)}',
-        'Venda processada com sucesso',
-        f'cod{random.randint(100, 999)}',
-        'Emitido',
-        '<Base64>',
-        '20240612153045',
-        '351406123456789012345512345678901234567890123456',
-        f'{venda.total}',
-        f'{random.randint(10000000000, 99999999999)}',
-        'ASSINATURAQRCODE',
+        f'{numeroSessao}',
+        eeeee,
+        cccc,
+        mensagem,
+        cod,
+        mensagem_sefaz,
+        arquivoCFeBase64,
+        timeStamp,
+        chaveConsulta,
+        valorTotalCFe,
+        CPFCNPJValue,
+        assinaturaQRCODE,
     ]
     
-    if codigo_retorno == '06000':
-        venda.xml_gerado = True
-        venda.xml_cfe = xml_venda
-        venda.sat_gerado = True
-        venda.sat_cfe = cfe
-        venda.codigo_retorno = codigo_retorno
-        venda.mensagem_retorno = mensagem
-        venda.retorno_sat = str(retorno)
-        venda.save()    
+    if eeeee == retorno[1]:
+        venda.numeroSessao = numeroSessao
+        venda.eeeee = eeeee
+        venda.cccc = cccc
+        venda.mensagem = mensagem
+        venda.cod = cod
+        venda.mensagem_sefaz = mensagem_sefaz
+        venda.arquivoCFeBase64 = arquivoCFeBase64
+        venda.timeStamp = timeStamp
+        venda.chaveConsulta = chaveConsulta
+        venda.valorTotalCFe = valorTotalCFe
+        venda.CPFCNPJValue = CPFCNPJValue
+        venda.assinaturaQRCODE = assinaturaQRCODE
+        venda.retornoSAT = '|'.join(retorno)
+        venda.save()
 
     return redirect('vendas:vendas')
 
-def enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id):
+def enviar_dados_sat_real(xml_venda, numeroSessao, venda_id):
     venda = Venda.objects.get(id=venda_id)
     configuracao_sat = ConfiguracaoSAT.objects.first()
 
     if configuracao_sat:
         literal_caminho = configuracao_sat.caminho
         caminho = literal_caminho.replace('\\', '/') if literal_caminho else 'C:/Program Files (x86)/SAT/SAT.dll'
-        print(caminho)
     else:
         caminho = 'C:/Program Files (x86)/SAT/SAT.dll'
-        print(caminho)
 
     sat = ctypes.CDLL(caminho)
-    retorno = sat.EnviarDadosVenda(codigo_ativacao.encode(), xml_venda.encode())
+    retorno = sat.EnviarDadosVenda(numeroSessao.encode(), xml_venda.encode())
 
     retorno_str = ctypes.string_at(retorno).decode("utf-8")
     retorno_parts = retorno_str.split("|")
 
-    status = retorno_parts[0]
-    mensagem = retorno_parts[1]
-    cfe = retorno_parts[2]
-    codigo_retorno = retorno_parts[3]
-    xml_venda = retorno_parts[4]
+    nroSessao = retorno_parts[0]
+    eeeee = retorno_parts[1]
+    cccc = retorno_parts[2]
+    mensagem = retorno_parts[3]
+    cod = retorno_parts[4]
+    mensagem_sefaz = retorno_parts[5]
+    arquivoCFeBase64 = retorno_parts[6]
+    timeStamp = retorno_parts[7]
+    chaveConsulta = retorno_parts[8]
+    valorTotalCFe = retorno_parts[9]
+    CPFCNPJValue = retorno_parts[10]
+    assinaturaQRCODE = retorno_parts[11]
 
-    if codigo_retorno == '06000':
-        venda.xml_gerado = True
-        venda.xml_cfe = xml_venda
-        venda.sat_gerado = True
-        venda.sat_cfe = cfe
-        venda.codigo_retorno = codigo_retorno
-        venda.retorno_sat = retorno_str
+    if eeeee == '06000':
+        venda.numeroSessao = int(nroSessao)
+        venda.eeeee = eeeee
+        venda.cccc = cccc
+        venda.mensagem = mensagem
+        venda.cod = cod
+        venda.mensagem_sefaz = mensagem_sefaz
+        venda.arquivoCFeBase64 = arquivoCFeBase64
+        venda.timeStamp = timeStamp
+        venda.chaveConsulta = chaveConsulta
+        venda.valorTotalCFe = valorTotalCFe
+        venda.CPFCNPJValue = CPFCNPJValue
+        venda.assinaturaQRCODE = assinaturaQRCODE
+        venda.retornoSAT = retorno_str
         venda.save()
 
     return redirect('vendas:vendas')
 
-def enviar_dados_sat(xml_venda, codigo_ativacao, venda_id):
+def enviar_dados_sat(xml_venda, numeroSessao, venda_id):
     SAT_SIMULADO  = ConfiguracaoSAT.objects.first()
 
     if SAT_SIMULADO and SAT_SIMULADO.teste:
-
-        return enviar_dados_simulados(xml_venda, codigo_ativacao, venda_id)
+        return enviar_dados_simulados(xml_venda, numeroSessao, venda_id)
         
     else:
-        return enviar_dados_sat_real(xml_venda, codigo_ativacao, venda_id)
+        return enviar_dados_sat_real(xml_venda, numeroSessao, venda_id)
 
 def gerar_xml_venda(venda):
 
@@ -215,33 +239,18 @@ def gerar_xml_venda(venda):
     ET.SubElement(pgto, "vMP").text = f"{total_com_desconto:.2f}"
 
     return ET.tostring(cfe, encoding="utf-8").decode("utf-8")
-
-def testar_sat(request, venda_id):
-    configuracao = ConfiguracaoSAT.objects.first()
-    venda = Venda.objects.get(id=venda_id)
-
-    if not configuracao:
-        return JsonResponse({"status": "erro", "mensagem": "Configuração do SAT não encontrada."})
-
-    try:
-        xml = gerar_xml_venda(venda)
-
-        return enviar_dados_sat(xml, configuracao.codigo_ativacao, venda_id)
-
-    except Exception as e:
-        return JsonResponse({"status": "erro", "mensagem": str(e)})
     
 def gerar_sat(request, venda_id):
     configuracao = ConfiguracaoSAT.objects.first()
     venda = Venda.objects.get(id=venda_id)
+    numeroSessao = random.randint(100000, 999999)
 
     if not configuracao:
         return JsonResponse({"status": "erro", "mensagem": "Configuração do SAT não encontrada."})
 
     try:
         xml = gerar_xml_venda(venda)
-
-        return enviar_dados_sat(xml, configuracao.codigo_ativacao, venda_id)
+        return enviar_dados_sat(xml, numeroSessao, venda_id)
 
     except Exception as e:
         return JsonResponse({"status": "erro", "mensagem": str(e)})

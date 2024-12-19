@@ -287,6 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let table = new DataTable('#dataTable', {
         responsive: true,
+        ordering: false,
         buttons: {
             buttons: [
                 'copy',

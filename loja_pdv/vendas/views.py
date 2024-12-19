@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 
 @login_required
 def vendas(request):
-    vendas = Venda.objects.all().order_by('-id')
+    vendas = Venda.objects.order_by('-id')
 
     if vendas:
         for venda in vendas:

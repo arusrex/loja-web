@@ -31,17 +31,11 @@
                             {% if venda.finalizada %}Finalizada{% else %}Venda aberta{% endif %}
                         </td>
                         <td>
-                            {% if not venda.sat_gerado %}
-                            <a class="btn" href="{% url "vendas:alterar_venda" venda.id %}">{% if venda.finalizada %}Alterar{% else %}Continuar Venda{% endif %}</a>
-                            <a class="btn" href="{% url "vendas:excluir_venda" venda.id %}">Excluir</a>
-                            <a class="btn" href="{% url "sat_nfe:testar_sat" venda.id %}">Gerar SAT/CFe</a>
-                            {% else %}
-                                {% if not venda.retorno_sat %}
-                                <a class="btn" href="{% url "sat_nfe:testar_sat" venda.id %}">Gerar SAT/CFe</a>
-                                {% else %}
-                                <a class="btn" href="{% url "sat_nfe:imprimir_sat" venda.id %}">Imprimir SAT</a>
-                                {% endif %}
-                            {% endif %}
+                            {% if venda.finalizada %}<a class="btn" href="{% url "vendas:imprimir_comprovante" venda.id %}">Imprimir Comprovante</a>{% endif %}
+                            {% if not venda.retornoSAT %}<a class="btn" href="{% url "vendas:alterar_venda" venda.id %}">{% if venda.finalizada %}Alterar{% else %}Continuar Venda{% endif %}</a>{% endif %}
+                            {% if venda.finalizada and not venda.retornoSAT %}<a class="btn" href="{% url "vendas:excluir_venda" venda.id %}">Excluir</a>{% endif %}
+                            {% if not venda.retornoSAT %}<a class="btn" href="{% url "sat_nfe:gerar_sat" venda.id %}">Gerar SAT/CFe</a>{% endif %}
+                            {% if venda.eeeee == '06000' %}<a class="btn" href="{% url "sat_nfe:imprimir_sat" venda.id %}">Imprimir SAT</a>{% endif %}
                         </td>
                     </tr>
                     {% endfor %}

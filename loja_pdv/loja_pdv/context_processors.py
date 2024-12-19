@@ -11,5 +11,3 @@ def dados_gerais(request):
     }
 
     return context
-
-    
