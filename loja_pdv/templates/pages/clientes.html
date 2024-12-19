@@ -1,12 +1,5 @@
 {% extends "base/base.html" %}
 {% block content %}
-<div class="confirm-question">
-    <h2 id="modal-title">Deseja continuar?</h2>
-    <div class="confirm-answer">
-        <button class="btn" id="confirm">Sim</button>
-        <button class="btn" id="cancel">Cancelar</button>
-    </div>
-</div>
 
 <div class="main-content">
     <h1>{% if is_edit %}Atualizar dados do cliente {% if tipo_cliente == '1' %}{{cliente.nome}} - Pessoa Física{% else %}{{cliente.nome_fantasia}} - Pessoa Jurídica{% endif %}{% else %}Gestão de Clientes{% endif %}</h1>
@@ -53,8 +46,8 @@
                 {% for item in objs %}
                 <tr>
                     <td class="cell">
-                        <a id="cliente-editar" class="btn-acao text-light bg-primary-dark" data-cliente-id="{{item.id}}">Editar</a>
-                        <a id="cliente-excluir" class="btn-acao text-light bg-error-dark" href="{% url "clientes:delete_cliente" item.id %}">Excluir</a>
+                        <a role="button" id="cliente-editar" class="btn-acao text-light bg-primary-dark" data-cliente-id="{{item.id}}">Editar</a>
+                        <a role="button" id="cliente-excluir" class="btn-acao text-light bg-error-dark" data-cliente-id="{{item.id}}">Excluir</a>
                     </td>
                     <td>{{item.codigo}}</td>
                     <td>{{item.nome}}</td>
@@ -130,26 +123,73 @@
     });
 
     let = clienteId = null;
-    const html = window.HTMLElement;
+    const html = document.body;
+    const divQuestion = document.querySelector('.confirm-question');
+    const btnEditar = document.querySelectorAll('#cliente-editar');
+    const btnExcluir = document.querySelectorAll('#cliente-excluir');
 
-    let = editarCliente = document.getElementById('cliente-editar').addEventListener('click', (e) => {
-        e.preventDefault();
-        html.classList.add('backdrop');
-        clienteId = e.target.dataset.clienteId;
+    btnEditar.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            clienteId = btn.getAttribute('data-cliente-id');
+
+            if (!html.classList.contains('backdrop')) {
+                html.classList.add('backdrop');
+            } else {
+                html.classList.remove('backdrop');
+            }
+            divQuestion.style.display = "flex";
+            divQuestion.querySelector('#modal-title').textContent = 'Deseja editar este cliente?';
+            confirmAction('editar');
+            cancelAction();
+        });
     });
 
-    let = confirmEditar = document.getElementById('confirm').addEventListener('click', (e) => {
-        if (html.classList == 'backdrop') {
-            html.classList.remove('backdrop');
-        }
-        window.location.href = `/clientes/edit_cliente/${clienteId}/`;
+    btnExcluir.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            clienteId = btn.getAttribute('data-cliente-id');
+
+            if (!html.classList.contains('backdrop')) {
+                html.classList.add('backdrop');
+            } else {
+                html.classList.remove('backdrop');
+            }
+            divQuestion.style.display = "flex";
+            divQuestion.querySelector('#modal-title').textContent = 'Deseja excluir este cliente?';
+            confirmAction('excluir');
+            cancelAction();
+        });
     });
 
-    let = cancelEditar = document.getElementById('cancel').addEventListener('click', (e) => {
-        e.preventDefault();
-        const backDrop = document.getElementById('backdrop-editar');
-        backDrop.style.display = "none";
-        clienteId = null;
-    });
+    function confirmAction (action) {
+        document.getElementById('confirm').addEventListener('click', (e) => {
+            if (html.classList.contains('backdrop')) {
+                html.classList.remove('backdrop');
+            }
+            if (divQuestion.style.display === "flex") {
+                divQuestion.style.display = "none";
+            }
+            if (action === 'editar') {
+                window.location.href = `/clientes/edit_cliente/${clienteId}/`;
+            } else if (action === 'excluir') {
+                window.location.href = `/clientes/delete_cliente/${clienteId}/`;
+            }
+        });
+    };
+
+    function cancelAction () {
+        document.getElementById('cancel').addEventListener('click', (e) => {
+            e.preventDefault();
+            if (html.classList.contains('backdrop')) {
+                html.classList.remove('backdrop');
+            }
+            if (divQuestion.style.display === "flex") {
+                divQuestion.style.display = "none";
+            }
+
+            clienteId = null;
+        });
+    };
 </script>
 {% endblock content %}
