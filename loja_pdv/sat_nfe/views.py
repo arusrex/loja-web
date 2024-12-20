@@ -7,6 +7,7 @@ import random
 import ctypes
 import xml.etree.ElementTree as ET
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 @login_required
 def sat_nfe(request):
@@ -19,6 +20,7 @@ def config_sat(request):
 
     if request.method == 'POST' and form.is_valid():
         form.save()
+        messages.success(request, 'Configurações salvas com sucesso!')
         return redirect('sat_nfe:config_sat')
 
     context = {
@@ -28,7 +30,7 @@ def config_sat(request):
 
     return render(request, 'pages/config_sat.html', context)
 
-def enviar_dados_simulados(xml_venda, numeroSessao, venda_id):
+def enviar_dados_simulados(request, xml_venda, numeroSessao, venda_id):
     venda = Venda.objects.get(id=venda_id)
 
     eeeee = f'{random.randint(10000, 99999)}'
@@ -73,10 +75,13 @@ def enviar_dados_simulados(xml_venda, numeroSessao, venda_id):
         venda.assinaturaQRCODE = assinaturaQRCODE
         venda.retornoSAT = '|'.join(retorno)
         venda.save()
+        messages.success(request, 'CFe - SAT emitido com sucesso!')
+    else:
+        messages.error(request, f'Erro ao emitir CFe - SAT: {mensagem}')
 
     return redirect('vendas:vendas')
 
-def enviar_dados_sat_real(xml_venda, numeroSessao, venda_id):
+def enviar_dados_sat_real(request, xml_venda, numeroSessao, venda_id):
     venda = Venda.objects.get(id=venda_id)
     configuracao_sat = ConfiguracaoSAT.objects.first()
 
@@ -120,17 +125,20 @@ def enviar_dados_sat_real(xml_venda, numeroSessao, venda_id):
         venda.assinaturaQRCODE = assinaturaQRCODE
         venda.retornoSAT = retorno_str
         venda.save()
+        messages.success(request, 'CFe - SAT emitido com sucesso!')
+    else:
+        messages.error(request, f'Erro ao emitir CFe - SAT: {mensagem}')
 
     return redirect('vendas:vendas')
 
-def enviar_dados_sat(xml_venda, numeroSessao, venda_id):
+def enviar_dados_sat(request, xml_venda, numeroSessao, venda_id):
     SAT_SIMULADO  = ConfiguracaoSAT.objects.first()
 
     if SAT_SIMULADO and SAT_SIMULADO.teste:
-        return enviar_dados_simulados(xml_venda, numeroSessao, venda_id)
+        return enviar_dados_simulados(request, xml_venda, numeroSessao, venda_id)
         
     else:
-        return enviar_dados_sat_real(xml_venda, numeroSessao, venda_id)
+        return enviar_dados_sat_real(request, xml_venda, numeroSessao, venda_id)
 
 def gerar_xml_venda(venda):
 
@@ -250,7 +258,7 @@ def gerar_sat(request, venda_id):
 
     try:
         xml = gerar_xml_venda(venda)
-        return enviar_dados_sat(xml, numeroSessao, venda_id)
+        return enviar_dados_sat(request, xml, numeroSessao, venda_id)
 
     except Exception as e:
         return JsonResponse({"status": "erro", "mensagem": str(e)})

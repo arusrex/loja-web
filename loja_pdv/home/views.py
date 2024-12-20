@@ -93,7 +93,11 @@ def user_form(request, user_id=None, action=None):
             messages.success(request, 'Usuário criado')
             log.info(f'Usuário criado com sucesso')
         return redirect('home:users')
-    
+
+    if form.errors:
+        messages.error(request, 'Erro ao salvar, revise os campos')
+        log.error(f'Erro ao salvar usuário: {form.errors}')
+
     context = {
         'form': form,
         'all_users': all_users,

@@ -2,6 +2,7 @@
 from vendas.models import Venda
 from home.models import DadosLoja
 from django.shortcuts import redirect
+from django.contrib import messages
 import qrcode
 import win32print
 import win32ui
@@ -124,7 +125,8 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
     hdc.EndDoc()
     hdc.DeleteDC()
     win32print.ClosePrinter(hprinter)
-    os.remove(qr_image_path)
+    if qr_image_path:
+        os.remove(qr_image_path)
 
 def gerar_comprovante(venda):
     loja = DadosLoja.objects.first()
@@ -236,11 +238,13 @@ def imprimir_sat(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
     xml = venda.retornoSAT
     gerar_cupom_fiscal_com_qrcode(venda, xml)
+    messages.success(request, f"Cupom Fiscal Sessão nº {venda.numeroSessao} impresso com sucesso!")
     return redirect('vendas:vendas')
 
 def imprimir_comprovante(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
     gerar_comprovante(venda)
+    messages.success(request, f"Comprovante nº {venda.id} impresso com sucesso!")
     return redirect('vendas:vendas')
 
 def quebra_linhas(texto, largura_max):

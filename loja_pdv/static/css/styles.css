@@ -1028,19 +1028,19 @@ table tbody tr td .btn-acao:hover {
 .error {
     color: var(--color-neutral-light);
     background-color: rgb(255, 0, 0);
-    padding: 10px;
+    padding: 20px;
 }
 
 .success {
     color: var(--color-neutral-light);
     background-color: rgb(28, 168, 0);
-    padding: 10px;
+    padding: 20px;
 }
 
 .warning {
     color: rgb(85, 85, 0);
     background-color: rgb(184, 125, 0);
-    padding: 10px;
+    padding: 20px;
 }
 
 /* ########## LOADER ########## */

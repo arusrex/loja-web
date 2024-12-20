@@ -47,9 +47,9 @@
                     <td>{{item.is_staff}}</td>
                     <td>{{item.is_superuser}}</td>
                     <td>
-                        <a class="btn-acao text-light bg-primary-dark" href="{% url "home:edit_user" item.id %}">Editar</a>
-                        <a class="btn-acao text-light bg-warning-dark" href="{% url "home:edit_user_password" item.id %}">Alterar Senha</a>
-                        <a class="btn-acao text-light bg-error-dark" href="{% url "home:delete_user" item.id %}">Excluir</a>
+                        <a role="button" id="editar_user" data-nome="{{item.get_full_name}}" data-id="{{item.id}}" class="btn-acao text-light bg-primary-dark">Editar</a>
+                        <a role="button" id="alterar_senha_user" data-nome="{{item.get_full_name}}" data-id="{{item.id}}" class="btn-acao text-light bg-warning-dark">Alterar Senha</a>
+                        <a role="button" id="excluir_user" data-nome="{{item.get_full_name}}" data-id="{{item.id}}" class="btn-acao text-light bg-error-dark">Excluir</a>
                     </td>
                 </tr>
                 {% endfor %}
@@ -70,40 +70,131 @@
 </div>
 
 <script>
-let formUsuarios = document.addEventListener('DOMContentLoaded', () => {
-    function adicionaClasseDivPai (elemento, classe) {
-        if (elemento && classe) {
-            elemento.parentNode.classList.add(classe);
-        }
-    };
-    const formUsername = document.querySelector('#id_username');
-    const formFisrtName = document.querySelector('#id_first_name');
-    const formLastName = document.querySelector('#id_last_name');
-    const formEmail = document.querySelector('#id_email');
-    const formIsActive = document.querySelector('#id_is_active');
-    const formIsStaff = document.querySelector('#id_is_staff');
-    const formIsSuperuser = document.querySelector('#id_is_superuser');
-    const formPassword1 = document.querySelector('#id_password1');
-    const formPassword2 = document.querySelector('#id_password2');
-    const formNewPassword1 = document.querySelector('#id_new_password1');
-    const formNewPassword2 = document.querySelector('#id_new_password2');
+    let formUsuarios = document.addEventListener('DOMContentLoaded', () => {
+        function adicionaClasseDivPai (elemento, classe) {
+            if (elemento && classe) {
+                elemento.parentNode.classList.add(classe);
+            }
+        };
+        const formUsername = document.querySelector('#id_username');
+        const formFisrtName = document.querySelector('#id_first_name');
+        const formLastName = document.querySelector('#id_last_name');
+        const formEmail = document.querySelector('#id_email');
+        const formIsActive = document.querySelector('#id_is_active');
+        const formIsStaff = document.querySelector('#id_is_staff');
+        const formIsSuperuser = document.querySelector('#id_is_superuser');
+        const formPassword1 = document.querySelector('#id_password1');
+        const formPassword2 = document.querySelector('#id_password2');
+        const formNewPassword1 = document.querySelector('#id_new_password1');
+        const formNewPassword2 = document.querySelector('#id_new_password2');
 
-    adicionaClasseDivPai(formUsername, 'col-3');
-    adicionaClasseDivPai(formFisrtName, 'col-3');
-    adicionaClasseDivPai(formLastName, 'col-3');
-    adicionaClasseDivPai(formEmail, 'col-3');
+        adicionaClasseDivPai(formUsername, 'col-3');
+        adicionaClasseDivPai(formFisrtName, 'col-3');
+        adicionaClasseDivPai(formLastName, 'col-3');
+        adicionaClasseDivPai(formEmail, 'col-3');
 
-    adicionaClasseDivPai(formIsActive, 'col-3');
-    adicionaClasseDivPai(formIsStaff, 'col-3');
-    adicionaClasseDivPai(formIsSuperuser, 'col-3');
+        adicionaClasseDivPai(formIsActive, 'col-3');
+        adicionaClasseDivPai(formIsStaff, 'col-3');
+        adicionaClasseDivPai(formIsSuperuser, 'col-3');
 
-    adicionaClasseDivPai(formPassword1, 'col-6');
-    adicionaClasseDivPai(formPassword2, 'col-6');
+        adicionaClasseDivPai(formPassword1, 'col-6');
+        adicionaClasseDivPai(formPassword2, 'col-6');
 
-    adicionaClasseDivPai(formNewPassword1, 'col-6');
-    adicionaClasseDivPai(formNewPassword2, 'col-6');
+        adicionaClasseDivPai(formNewPassword1, 'col-6');
+        adicionaClasseDivPai(formNewPassword2, 'col-6');
 
-});
+    });
+
+    let userId = null;
+    let userName = null;
+    const divConfirm = document.querySelector('.confirm-question');
+    const editarUser = document.querySelectorAll('#editar_user');
+    const alterarSenhaUser = document.querySelectorAll('#alterar_senha_user');
+    const excluirUser = document.querySelectorAll('#excluir_user');
+
+    editarUser.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            userId = btn.getAttribute('data-id');
+            userName = btn.getAttribute('data-nome');
+
+            if (!document.body.classList.contains('backdrop')) {
+                document.body.classList.add('backdrop');
+                divConfirm.style.display = "flex";
+            } else {
+                document.body.classList.remove('backdrop');
+                divConfirm.style.display = "none";
+            }
+            divConfirm.querySelector('#modal-title').textContent = `Deseja editar o usuário ${userName}?`;
+            confirmAction('editar');
+            cancelAction();
+        });
+    });
+
+    alterarSenhaUser.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            userId = btn.getAttribute('data-id');
+            userName = btn.getAttribute('data-nome');
+
+            if (!document.body.classList.contains('backdrop')) {
+                document.body.classList.add('backdrop');
+                divConfirm.style.display = "flex";
+            } else {
+                document.body.classList.remove('backdrop');
+                divConfirm.style.display = "none";
+            }
+            divConfirm.querySelector('#modal-title').textContent = `Deseja alterar a senha do usuário ${userName}?`;
+            confirmAction('alterar-senha');
+            cancelAction();
+        });
+    });
+
+    excluirUser.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            userId = btn.getAttribute('data-id');
+            userName = btn.getAttribute('data-nome');
+
+            if (!document.body.classList.contains('backdrop')) {
+                document.body.classList.add('backdrop');
+                divConfirm.style.display = "flex";
+            } else {
+                document.body.classList.remove('backdrop');
+                divConfirm.style.display = "none";
+            }
+            divConfirm.querySelector('#modal-title').textContent = `Deseja excluir o usuário ${userName}?`;
+            confirmAction('excluir');
+            cancelAction();
+        });
+    });
+
+    function confirmAction (action) {
+        document.getElementById('confirm').addEventListener('click', (e) => {
+            if (action === 'editar') {
+                window.location.href = `/edit_user/${userId}`;
+            } else if (action === 'alterar-senha') {
+                window.location.href = `/edit_user_password/${userId}`;
+            } else if (action === 'excluir') {
+                window.location.href = `/delete_users/${userId}`;
+            }
+            if (document.body.classList.contains('backdrop')) {
+                document.body.classList.remove('backdrop');
+                divConfirm.style.display = "none";
+            }
+        });
+    }
+
+    function cancelAction () {
+        document.getElementById('cancel').addEventListener('click', (e) => {
+            if (document.body.classList.contains('backdrop')) {
+                document.body.classList.remove('backdrop');
+                divConfirm.style.display = "none";
+            }
+            userId = null;
+            userName = null;
+        });
+    }
 
 </script>
 

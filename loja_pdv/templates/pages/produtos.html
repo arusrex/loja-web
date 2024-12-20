@@ -44,8 +44,8 @@
                 {% for item in objs %}
                 <tr>
                     <td class="cell">
-                        <a class="btn-acao bg-primary text-light" href="{% url 'produtos:edit_produto' item.id %}">Editar</a>
-                        <a class="btn-acao bg-error text-light" href="{% url 'produtos:delete_produto' item.id %}">Excluir</a>
+                        <a id="editar-produto" role="button" class="btn-acao bg-primary text-light" data-produto-nome="{{item.nome}}" data-produto-id="{{item.id}}">Editar</a>
+                        <a id="excluir-produto" role="button" class="btn-acao bg-error text-light" data-produto-nome="{{item.nome}}" data-produto-id="{{item.id}}">Excluir</a>
                     </td>
                     <td>{{item.codigo}}</td>
                     <td>{{item.nome}}</td>
@@ -112,7 +112,82 @@
         addClasseElementoPai(formIpi, 'col-2');
         addClasseElementoPai(formPis, 'col-2');
         addClasseElementoPai(formCofins, 'col-2');
+        
     });
+
+    let produtoId = produtoNome = null;
+    const divConfirm = document.querySelector('.confirm-question');
+    const editarProduto = document.querySelectorAll('#editar-produto');
+    const excluirProduto = document.querySelectorAll('#excluir-produto');
+
+    editarProduto.forEach((element) => {
+        element.addEventListener('click', (e) => {
+            e.preventDefault();
+            produtoId = element.getAttribute('data-produto-id');
+            produtoNome = element.getAttribute('data-produto-nome');
+
+            if (!document.body.classList.contains('backdrop')) {
+                document.body.classList.add('backdrop');
+                divConfirm.style.display = "flex";
+            } else {
+                document.body.classList.remove('backdrop');
+                divConfirm.style.display = "none";
+            }
+            divConfirm.querySelector('#modal-title').textContent = `Deseja editar o produto ${produtoNome}?`;
+            confirmAction('editar');
+            cancelAction();
+        });
+    });
+
+    excluirProduto.forEach((element) => {
+        element.addEventListener('click', (event) => {
+            event.preventDefault();
+            produtoId = element.getAttribute('data-produto-id');
+            produtoNome = element.getAttribute('data-produto-nome');
+
+            if (!document.body.classList.contains('backdrop')) {
+                document.body.classList.add('backdrop');
+                divConfirm.style.display = "flex";
+            } else {
+                document.body.classList.remove('backdrop');
+                divConfirm.style.display = "none";
+            }
+            divConfirm.querySelector('#modal-title').textContent = `Deseja excluir o produto ${produtoNome}?`;
+            confirmAction('excluir');
+            cancelAction();
+        });
+    });
+
+    function confirmAction (action) {
+        document.getElementById('confirm').addEventListener('click', (event) => {
+            if (document.body.classList.contains('backdrop')) {
+                document.body.classList.remove('backdrop');
+            }
+            if (divConfirm.style.display === "flex") {
+                divConfirm.style.display = "none";
+            }
+            if (action === 'editar') {
+                window.location.href = `/produtos/edit_produto/${produtoId}/`;
+            } else if (action === 'excluir') {
+                window.location.href = `/produtos/delete_produto/${produtoId}/`;
+            }
+        });
+    };
+
+    function cancelAction () {
+        document.getElementById('cancel').addEventListener('click', (event) => {
+            event.preventDefault();
+            if (document.body.classList.contains('backdrop')) {
+                document.body.classList.remove('backdrop');
+            }
+            if (divConfirm.style.display === "flex") {
+                divConfirm.style.display = "none";
+            }
+            produtoId = null;
+            produtoNome = null;
+        });
+    };
+    
     
 </script>
 {% endblock content %}
