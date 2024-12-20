@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', () => {
         responsive: true,
         pageLength: 50,
         lengthChange: false,
-
+        autoWidth: false,
         layout: {
             topStart: 'search',
             topEnd: null,
@@ -260,17 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let tableProdutos = new DataTable('#dataTableProdutos', {
         responsive: true,
-        scrollY: '200px',
-        scrollCollapse: true,
-        pageLength: 10,
-        lengthChange: false,
-        paging: false,
-        layout: {
-            topStart: 'search',
-            topEnd: null,
-            bottomStart: null,
-        },
-        language, 
+        ordering: false,
+        autoWidth: false,     
+        language,
     });
 
     let tableVenda = new DataTable('#dataTableVenda', {

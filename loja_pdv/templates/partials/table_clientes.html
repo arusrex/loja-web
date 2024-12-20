@@ -1,0 +1,30 @@
+<div id="table-clientes" class="table-clientes">
+    <div class="div-table-header p-1">
+        <h3 class="p-1">Lista de Clientes</h3>
+        <button class="btn" onclick="closeTableClientes()">Fechar</button>
+    </div>
+    <table id="dataTableClientes" class="display compact cell-border">
+        <thead>
+            <tr>
+                <th>Código</th>
+                <th>Nome</th>
+                <th>Ações</th>    
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+            <tr>
+                <td>{{cliente.codigo}}</td>
+                <td>{{cliente.nome}}</td>
+                <td>
+                    {% if venda.cliente %}
+                    <a class="btn" href="{% url "vendas:alterar_cliente" cliente.id %}">Alterar</a>
+                    {% else %}
+                    <a class="btn" href="{% url "vendas:adicionar_cliente" cliente.id %}">Adicionar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

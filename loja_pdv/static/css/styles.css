@@ -1031,6 +1031,16 @@ table tbody tr td .btn-acao:hover {
     animation: spin 1s linear infinite !important;
 }
 
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /* ########## BackDrop ########## */
 
 /* Estilo para o backdrop */
@@ -1078,47 +1088,69 @@ table tbody tr td .btn-acao:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    max-width: 75%;
-    padding: 10px;
+    padding: 20px;
     z-index: 1000 !important;
     opacity: 1;
     flex-direction: column;
+    background-color: #fff !important;
+    border: 2px solid rgba(0, 0, 0, 0.8);
 }
 
 .table-clientes h3 {
-    color: var(--color-neutral-lightest);
+    color: var(--color-neutral-light) !important;
 }
 
 .table-clientes table {
     margin: 0 !important;
     padding: 0 !important;
+    background-color: #fff !important;
 }
 
 /* ########## Tabela de Produtos Venda ########## */
 
 .table-produtos {
-    margin: 10px auto;
-    max-width: 75%;
-    padding: 10px;
-    background-color: var(--color-neutral) !important;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 20px;
+    background-color: var(--color-neutral-lightest) !important;
+    z-index: 1000 !important;
+    opacity: 1;
+    flex-direction: column;
+    border: 2px solid rgba(0, 0, 0, 0.8);
+    width: 1080px !important;
+}
+
+.table-produtos table {
+    background-color: #fff !important;
 }
 
 .table-produtos h3 {
-    color: var(--color-neutral-lightest);
+    color: var(--color-neutral-light) !important;
 }
 
-.table-produtos tr {
+.div-table-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: var(--color-primary-dark) !important;
+    padding: 10px;
+}
+
+.form-codigo-produto {
+    border: none !important;
+    box-shadow: none !important;
+    margin: 0 !important;
     padding: 0 !important;
 }
 
-
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+#codigo-produto {
+    min-width: 200px !important;
+    margin: 0 !important;
 }
 
 /* ########## PESQUISA DE CLIENTE E PRODUTOS ########## */

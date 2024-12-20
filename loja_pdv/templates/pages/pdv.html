@@ -1,8 +1,7 @@
 {% extends "base/base.html" %}
 {% block content %}
     <div class="main-content">
-        <h1>Ponto de Venda</h1>
-        
+        <h1>Ponto de Venda</h1>        
         <!-- Venda -->
         <div class="table div-venda">
             <div class="my-1 div-titulo-venda">
@@ -16,41 +15,20 @@
                 {% else %}
                 <button id="btn-clientes" class="btn">Adicionar Cliente</button>
                 {% endif %}
-            </div>
-
-            <div class="table-clientes bg-neutral" style="display: none;">
-                <h3 class="p-1">Lista de Clientes</h3>
-                <button id="btn-clientes" class="btn">Fechar</button>
-                <table id="dataTableClientes" class="display compact cell-border">
-                    <thead>
-                        <tr>
-                            <th>Código</th>
-                            <th>Nome</th>
-                            <th>Ações</th>    
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for cliente in clientes %}
-                        <tr>
-                            <td>{{cliente.codigo}}</td>
-                            <td>{{cliente.nome}}</td>
-                            <td>
-                                {% if venda.cliente %}
-                                <a class="btn" href="{% url "vendas:alterar_cliente" cliente.id %}">Alterar</a>
-                                {% else %}
-                                <a class="btn" href="{% url "vendas:adicionar_cliente" cliente.id %}">Adicionar</a>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+            </div>            
 
             <div class="table-venda row">
                 <div class="col-9">
+                    <div class="div-table-header">
+                        <form class="form-codigo-produto" action="{% url 'vendas:adicionar' 0 %}" method="GET">
+                            {% csrf_token %}
+                            <input autofocus type="text" id="codigo-produto" name="codigo-produto" placeholder="Digite o código do produto">
+                        </form>
+                        <button id="pesquisar-produtos" class="btn">Pesquisar produtos</button>
+                    </div>
                     <table id="dataTableVenda">
                         <h3>Itens da Venda</h3>
+                        
                         <thead>
                             <tr>
                                 <th>Nome</th>
@@ -96,46 +74,27 @@
                     <a class="btn" href="{% url 'vendas:finalizar' %}">Finalizar Venda</a>
                     {% endif %}
                 </div>
-            </div>
-
-            <!-- Adicionar produtos -->
-            <div class="table-produtos">
-                <h3>Adicionar Produtos</h3>
-                <table id="dataTableProdutos" class="display compact cell-border">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Preço</th>
-                            <th>Quantidade</th>
-                            <th>Código</th>
-                            <th>EAN</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for produto in produtos %}
-                        <tr>
-                            <td>{{ produto.nome }}</td>
-                            <td>{{ produto.preco }}</td>
-                            <td>
-                                <form class="form-quantidade" method="POST" action="{% url 'vendas:adicionar' produto.id %}">
-                                    {% csrf_token %}
-                                    <input class="" type="number" id="quantidade" name="quantidade" min="1" value="1"></input>
-                                    <div class=""><button class="btn">Adicionar</button></div>
-                                </form>
-                            </td>
-                            <td>{{ produto.codigo }}</td>
-                            <td>{{ produto.ean }}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
+            </div>            
         </div>
     </div>
 
     <script>
-        let btnCliente = document.getElementById('btn-clientes').addEventListener('click', () => {
-            const tableClientes = document.querySelector('.table-clientes');
+        let btnProdutos = document.getElementById('pesquisar-produtos');
+        let btnClientes = document.getElementById('btn-clientes');
+
+        btnProdutos.addEventListener('click', () => {
+            const tableProdutos = document.getElementById('table-produtos');
+            if (!document.body.classList.contains('backdrop')) {
+                document.body.classList.add('backdrop');
+                tableProdutos.style.display = 'flex';
+            } else {
+                document.body.classList.remove('backdrop');
+                tableProdutos.style.display = 'none';
+            }
+        });
+
+        btnClientes.addEventListener('click', () => {
+            const tableClientes = document.getElementById('table-clientes');
             if (!document.body.classList.contains('backdrop')) {
                 document.body.classList.add('backdrop');
                 tableClientes.style.display = 'flex';
@@ -144,12 +103,27 @@
                 tableClientes.style.display = 'none';
             }
         });
+        
+
+        function closeTableClientes () {
+            document.body.classList.remove('backdrop');
+            const tableClientes = document.getElementById('table-clientes');
+            tableClientes.style.display = 'none';
+        }
+
+        function closeTableProdutos() {
+            document.body.classList.remove('backdrop');
+            const tableProdutos = document.getElementById('table-produtos');
+            tableProdutos.style.display = 'none';
+        }
+        
 
         document.addEventListener('DOMContentLoaded', () => {
             let descontoTotal = document.getElementById('desconto');
-
             let valor = '{{venda.desconto_total}}';
             descontoTotal.value = valor.replace(',', '.');
+
+            
         });
 
     </script>

@@ -4,6 +4,8 @@ from produtos.models import *
 from clientes.models import *
 from .forms import *
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
+from django.contrib import messages
 
 @login_required
 def vendas(request):
@@ -105,9 +107,39 @@ def alterar_cliente(request, cliente_id):
 
     return redirect('vendas:pdv')
 
-def adicionar(request, produto_id):
-    produto = Produto.objects.get(id=produto_id)
+def adicionar(request, produto_id=None):
     venda = Venda.objects.filter(finalizada=False).first()
+    search_codigo = request.GET.get('codigo-produto')
+
+    if search_codigo:
+        produto = Produto.objects.filter(
+            Q(codigo=search_codigo) |
+            Q(ean=search_codigo)
+            ).first()
+        if produto:
+            item_venda = venda.itens.filter(produto=produto).first() # type: ignore
+            if item_venda:
+                item_venda.quantidade += 1
+                item_venda.subtotal = calcular_subtotal(1, produto.preco) # type: ignore
+                item_venda.save()
+            else:
+                item = ItemVenda.objects.create(
+                    venda=venda,
+                    produto=produto,
+                    quantidade=1,
+                    subtotal=calcular_subtotal(1, produto.preco) # type: ignore
+                )            
+                item.save()
+        else:
+            messages.error(request, 'Produto não encontrado')
+            return redirect('vendas:pdv')
+    else:
+        produto = Produto.objects.get(id=produto_id)
+    
+    if produto == None:
+        messages.error(request, 'Produto não encontrado')
+        return redirect('vendas:pdv')
+
 
     if not venda:
         venda = Venda.objects.create(
@@ -119,19 +151,19 @@ def adicionar(request, produto_id):
         item_venda = venda.itens.filter(produto=produto).first() # type: ignore
         if item_venda:
             item_venda.quantidade += quantidade
-            item_venda.subtotal = calcular_subtotal(item_venda.quantidade, produto.preco)
+            item_venda.subtotal = calcular_subtotal(item_venda.quantidade, produto.preco) # type: ignore
             item_venda.save()
         else:
             item = ItemVenda.objects.create(
                 venda=venda,
                 produto=produto,
                 quantidade=quantidade,
-                subtotal=calcular_subtotal(quantidade, produto.preco)
+                subtotal=calcular_subtotal(quantidade, produto.preco) # type: ignore
             )
             
             item.save()
         
-    return redirect('vendas:pdv')    
+    return redirect('vendas:pdv')
 
 @login_required
 def remover(request, item_id):

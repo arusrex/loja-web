@@ -1,0 +1,35 @@
+<!-- Adicionar produtos -->
+<div id="table-produtos" class="table-produtos">
+    <div class="div-table-header p-1">
+        <h3>Adicionar Produtos</h3>
+        <button class="btn" onclick="closeTableProdutos()">Fechar</button>
+    </div>
+    <table id="dataTableProdutos" class="display compact cell-border">
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Preço</th>
+                <th>Quantidade</th>
+                <th>Código</th>
+                <th>EAN</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                <td>{{ produto.nome }}</td>
+                <td>{{ produto.preco }}</td>
+                <td>
+                    <form class="form-quantidade" method="POST" action="{% url 'vendas:adicionar' produto.id %}">
+                        {% csrf_token %}
+                        <input class="" type="number" id="quantidade" name="quantidade" min="1" value="1"></input>
+                        <div class=""><button class="btn">Adicionar</button></div>
+                    </form>
+                </td>
+                <td>{{ produto.codigo }}</td>
+                <td>{{ produto.ean }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
