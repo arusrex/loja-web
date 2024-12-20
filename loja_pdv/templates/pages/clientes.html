@@ -46,8 +46,8 @@
                 {% for item in objs %}
                 <tr>
                     <td class="cell">
-                        <a role="button" id="cliente-editar" class="btn-acao text-light bg-primary-dark" data-cliente-id="{{item.id}}">Editar</a>
-                        <a role="button" id="cliente-excluir" class="btn-acao text-light bg-error-dark" data-cliente-id="{{item.id}}">Excluir</a>
+                        <a role="button" id="cliente-editar" class="btn-acao text-light bg-primary-dark" data-cliente-nome="{{item.nome}}" data-cliente-id="{{item.id}}">Editar</a>
+                        <a role="button" id="cliente-excluir" class="btn-acao text-light bg-error-dark" data-cliente-nome="{{item.nome}}" data-cliente-id="{{item.id}}">Excluir</a>
                     </td>
                     <td>{{item.codigo}}</td>
                     <td>{{item.nome}}</td>
@@ -123,6 +123,7 @@
     });
 
     let = clienteId = null;
+    let = clienteNome = null;
     const html = document.body;
     const divQuestion = document.querySelector('.confirm-question');
     const btnEditar = document.querySelectorAll('#cliente-editar');
@@ -132,6 +133,7 @@
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             clienteId = btn.getAttribute('data-cliente-id');
+            clienteNome = btn.getAttribute('data-cliente-nome');
 
             if (!html.classList.contains('backdrop')) {
                 html.classList.add('backdrop');
@@ -139,7 +141,7 @@
                 html.classList.remove('backdrop');
             }
             divQuestion.style.display = "flex";
-            divQuestion.querySelector('#modal-title').textContent = 'Deseja editar este cliente?';
+            divQuestion.querySelector('#modal-title').textContent = `Deseja editar o cliente ${clienteNome}?`;
             confirmAction('editar');
             cancelAction();
         });
@@ -149,6 +151,7 @@
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             clienteId = btn.getAttribute('data-cliente-id');
+            clienteNome = btn.getAttribute('data-cliente-nome');
 
             if (!html.classList.contains('backdrop')) {
                 html.classList.add('backdrop');
@@ -156,7 +159,7 @@
                 html.classList.remove('backdrop');
             }
             divQuestion.style.display = "flex";
-            divQuestion.querySelector('#modal-title').textContent = 'Deseja excluir este cliente?';
+            divQuestion.querySelector('#modal-title').textContent = `Deseja excluir o cliente ${clienteNome}?`;
             confirmAction('excluir');
             cancelAction();
         });
@@ -189,6 +192,7 @@
             }
 
             clienteId = null;
+            clienteNome = null;
         });
     };
 </script>

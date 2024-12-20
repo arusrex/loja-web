@@ -1014,12 +1014,15 @@ table tbody tr td .btn-acao:hover {
 
 /*########## MENSAGENS ##########*/
 .messages {
+    position: fixed;
+    top: 50%;
+    left: 50%;
     border: 1px solid rgb(0, 0, 0, 0.2);
     box-shadow: 2px 2px 2px rgb(0, 0, 0, 0.5);
     list-style: none !important;
     width: fit-content;
-    margin: 0 auto;
-    margin-bottom: 10px;
+    z-index: 999;
+    transform: translate(-50%, -50%);
 }
 
 .error {
@@ -1094,8 +1097,6 @@ table tbody tr td .btn-acao:hover {
     opacity: 1;
     flex-direction: column;
 }
-
-
 
 .confirm-question .confirm-answer {
     display: flex;

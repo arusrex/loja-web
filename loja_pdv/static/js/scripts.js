@@ -304,14 +304,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function removeMessages () {
         let messages = document.querySelectorAll('.messages');
-
-        messages.forEach((message) => {
-            message.remove();
-        });
+        
+        if (messages) {
+            messages.forEach((message) => {
+                message.remove();
+                document.body.classList.remove('backdrop');
+            });
+        }
     };
 
-    setTimeout(removeMessages, 10000);
-
+    setTimeout(removeMessages, 5000);
 
     function removeLoader () {
         let loader = document.querySelector('#loader');

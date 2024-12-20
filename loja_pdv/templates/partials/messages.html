@@ -4,4 +4,10 @@
     <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
     {% endfor %}
 </ul>
+<script>
+    const msg = document.querySelector('.messages');
+    if (msg) {
+        document.body.classList.add('backdrop');
+    }
+</script>
 {% endif %}
