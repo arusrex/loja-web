@@ -20,6 +20,7 @@
 
             <div class="table-clientes bg-neutral" style="display: none;">
                 <h3 class="p-1">Lista de Clientes</h3>
+                <button id="btn-clientes" class="btn">Fechar</button>
                 <table id="dataTableClientes" class="display compact cell-border">
                     <thead>
                         <tr>
@@ -135,9 +136,11 @@
     <script>
         let btnCliente = document.getElementById('btn-clientes').addEventListener('click', () => {
             const tableClientes = document.querySelector('.table-clientes');
-            if (tableClientes.style.display === 'none') {
-                tableClientes.style.display = 'block';
+            if (!document.body.classList.contains('backdrop')) {
+                document.body.classList.add('backdrop');
+                tableClientes.style.display = 'flex';
             } else {
+                document.body.classList.remove('backdrop');
                 tableClientes.style.display = 'none';
             }
         });

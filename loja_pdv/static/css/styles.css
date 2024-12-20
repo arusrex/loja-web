@@ -950,41 +950,6 @@ table tbody tr td .btn-acao:hover {
     background-color: var(--color-secondary-dark) !important;
 }
 
-/* ########## TABELA CLIENTES ########## */
-.table-clientes {
-    margin: 10px auto;
-    max-width: 75%;
-    padding: 10px;
-}
-
-.table-clientes h3 {
-    color: var(--color-neutral-lightest);
-}
-
-.table-clientes table {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-/* ########## Tabela de Produtos Venda ########## */
-
-.table-produtos {
-    margin: 10px auto;
-    max-width: 75%;
-    padding: 10px;
-    background-color: var(--color-neutral) !important;
-}
-
-.table-produtos h3 {
-    color: var(--color-neutral-lightest);
-}
-
-.table-produtos tr {
-    padding: 0 !important;
-}
-
-.div-venda {
-}
 
 /* ########## Alinhamento de texto ########## */
 
@@ -1077,7 +1042,7 @@ table tbody tr td .btn-acao:hover {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.6);
-    z-index: 2;
+    z-index: 999;
     display: block;
 }
 
@@ -1104,6 +1069,46 @@ table tbody tr td .btn-acao:hover {
     justify-content: center;
     gap: 10px;
     margin-top: 15px;
+}
+
+/* ########## TABELA CLIENTES ########## */
+.table-clientes {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 75%;
+    padding: 10px;
+    z-index: 1000 !important;
+    opacity: 1;
+    flex-direction: column;
+}
+
+.table-clientes h3 {
+    color: var(--color-neutral-lightest);
+}
+
+.table-clientes table {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* ########## Tabela de Produtos Venda ########## */
+
+.table-produtos {
+    margin: 10px auto;
+    max-width: 75%;
+    padding: 10px;
+    background-color: var(--color-neutral) !important;
+}
+
+.table-produtos h3 {
+    color: var(--color-neutral-lightest);
+}
+
+.table-produtos tr {
+    padding: 0 !important;
 }
 
 
