@@ -33,7 +33,7 @@ def config_sat(request):
 def enviar_dados_simulados(request, xml_venda, numeroSessao, venda_id):
     venda = Venda.objects.get(id=venda_id)
 
-    eeeee = f'{random.randint(10000, 99999)}'
+    eeeee = f'06000'
     cccc = f'{random.randint(1000, 9999)}'
     mensagem = 'Emitido com sucesso + conteúdo notas.'
     cod = f'{random.randint(100, 999)}'

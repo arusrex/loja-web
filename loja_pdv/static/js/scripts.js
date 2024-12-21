@@ -305,7 +305,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    setTimeout(removeMessages, 5000);
+    setTimeout(removeMessages, 2000);
 
     function removeLoader () {
         let loader = document.querySelector('#loader');

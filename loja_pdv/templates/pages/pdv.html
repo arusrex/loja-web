@@ -28,7 +28,6 @@
                     </div>
                     <table id="dataTableVenda">
                         <h3>Itens da Venda</h3>
-                        
                         <thead>
                             <tr>
                                 <th>Nome</th>
@@ -71,7 +70,7 @@
                     </h5>
                     <h2>Total: {{venda.total}}</h2>
                     {% if venda.itens.all %}
-                    <a class="btn" href="{% url 'vendas:finalizar' %}">Finalizar Venda</a>
+                    <a id="finalizar_venda" role="button" class="btn">Finalizar Venda</a>
                     {% endif %}
                 </div>
             </div>            
@@ -121,10 +120,26 @@
         document.addEventListener('DOMContentLoaded', () => {
             let descontoTotal = document.getElementById('desconto');
             let valor = '{{venda.desconto_total}}';
-            descontoTotal.value = valor.replace(',', '.');
-
-            
+            descontoTotal.value = valor.replace(',', '.');           
         });
+
+        let finalizarVenda = document.getElementById('finalizar_venda');
+        const opcoesFinalizar = document.querySelector('.opcoes_finalizar');
+
+        if (finalizarVenda) {
+            finalizarVenda.addEventListener('click', () => {
+                let btnCancel = document.getElementById('cancel');
+                
+                if (!document.body.classList.contains('backdrop')) {
+                    document.body.classList.add('backdrop');
+                    opcoesFinalizar.style.display = 'flex';
+                } else {
+                    document.body.classList.remove('backdrop');
+                    opcoesFinalizar.style.display = 'flex';
+                }
+
+            });
+        }
 
     </script>
 {% endblock content %}

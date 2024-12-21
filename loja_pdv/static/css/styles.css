@@ -1008,6 +1008,12 @@ table tbody tr td .btn-acao:hover {
     padding: 20px;
 }
 
+.info {
+    color: var(--color-neutral-light) !important;
+    background-color: var(--color-primary-dark) !important;
+    padding: 20px;
+}
+
 /* ########## LOADER ########## */
 #loader {
     position: fixed !important;
@@ -1151,6 +1157,31 @@ table tbody tr td .btn-acao:hover {
 #codigo-produto {
     min-width: 200px !important;
     margin: 0 !important;
+}
+
+.opcoes_finalizar {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1000 !important;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    min-width: 300px;
+    opacity: 1;
+    flex-direction: column;
+}
+
+.opcoes_finalizar .confirm-answer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
 }
 
 /* ########## PESQUISA DE CLIENTE E PRODUTOS ########## */

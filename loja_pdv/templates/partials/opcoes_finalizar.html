@@ -1,0 +1,13 @@
+<div class="opcoes_finalizar">
+    <h2 id="modal-title">Finalizar Venda</h2>
+    <p id="modal-text">Escolha uma ação para finalizar a venda?</p>
+    <div class="confirm-answer">
+        <form action="{% url "vendas:finalizar" %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="btn" id="comprovante" name="comprovante" value="True">Imprimir Comprovante</button>
+            <button type="submit" class="btn" id="sat" name="sat" value="True">Gerar SAT</button>
+            <button type="submit" class="btn" id="finalizar" name="finalizar" value="True">Finalizar</button>
+            <button type="submit" class="btn" id="cancel" name="cancel" value="True">Voltar para a venda</button>
+        </form>
+    </div>
+</div>

@@ -6,6 +6,8 @@ from .forms import *
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.contrib import messages
+from sat_nfe.report import imprimir_comprovante, imprimir_sat
+from sat_nfe.views import gerar_sat
 
 @login_required
 def vendas(request):
@@ -180,16 +182,6 @@ def remover(request, item_id):
     return redirect('vendas:pdv')
 
 @login_required
-def finalizar(request):
-    venda = Venda.objects.filter(finalizada=False).first()
-
-    if venda:
-        venda.finalizada = True
-        venda.save()
-
-    return redirect('vendas:pdv')
-
-@login_required
 def aplicar_desconto(request):
     venda = Venda.objects.filter(finalizada=False).first()
 
@@ -198,5 +190,44 @@ def aplicar_desconto(request):
         if venda:
             venda.desconto_total = desconto
             venda.save()
+    
+    return redirect('vendas:pdv')
+
+def finalizar(request):
+    venda = Venda.objects.filter(finalizada=False).first()
+
+    if venda:
+        if request.method == 'POST':
+            comprovante = request.POST.get('comprovante')
+            sat = request.POST.get('sat')
+            venda_finalizar = request.POST.get('finalizar')
+
+            if comprovante:
+                print('entrou emcomprovante')
+                venda.finalizada = True
+                venda.save()
+                imprimir_comprovante(request, venda.id) # type: ignore
+
+            elif sat:
+                print('entrou sat')
+                venda.finalizada = True
+                venda.save()
+                gerar_sat(request, venda.id) # type: ignore
+                consulta = Venda.objects.get(id=venda.id) # type: ignore
+                print(consulta.eeeee)
+                if consulta.retornoSAT:
+                    imprimir_sat(request, venda.id) # type: ignore
+                else:
+                    messages.error(request, 'Erro ao imprimir o SAT')
+            
+            elif venda_finalizar:
+                print('entrou finalizar')
+                venda.finalizada = True
+                venda.save()
+                messages.success(request, 'Venda finalizada com sucesso')
+
+            else:
+                messages.info(request, 'Venda retomada')
+                return redirect('vendas:pdv')
     
     return redirect('vendas:pdv')

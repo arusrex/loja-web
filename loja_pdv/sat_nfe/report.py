@@ -46,13 +46,13 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
 
     # Definir a posição inicial (em pontos gráficos)
     start_x, start_y = 100, 100
-    line_height = 100
+    line_height = 50
 
     # Imprimir o cabeçalho como texto
     cupom_texto = [
         "----------------------------------------",
         "                CF-e SAT",
-        f"    Numero de Serie: {dados[0]}",
+        f"        Extrato nº: {venda.id}",
         "----------------------------------------",
         f"{loja.nome_fantasia}",
         f"CNPJ: {loja.cnpj}",
@@ -158,7 +158,7 @@ def gerar_comprovante(venda):
 
     # Definir a posição inicial (em pontos gráficos)
     start_x, start_y = 100, 100
-    line_height = 100
+    line_height = 50
 
     # Imprimir o cabeçalho como texto
     cupom_texto = [
