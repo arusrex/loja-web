@@ -40,7 +40,7 @@ def enviar_dados_simulados(request, xml_venda, numeroSessao, venda_id):
     mensagem_sefaz = 'Autorizado o uso do CFe'
     arquivoCFeBase64 = 'ExemploCFeBase64.txt...'
     timeStamp = '20110101170101'
-    chaveConsulta = 'CFe351112027675790001485 98583801050151865833992'
+    chaveConsulta = '35111202767579000148598583801050151865833992'
     valorTotalCFe = f'{venda.total}'
     CPFCNPJValue = f'{random.randint(10000000000, 99999999999)}'
     assinaturaQRCODE = 'ExemploAssinaturaQRCODE.txt...'

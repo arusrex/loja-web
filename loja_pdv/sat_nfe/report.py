@@ -3,11 +3,14 @@ from vendas.models import Venda
 from home.models import DadosLoja
 from django.shortcuts import redirect
 from django.contrib import messages
+from PIL import Image, ImageWin
 import qrcode
 import win32print
 import win32ui
-from PIL import Image, ImageWin
 import os
+from barcode import Code128
+import barcode
+from barcode.writer import ImageWriter
 
 
 def gerar_cupom_fiscal_com_qrcode(venda, xml):
@@ -33,8 +36,19 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
     qr_image_path = "qr_code.bmp"
     qr.make_image(fill="black", back_color="white").save(qr_image_path)
 
+    # Gerar o código de barras da chave de acesso
+    barcode_image_path = "barcode.png"
+    barcode_writer = ImageWriter()
+    # barcode_data = barcode.get_barcode_class('code128')
+    # barcode_instance = barcode_data(chave_acesso, writer=barcode_writer)
+    barcode_instance = Code128(chave_acesso, writer=barcode_writer)
+    barcode_instance.default_writer_options['write_text'] = False
+
+    barcode_instance.save("barcode")
+
     # Abrir a imagem do QR Code
     qr_image = Image.open(qr_image_path)
+    barcode_image = Image.open(barcode_image_path)
 
     # Configurar a impressora
     hprinter = win32print.OpenPrinter(printer_name)
@@ -90,6 +104,9 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
         f"Desconto: R$ {venda.desconto_total:.2f}",
         f"TOTAL FINAL: R$ {venda.calcular_desconto():.2f}",
         f"PGTO: {venda.metodo_pagamento if venda.metodo_pagamento else " Dinheiro"}",
+        "Chave de Acesso:",
+        f"{chave_acesso[:22]}",
+        f"{chave_acesso[22:]}",
         f"----------------------------------------",
     ]
 
@@ -99,12 +116,20 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
             hdc.TextOut(start_x, start_y, l)
             start_y += line_height
 
+    start_y += 150
+
     posicao = (largura_max - -600) // 2
-    
+    posicao_barcode = (largura_max - -200) // 2
+
     # Inserir o QR Code
     dib = ImageWin.Dib(qr_image)
     dib.draw(hdc.GetHandleOutput(), (posicao, start_y, posicao + 800, start_y + 800))
-    start_y += 950
+    start_y += 800
+
+    # Inserir o Código de Barras
+    dib_barcode = ImageWin.Dib(barcode_image)
+    dib_barcode.draw(hdc.GetHandleOutput(), (posicao_barcode, start_y, posicao_barcode + 1300, start_y + 200))
+    start_y += 200
 
     # Rodapé
     rodape = [
@@ -125,8 +150,11 @@ def gerar_cupom_fiscal_com_qrcode(venda, xml):
     hdc.EndDoc()
     hdc.DeleteDC()
     win32print.ClosePrinter(hprinter)
+
     if qr_image_path:
         os.remove(qr_image_path)
+    if barcode_image_path:
+        os.remove(barcode_image_path)
 
 def gerar_comprovante(venda):
     loja = DadosLoja.objects.first()
@@ -212,7 +240,7 @@ def gerar_comprovante(venda):
     # Inserir o QR Code
     dib = ImageWin.Dib(qr_image)
     dib.draw(hdc.GetHandleOutput(), (posicao, start_y, posicao + 800, start_y + 800))
-    start_y += (line_height + 950)
+    start_y += (line_height + 850)
 
     # Rodapé
     rodape = [
