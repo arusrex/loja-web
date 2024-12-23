@@ -127,7 +127,6 @@
             }
             divConfirm.querySelector('#modal-title').textContent = `Deseja editar o usuário ${userName}?`;
             confirmAction('editar');
-            cancelAction();
         });
     });
 
@@ -146,7 +145,6 @@
             }
             divConfirm.querySelector('#modal-title').textContent = `Deseja alterar a senha do usuário ${userName}?`;
             confirmAction('alterar-senha');
-            cancelAction();
         });
     });
 
@@ -165,7 +163,6 @@
             }
             divConfirm.querySelector('#modal-title').textContent = `Deseja excluir o usuário ${userName}?`;
             confirmAction('excluir');
-            cancelAction();
         });
     });
 
@@ -186,14 +183,12 @@
     }
 
     function cancelAction () {
-        document.getElementById('cancel').addEventListener('click', (e) => {
-            if (document.body.classList.contains('backdrop')) {
-                document.body.classList.remove('backdrop');
-                divConfirm.style.display = "none";
-            }
-            userId = null;
-            userName = null;
-        });
+        if (document.body.classList.contains('backdrop')) {
+            document.body.classList.remove('backdrop');
+            divConfirm.style.display = "none";
+        }
+        userId = null;
+        userName = null;
     }
 
 </script>

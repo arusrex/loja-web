@@ -142,7 +142,6 @@
             divQuestion.style.display = "flex";
             divQuestion.querySelector('#modal-title').textContent = `Deseja editar o cliente ${clienteNome}?`;
             confirmAction('editar');
-            cancelAction();
         });
     });
 
@@ -160,7 +159,6 @@
             divQuestion.style.display = "flex";
             divQuestion.querySelector('#modal-title').textContent = `Deseja excluir o cliente ${clienteNome}?`;
             confirmAction('excluir');
-            cancelAction();
         });
     });
 
@@ -181,18 +179,14 @@
     };
 
     function cancelAction () {
-        document.getElementById('cancel').addEventListener('click', (e) => {
-            e.preventDefault();
-            if (html.classList.contains('backdrop')) {
-                html.classList.remove('backdrop');
-            }
-            if (divQuestion.style.display === "flex") {
-                divQuestion.style.display = "none";
-            }
-
-            clienteId = null;
-            clienteNome = null;
-        });
+        if (html.classList.contains('backdrop')) {
+            html.classList.remove('backdrop');
+        }
+        if (divQuestion.style.display === "flex") {
+            divQuestion.style.display = "none";
+        }
+        clienteId = null;
+        clienteNome = null;
     };
 </script>
 {% endblock content %}
