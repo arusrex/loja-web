@@ -34,10 +34,13 @@ def gerar_pdf_cupom_fiscal(venda, xml):
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, altura - 50, f"CF-e SAT - Extrato Nº {venda.id}")
     c.setFont("Helvetica", 8)
-    c.drawString(50, altura - 70, f"{loja.nome_fantasia if loja else ""}")
-    c.drawString(50, altura - 80, f"CNPJ: {loja.cnpj if loja else ""} | IE: {loja.inscricao_estadual if loja else ""}")
-    c.drawString(50, altura - 90, f"End.: {loja.endereco if loja else ""}, {loja.cidade if loja else ""} - {loja.estado if loja else ""}")
-    c.drawString(50, altura - 100, f"CEP: {loja.cep if loja else ""} | Tel: {loja.fone if loja else ""}")
+    if loja:
+        c.drawString(50, altura - 70, f"{loja.nome_fantasia}")
+        c.drawString(50, altura - 80, f"CNPJ: {loja.cnpj} | IE: {loja.inscricao_estadual}")
+        c.drawString(50, altura - 90, f"End.: {loja.endereco}, {loja.cidade} - {loja.estado}")
+        c.drawString(50, altura - 100, f"CEP: {loja.cep} | Tel: {loja.fone}")
+    else:
+        c.drawString(50, altura - 70, "Loja não configurada")
 
     # Dados do cliente
     c.drawString(50, altura - 115, f"Cliente: {venda.cliente.nome if venda.cliente else 'Consumidor Final'}")
@@ -140,9 +143,13 @@ def gerar_pdf_comprovante(venda):
     c.setFont("Helvetica-Bold", 12)
     c.drawString(50, altura - 50, f"Comprovante de Venda Nº {venda.id}")
     c.setFont("Helvetica", 10)
-    c.drawString(50, altura - 70, f"{loja.nome_fantasia if loja else ""}")
-    c.drawString(50, altura - 90, f"End.: {loja.endereco if loja else ""}, {loja.cidade if loja else ""} - {loja.estado if loja else ""}")
-    c.drawString(50, altura - 110, f"Tel: {loja.fone if loja else ""}")
+    if loja:
+        c.drawString(50, altura - 70, f"{loja.nome_fantasia}")
+        c.drawString(50, altura - 90, f"End.: {loja.endereco}, {loja.cidade} - {loja.estado}")
+        c.drawString(50, altura - 110, f"Tel: {loja.fone}")
+    else:
+        c.drawString(50, altura - 70, "Loja não configurada")
+
 
     # Lista de itens
     y_position = altura - 140
