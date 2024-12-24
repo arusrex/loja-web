@@ -3,6 +3,7 @@ from home.models import *
 
 class ConfiguracaoSAT(models.Model):
     loja = models.OneToOneField(DadosLoja, on_delete=models.CASCADE)
+    numero_sat = models.CharField(max_length=16)
     codigo_ativacao = models.CharField(max_length=16)
     tipo_certificado = models.IntegerField(choices=[(1, 'A1'), (2, 'A3')])
     numero_caixa = models.CharField(max_length=3)

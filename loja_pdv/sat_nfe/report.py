@@ -1,287 +1,184 @@
-# type:ignore
+# Importações necessárias
 from vendas.models import Venda
 from home.models import DadosLoja
+from sat_nfe.models import ConfiguracaoSAT
 from django.shortcuts import redirect
 from django.contrib import messages
-from PIL import Image, ImageWin
-import qrcode
-import win32print
-import win32ui
-import os
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 from barcode import Code128
-import barcode
 from barcode.writer import ImageWriter
+from io import BytesIO
+from django.http import HttpResponse
+from PIL import Image
+import qrcode
+import tempfile
+import os
 
-
-def gerar_cupom_fiscal_com_qrcode(venda, xml):
+def gerar_pdf_cupom_fiscal(venda, xml):
+    # Dividir os dados do XML
     dados = xml.split('|')
     loja = DadosLoja.objects.first()
-    largura_max = 40
-    # Pegar a impressora padrão
-    printer_name = win32print.GetDefaultPrinter()
+    sat = ConfiguracaoSAT.objects.first()
 
-    # Criar o QR Code
+    buffer = BytesIO()
+
     chave_acesso = dados[8]
-    valor_total_cfe = dados[9]
-    time_stamp = dados[7]
-    assinatura_qrcode = dados[11]
-    url_consulta = "http://www.sefaz.sp.gov.br/qrcode"
-    qr_code_text = f"{url_consulta}?p={chave_acesso}|{valor_total_cfe}|{time_stamp}|{assinatura_qrcode}"
 
+    # Configurações do PDF
+    c = canvas.Canvas(buffer, pagesize=letter)
+
+    largura, altura = letter
+
+    # Cabeçalho do cupom
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(50, altura - 50, f"CF-e SAT - Extrato Nº {venda.id}")
+    c.setFont("Helvetica", 8)
+    c.drawString(50, altura - 70, f"{loja.nome_fantasia if loja else ""}")
+    c.drawString(50, altura - 80, f"CNPJ: {loja.cnpj if loja else ""} | IE: {loja.inscricao_estadual if loja else ""}")
+    c.drawString(50, altura - 90, f"End.: {loja.endereco if loja else ""}, {loja.cidade if loja else ""} - {loja.estado if loja else ""}")
+    c.drawString(50, altura - 100, f"CEP: {loja.cep if loja else ""} | Tel: {loja.fone if loja else ""}")
+
+    # Dados do cliente
+    c.drawString(50, altura - 115, f"Cliente: {venda.cliente.nome if venda.cliente else 'Consumidor Final'}")
+    if venda.cliente and venda.cliente.cnpj:
+        c.drawString(50, altura - 130, f"CNPJ/CPF: {venda.cliente.cnpj}")
+    elif venda.cliente and venda.cliente.cpf:
+        c.drawString(50, altura - 130, f"CPF: {venda.cliente.cpf}")
+    else:
+        c.drawString(50, altura - 130, f"CPF: ---")
+
+
+    # Lista de itens da venda
+    y_position = altura - 150
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(50, y_position, "Itens:")
+    c.setFont("Helvetica", 8)
+    c.drawString(50, y_position - 15, f"COD | NOME | xQtd | Med | ValorUnit | SubTotal")
+    y_position -= 10
+    for item in venda.itens.all():
+        c.drawString(50, y_position - 20, f"{item.produto.codigo} {item.produto.nome[:20]} x{item.quantidade} {item.produto.unidade} R${item.produto.preco:.2f} = R${item.subtotal:.2f}")
+        y_position -= 20
+
+    # Totais
+    y_position -= 20
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(50, y_position, f"TOTAL: R$ {venda.total:.2f}")
+    y_position -= 10
+    c.drawString(50, y_position, f"Desconto: R$ {venda.desconto_total:.2f}")
+    y_position -= 10
+    c.drawString(50, y_position, f"TOTAL FINAL: R$ {venda.calcular_desconto():.2f}")
+
+    # Criar QR Code
+    qr_code_text = f"http://www.sefaz.sp.gov.br/qrcode?p={dados[8]}|{dados[9]}|{dados[7]}|{dados[11]}"
     qr = qrcode.QRCode(version=1, box_size=5, border=2)
     qr.add_data(qr_code_text)
     qr.make(fit=True)
+    qr_image = qr.make_image(fill="black", back_color="white")
 
-    # Salvar QR Code como imagem
-    qr_image_path = "qr_code.bmp"
-    qr.make_image(fill="black", back_color="white").save(qr_image_path)
+    qr_buffer = BytesIO()
+    qr_image.save(qr_buffer)
+    qr_buffer.seek(0)
 
-    # Gerar o código de barras da chave de acesso
-    barcode_image_path = "barcode.png"
+    qr_pil_image = Image.open(qr_buffer)
+
+    temp_dir = tempfile.gettempdir()
+    qr_image_path = os.path.join(temp_dir, "qr_image.png")
+    qr_pil_image.save(qr_image_path)
+    c.drawImage(qr_image_path, 110, y_position - 120, width=100, height=100)
+
+    # Cria código de barras
+    barcode_buffer = BytesIO()
     barcode_writer = ImageWriter()
-    # barcode_data = barcode.get_barcode_class('code128')
-    # barcode_instance = barcode_data(chave_acesso, writer=barcode_writer)
     barcode_instance = Code128(chave_acesso, writer=barcode_writer)
     barcode_instance.default_writer_options['write_text'] = False
+    barcode_instance.write(barcode_buffer)
+    barcode_buffer.seek(0)
 
-    barcode_instance.save("barcode")
-
-    # Abrir a imagem do QR Code
-    qr_image = Image.open(qr_image_path)
-    barcode_image = Image.open(barcode_image_path)
-
-    # Configurar a impressora
-    hprinter = win32print.OpenPrinter(printer_name)
-    hdc = win32ui.CreateDC()
-    hdc.CreatePrinterDC(printer_name)
-
-    hdc.StartDoc("Cupom Fiscal SAT")
-    hdc.StartPage()
-
-    # Definir a posição inicial (em pontos gráficos)
-    start_x, start_y = 100, 100
-    line_height = 50
-
-    # Imprimir o cabeçalho como texto
-    cupom_texto = [
-        "----------------------------------------",
-        "                CF-e SAT",
-        f"        Extrato nº: {venda.id}",
-        "----------------------------------------",
-        f"{loja.nome_fantasia}",
-        f"CNPJ: {loja.cnpj}",
-        f"IE: {loja.inscricao_estadual}",
-        f"End.: {loja.endereco} - {loja.cidade}",
-        f"CEP: {loja.cep} - {loja.estado}",
-        f"Telefone: {loja.fone}",
-        "----------------------------------------",
-        f"Data: {venda.data.strftime('%d/%m/%Y %H:%M')}",
-        f"Venda Nº: {venda.id}",
-        f"Cliente: {venda.cliente.razao_social if venda.cliente else 'Consumidor Final'}",
-        f"CNPJ: {venda.cliente.cnpj if venda.cliente else '---'}",
-        "----------------------------------------",
-        "Itens:",
-        "COD|PROD|QT|PREC|SUBT",
-    ]
-
-    for linha in cupom_texto:
-        linhas_quebradas = quebra_linhas(linha, largura_max)
-        for l in linhas_quebradas:
-            hdc.TextOut(start_x, start_y, l)
-            start_y += line_height
-
-    # Imprimir os itens da venda
-    for item in venda.itens.all():
-        texto_item = f"{item.produto.codigo} {item.produto.nome[:30]} {item.quantidade} x {item.produto.preco:.2f} = {item.subtotal:.2f}"
-        linhas_quebradas = quebra_linhas(texto_item, largura_max)
-        for l in linhas_quebradas:
-            hdc.TextOut(start_x, start_y, l)
-            start_y += line_height
-
-    # Total e descontos
-    totais = [
-        f"TOTAL: R$ {venda.total:.2f}",
-        f"Desconto: R$ {venda.desconto_total:.2f}",
-        f"TOTAL FINAL: R$ {venda.calcular_desconto():.2f}",
-        f"PGTO: {venda.metodo_pagamento if venda.metodo_pagamento else " Dinheiro"}",
-        "Chave de Acesso:",
-        f"{chave_acesso[:22]}",
-        f"{chave_acesso[22:]}",
-        f"----------------------------------------",
-    ]
-
-    for linha in totais:
-        linhas_quebradas = quebra_linhas(linha, largura_max)
-        for l in linhas_quebradas:
-            hdc.TextOut(start_x, start_y, l)
-            start_y += line_height
-
-    start_y += 150
-
-    posicao = (largura_max - -600) // 2
-    posicao_barcode = (largura_max - -200) // 2
-
-    # Inserir o QR Code
-    dib = ImageWin.Dib(qr_image)
-    dib.draw(hdc.GetHandleOutput(), (posicao, start_y, posicao + 800, start_y + 800))
-    start_y += 800
-
-    # Inserir o Código de Barras
-    dib_barcode = ImageWin.Dib(barcode_image)
-    dib_barcode.draw(hdc.GetHandleOutput(), (posicao_barcode, start_y, posicao_barcode + 1300, start_y + 200))
-    start_y += 200
+    barcode_image = Image.open(barcode_buffer)
+    barcode_image_path = os.path.join(temp_dir, "barcode_image.png")
+    barcode_image.save(barcode_image_path)
+    c.drawImage(barcode_image_path, 50, y_position - 170, width=230, height=35)
 
     # Rodapé
-    rodape = [
-        "----------------------------------------",
-         f"Consulta: {qr_code_text}",
-        "----------------------------------------",
-        "OBRIGADO PELA PREFERÊNCIA!",
-    ]
+    y_position -= 190
+    c.setFont("Helvetica", 8)
+    c.drawString(50, y_position, f"{chave_acesso}")
+    c.setFont("Helvetica-Bold", 8)
+    c.drawString(50, y_position - 20, f"SAT nº série: {sat.numero_sat}") #type:ignore
+    c.setFont("Helvetica", 8)
+    c.drawString(50, y_position - 30, "Consulta: http://www.sefaz.sp.gov.br/qrcode")
+    c.drawString(50, y_position - 40, "OBRIGADO PELA PREFERÊNCIA!")
 
-    for linha in rodape:
-        linhas_quebradas = quebra_linhas(linha, largura_max)
-        for l in linhas_quebradas:
-            hdc.TextOut(start_x, start_y, l)
-            start_y += line_height
+    # Finalizar o PDF
+    c.save()
 
-    # Finalizar a impressão
-    hdc.EndPage()
-    hdc.EndDoc()
-    hdc.DeleteDC()
-    win32print.ClosePrinter(hprinter)
+    buffer.seek(0)
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="cupom_fiscal_venda_{venda.id}.pdf"'
 
-    if qr_image_path:
-        os.remove(qr_image_path)
-    if barcode_image_path:
-        os.remove(barcode_image_path)
-
-def gerar_comprovante(venda):
-    loja = DadosLoja.objects.first()
-    largura_max = 40
-    # Pegar a impressora padrão
-    printer_name = win32print.GetDefaultPrinter()
-
-    # Criar o QR Code
-    qr_code_text = f"www.luelueletronicos.com.br"
-
-    qr = qrcode.QRCode(version=1, box_size=5, border=2)
-    qr.add_data(qr_code_text)
-    qr.make(fit=True)
-
-    # Salvar QR Code como imagem
-    qr_image_path = "qr_code.bmp"
-    qr.make_image(fill="black", back_color="white").save(qr_image_path)
-
-    # Abrir a imagem do QR Code
-    qr_image = Image.open(qr_image_path)
-
-    # Configurar a impressora
-    hprinter = win32print.OpenPrinter(printer_name)
-    hdc = win32ui.CreateDC()
-    hdc.CreatePrinterDC(printer_name)
-
-    hdc.StartDoc("Comprovante de Venda")
-    hdc.StartPage()
-
-    # Definir a posição inicial (em pontos gráficos)
-    start_x, start_y = 100, 100
-    line_height = 50
-
-    # Imprimir o cabeçalho como texto
-    cupom_texto = [
-        "----------------------------------------",
-        "           Comprovante de Venda",
-        "              Sem valor fiscal",
-        "----------------------------------------",
-        f"{loja.nome_fantasia}",
-        f"End.: {loja.endereco} - {loja.cidade}",
-        f"Telefone: {loja.fone}",
-        "----------------------------------------",
-        f"Data: {venda.data.strftime('%d/%m/%Y %H:%M')}",
-        f"Venda Nº: {venda.id}",
-        f"Cliente: {venda.cliente.razao_social if venda.cliente else 'Consumidor Final'}",
-        f"CNPJ: {venda.cliente.cnpj if venda.cliente else '---'}",
-        "----------------------------------------",
-        "Itens:",
-        "PROD|QTD|PRECO|SUBTOTAL",
-    ]
-
-    for linha in cupom_texto:
-        linhas_quebradas = quebra_linhas(linha, largura_max)
-        for l in linhas_quebradas:
-            hdc.TextOut(start_x, start_y, l)
-            start_y += line_height
-
-    # Imprimir os itens da venda
-    for item in venda.itens.all():
-        texto_item = f" {item.produto.nome[:30]} {item.quantidade} x {item.produto.preco:.2f} = {item.subtotal:.2f}"
-        linhas_quebradas = quebra_linhas(texto_item, largura_max)
-        for l in linhas_quebradas:
-            hdc.TextOut(start_x, start_y, l)
-            start_y += line_height 
-
-    # Total e descontos
-    totais = [
-        f"TOTAL: R$ {venda.total:.2f}",
-        f"Desconto: R$ {venda.desconto_total:.2f}",
-        f"TOTAL FINAL: R$ {venda.calcular_desconto():.2f}",
-        f"----------------------------------------",
-    ]
-
-    for linha in totais:
-        linhas_quebradas = quebra_linhas(linha, largura_max)
-        for l in linhas_quebradas:
-            hdc.TextOut(start_x, start_y, l)
-            start_y += line_height
-
-    posicao = (largura_max - -600) // 2
-    
-    # Inserir o QR Code
-    dib = ImageWin.Dib(qr_image)
-    dib.draw(hdc.GetHandleOutput(), (posicao, start_y, posicao + 800, start_y + 800))
-    start_y += (line_height + 850)
-
-    # Rodapé
-    rodape = [
-        "----------------------------------------",
-        "OBRIGADO PELA PREFERÊNCIA!",
-    ]
-
-    for linha in rodape:
-        linhas_quebradas = quebra_linhas(linha, largura_max)
-        for l in linhas_quebradas:
-            hdc.TextOut(start_x, start_y, l)
-            start_y += line_height
-
-    # Finalizar a impressão
-    hdc.EndPage()
-    hdc.EndDoc()
-    hdc.DeleteDC()
-    win32print.ClosePrinter(hprinter)
-    if qr_image_path:
-        os.remove(qr_image_path)
+    return response
 
 def imprimir_sat(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
     xml = venda.retornoSAT
-    gerar_cupom_fiscal_com_qrcode(venda, xml)
-    messages.success(request, f"Cupom Fiscal Sessão nº {venda.numeroSessao} impresso com sucesso!")
-    return redirect('vendas:vendas')
+    response = gerar_pdf_cupom_fiscal(venda, xml)
+    messages.success(request, f"Cupom Fiscal gerado com sucesso!")
+    return response
+
+def gerar_pdf_comprovante(venda):
+    loja = DadosLoja.objects.first()
+
+    buffer = BytesIO()
+
+    # Configurações do PDF
+    pdf_path = f"comprovante_venda_{venda.id}.pdf"
+    c = canvas.Canvas(buffer, pagesize=letter)
+    largura, altura = letter
+
+    # Cabeçalho do comprovante
+    c.setFont("Helvetica-Bold", 12)
+    c.drawString(50, altura - 50, f"Comprovante de Venda Nº {venda.id}")
+    c.setFont("Helvetica", 10)
+    c.drawString(50, altura - 70, f"{loja.nome_fantasia if loja else ""}")
+    c.drawString(50, altura - 90, f"End.: {loja.endereco if loja else ""}, {loja.cidade if loja else ""} - {loja.estado if loja else ""}")
+    c.drawString(50, altura - 110, f"Tel: {loja.fone if loja else ""}")
+
+    # Lista de itens
+    y_position = altura - 140
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(50, y_position, "Itens:")
+    c.setFont("Helvetica", 10)
+    y_position -= 20
+    for item in venda.itens.all():
+        c.drawString(50, y_position, f"{item.produto.nome[:30]} x{item.quantidade} R${item.produto.preco:.2f} = R${item.subtotal:.2f}")
+        y_position -= 20
+
+    # Totais
+    y_position -= 20
+    c.setFont("Helvetica-Bold", 10)
+    c.drawString(50, y_position, f"TOTAL: R$ {venda.total:.2f}")
+    y_position -= 20
+    c.drawString(50, y_position, f"Desconto: R$ {venda.desconto_total:.2f}")
+    y_position -= 20
+    c.drawString(50, y_position, f"TOTAL FINAL: R$ {venda.calcular_desconto():.2f}")
+
+    # Rodapé
+    y_position -= 40
+    c.setFont("Helvetica", 10)
+    c.drawString(50, y_position, "OBRIGADO PELA PREFERÊNCIA!")
+
+    # Finalizar o PDF
+    c.save()
+    buffer.seek(0)
+
+    response = HttpResponse(buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'inline; filename="comprovante_venda_{venda.id}.pdf"'
+
+    return response
 
 def imprimir_comprovante(request, venda_id):
     venda = Venda.objects.get(id=venda_id)
-    gerar_comprovante(venda)
-    messages.success(request, f"Comprovante nº {venda.id} impresso com sucesso!")
-    return redirect('vendas:vendas')
-
-def quebra_linhas(texto, largura_max):
-    linhas = []
-    while len(texto) > largura_max:
-        corte = texto.rfind(" ", 0, largura_max)
-        if corte == -1:
-            corte = largura_max
-        linhas.append(texto[:corte])
-        texto = texto[corte:].strip()
-    linhas.append(texto)
-    return linhas
+    response = gerar_pdf_comprovante(venda)
+    messages.success(request, f"Comprovante gerado com sucesso!")
+    return response
