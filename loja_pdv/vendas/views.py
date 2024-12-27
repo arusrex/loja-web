@@ -203,31 +203,30 @@ def finalizar(request):
             venda_finalizar = request.POST.get('finalizar')
 
             if comprovante:
-                print('entrou emcomprovante')
                 venda.finalizada = True
                 venda.save()
-                imprimir_comprovante(request, venda.id) # type: ignore
+                return imprimir_comprovante(request, venda.id) # type: ignore
 
             elif sat:
-                print('entrou sat')
                 venda.finalizada = True
                 venda.save()
                 gerar_sat(request, venda.id) # type: ignore
                 consulta = Venda.objects.get(id=venda.id) # type: ignore
-                print(consulta.eeeee)
                 if consulta.retornoSAT:
-                    imprimir_sat(request, venda.id) # type: ignore
+                    return imprimir_sat(request, venda.id) # type: ignore
                 else:
                     messages.error(request, 'Erro ao imprimir o SAT')
+                    return redirect('vendas:pdv')
             
             elif venda_finalizar:
-                print('entrou finalizar')
                 venda.finalizada = True
                 venda.save()
                 messages.success(request, 'Venda finalizada com sucesso')
+                return redirect('vendas:pdv')
 
             else:
                 messages.info(request, 'Venda retomada')
                 return redirect('vendas:pdv')
-    
-    return redirect('vendas:pdv')
+    else:
+        messages.info(request, 'Venda retomada')
+        return redirect('vendas:pdv')

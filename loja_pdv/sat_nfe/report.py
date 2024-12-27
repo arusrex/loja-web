@@ -145,14 +145,14 @@ def gerar_pdf_comprovante(venda):
     c.setFont("Helvetica", 10)
     if loja:
         c.drawString(50, altura - 70, f"{loja.nome_fantasia}")
-        c.drawString(50, altura - 90, f"End.: {loja.endereco}, {loja.cidade} - {loja.estado}")
-        c.drawString(50, altura - 110, f"Tel: {loja.fone}")
+        c.drawString(50, altura - 82, f"End.: {loja.endereco}, {loja.cidade} - {loja.estado}")
+        c.drawString(50, altura - 95, f"Tel: {loja.fone}")
     else:
         c.drawString(50, altura - 70, "Loja não configurada")
 
 
     # Lista de itens
-    y_position = altura - 140
+    y_position = altura - 110
     c.setFont("Helvetica-Bold", 10)
     c.drawString(50, y_position, "Itens:")
     c.setFont("Helvetica", 10)
@@ -162,18 +162,37 @@ def gerar_pdf_comprovante(venda):
         y_position -= 20
 
     # Totais
-    y_position -= 20
+    y_position -= 10
     c.setFont("Helvetica-Bold", 10)
     c.drawString(50, y_position, f"TOTAL: R$ {venda.total:.2f}")
-    y_position -= 20
+    y_position -= 15
     c.drawString(50, y_position, f"Desconto: R$ {venda.desconto_total:.2f}")
-    y_position -= 20
+    y_position -= 15
     c.drawString(50, y_position, f"TOTAL FINAL: R$ {venda.calcular_desconto():.2f}")
 
+    # Criar QR Code
+    qr_code_text = f"www.luelueletronicos.com.br"
+    qr = qrcode.QRCode(version=1, box_size=5, border=2)
+    qr.add_data(qr_code_text)
+    qr.make(fit=True)
+    qr_image = qr.make_image(fill="black", back_color="white")
+
+    qr_buffer = BytesIO()
+    qr_image.save(qr_buffer)
+    qr_buffer.seek(0)
+
+    qr_pil_image = Image.open(qr_buffer)
+
+    temp_dir = tempfile.gettempdir()
+    qr_image_path = os.path.join(temp_dir, "qr_image.png")
+    qr_pil_image.save(qr_image_path)
+    c.drawImage(qr_image_path, 70, y_position - 110, width=100, height=100)
+    
     # Rodapé
-    y_position -= 40
+    y_position -= 140
     c.setFont("Helvetica", 10)
     c.drawString(50, y_position, "OBRIGADO PELA PREFERÊNCIA!")
+    c.drawString(50, y_position - 10, "Sem valor fiscal")
 
     # Finalizar o PDF
     c.save()
