@@ -8,6 +8,7 @@ import ctypes
 import xml.etree.ElementTree as ET
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from pathlib import Path
 
 @login_required
 def sat_nfe(request):
@@ -87,7 +88,13 @@ def enviar_dados_sat_real(request, xml_venda, numeroSessao, venda_id):
 
     if configuracao_sat:
         literal_caminho = configuracao_sat.caminho
-        caminho = literal_caminho.replace('\\', '/') if literal_caminho else 'C:/Program Files (x86)/SAT/SAT.dll'
+        print(literal_caminho)
+        # caminho = literal_caminho.replace('\\', '/') if literal_caminho else 'C:/Program Files (x86)/SAT/SAT.dll'
+        caminho = (
+            Path(literal_caminho).as_posix() if literal_caminho and Path(literal_caminho).exists()
+            else 'C:/Program Files (x86)/SAT/SAT.dll'
+        )
+        print(caminho)
     else:
         caminho = 'C:/Program Files (x86)/SAT/SAT.dll'
 
