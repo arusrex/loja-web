@@ -9,6 +9,8 @@ import xml.etree.ElementTree as ET
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from pathlib import Path
+import platform
+print(platform.architecture())
 
 @login_required
 def sat_nfe(request):
@@ -88,18 +90,26 @@ def enviar_dados_sat_real(request, xml_venda, numeroSessao, venda_id):
 
     if configuracao_sat:
         literal_caminho = configuracao_sat.caminho
-        print(literal_caminho)
         # caminho = literal_caminho.replace('\\', '/') if literal_caminho else 'C:/Program Files (x86)/SAT/SAT.dll'
         caminho = (
             Path(literal_caminho).as_posix() if literal_caminho and Path(literal_caminho).exists()
-            else 'C:/Program Files (x86)/SAT/SAT.dll'
+            else 'C:/Program Files (x86)/ELGIN/SW Ativação Linker/dllsat.dll'
         )
-        print(caminho)
     else:
-        caminho = 'C:/Program Files (x86)/SAT/SAT.dll'
+        caminho = 'C:/Program Files (x86)/ELGIN/SW Ativação Linker/dllsat.dll'
 
-    sat = ctypes.CDLL(caminho)
-    retorno = sat.EnviarDadosVenda(numeroSessao.encode(), xml_venda.encode())
+    if not Path(caminho).exists():
+        mensagem_erro = f"O arquivo da DLL no caminho '{caminho}' não foi encontrado."
+        print(mensagem_erro)
+        return {"status": "erro", "mensagem": mensagem_erro}
+
+    try:
+        dll = ctypes.CDLL(caminho)
+        print("DLL carregada com sucesso!")
+    except OSError as e:
+        print(f"Erro ao carregar a DLL: {e}")
+
+    retorno = dll.EnviarDadosVenda(numeroSessao.encode(), xml_venda.encode())
 
     retorno_str = ctypes.string_at(retorno).decode("utf-8")
     retorno_parts = retorno_str.split("|")
